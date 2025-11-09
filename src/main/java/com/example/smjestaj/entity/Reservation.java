@@ -1,0 +1,39 @@
+package com.example.smjestaj.entity;
+
+import com.example.smjestaj.enums.ReservationStatus;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "reservations")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Reservation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reservation_id")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private ListingRoom room;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private User student;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "cancelled_at")
+    private LocalDateTime cancelledAt;
+}
