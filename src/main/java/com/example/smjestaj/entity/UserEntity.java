@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,15 +42,15 @@ public class User {
     private Integer phoneNumber;
 
     @OneToMany(mappedBy = "landlord", cascade = CascadeType.ALL)
-    private List<Listing> listings;
+    private List<ListingEntity> listings;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Favorite> favorites;
+    private List<FavoriteEntity> favorites;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    private List<ReservationEntity> reservations;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<RoomOccupant> roomOccupants;
+    private List<RoomOccupantEntity> roomOccupants;
 }
 

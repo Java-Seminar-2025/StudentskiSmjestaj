@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Faculty {
+public class FacultyEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +28,5 @@ public class Faculty {
     private String city;
 
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL)
-    private List<StudentDetails> studentDetailsList;
+    private List<StudentDetailsEntity> studentDetailsList;
 }

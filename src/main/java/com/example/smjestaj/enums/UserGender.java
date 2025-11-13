@@ -1,6 +1,12 @@
 package com.example.smjestaj.enums;
 
+import lombok.*;
+
+@AllArgsConstructor
+@Getter
 public enum UserGender {
-    male,
-    female
+    MALE("male"),
+    FEMALE("female");
+
+    private final String displayName;
 }

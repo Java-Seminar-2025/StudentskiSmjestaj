@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListingRoom {
+public class ListingRoomEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class ListingRoom {
 
     @ManyToOne
     @JoinColumn(name = "listing_id", nullable = false)
-    private Listing listing;
+    private ListingEntity listing;
 
     @Column(name = "room_price", nullable = false)
     private BigDecimal roomPrice;
@@ -31,8 +31,8 @@ public class ListingRoom {
     private Integer capacity;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    private List<ReservationEntity> reservations;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List<RoomOccupant> roomOccupants;
+    private List<RoomOccupantEntity> roomOccupants;
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Listing {
+public class ListingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class Listing {
 
     @ManyToOne
     @JoinColumn(name = "landlord_id", nullable = false)
-    private User landlord;
+    private UserEntity landlord;
 
     @Column(nullable = false)
     private String title;
@@ -59,9 +59,9 @@ public class Listing {
     private LocalDateTime cancellationDeadline;
 
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
-    private List<Favorite> favorites;
+    private List<FavoriteEntity> favorites;
 
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
-    private List<ListingRoom> listingRooms;
+    private List<ListingRoomEntity> listingRooms;
 }
 

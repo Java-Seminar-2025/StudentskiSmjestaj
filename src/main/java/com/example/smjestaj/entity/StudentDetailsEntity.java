@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentDetails {
+public class StudentDetailsEntity {
 
     @Id
     @Column(name = "student_id")
@@ -20,11 +20,11 @@ public class StudentDetails {
     @OneToOne
     @MapsId
     @JoinColumn(name = "student_id")
-    private User student;
+    private UserEntity student;
 
     @ManyToOne
     @JoinColumn(name = "faculty_id", nullable = false)
-    private Faculty faculty;
+    private FacultyEntity faculty;
 
     @Column(name = "year_of_study")
     private Integer yearOfStudy;

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation {
+public class ReservationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,11 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
-    private ListingRoom room;
+    private ListingRoomEntity room;
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
-    private User student;
+    private UserEntity student;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;

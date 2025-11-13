@@ -1,18 +1,14 @@
 package com.example.smjestaj.enums;
 
+import lombok.*;
+
+@AllArgsConstructor
+@Getter
 public enum ReservationStatus {
-    pending("pending confirmation"),
-    active("active"),
-    cancelled("cancelled"),
-    completed("completed");
+    PENDING("pending confirmation"),
+    ACTIVE("active"),
+    CANCELLED("cancelled"),
+    COMPLETED("completed");
 
     private final String displayName;
-
-    ReservationStatus(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
 }
