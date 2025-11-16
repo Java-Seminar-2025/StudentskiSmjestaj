@@ -1,7 +1,7 @@
-package com.example.smjestaj.entity;
+package com.smjestaj.entity;
 
-import com.example.smjestaj.enums.UserGender;
-import com.example.smjestaj.enums.ListingStatus;
+import com.smjestaj.enums.UserGender;
+import com.smjestaj.enums.ListingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,9 +13,7 @@ import java.util.List;
 @Table(name = "listings")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class ListingEntity {
 
     @Id

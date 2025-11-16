@@ -1,4 +1,4 @@
-package com.example.smjestaj.enums;
+package com.smjestaj.enums;
 
 import lombok.*;
 

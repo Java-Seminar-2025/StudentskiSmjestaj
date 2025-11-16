@@ -1,6 +1,6 @@
-package com.example.smjestaj.entity;
+package com.smjestaj.entity;
 
-import com.example.smjestaj.enums.ReservationStatus;
+import com.smjestaj.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "reservations")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class ReservationEntity {
 
     @Id

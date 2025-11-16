@@ -1,6 +1,6 @@
-package com.example.smjestaj.entity;
+package com.smjestaj.entity;
 
-import com.example.smjestaj.enums.UserRole;
+import com.smjestaj.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -9,9 +9,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserEntity {
 
     @Id
@@ -39,7 +37,7 @@ public class UserEntity {
     private UserRole role;
 
     @Column(name = "phone_number")
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @OneToMany(mappedBy = "landlord", cascade = CascadeType.ALL)
     private List<ListingEntity> listings;

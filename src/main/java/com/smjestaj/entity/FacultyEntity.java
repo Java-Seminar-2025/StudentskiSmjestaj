@@ -1,4 +1,4 @@
-package com.example.smjestaj.entity;
+package com.smjestaj.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,9 +8,7 @@ import java.util.List;
 @Table(name = "faculties")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class FacultyEntity {
 
     @Id

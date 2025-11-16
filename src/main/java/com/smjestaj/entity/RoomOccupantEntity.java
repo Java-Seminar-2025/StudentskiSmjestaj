@@ -1,4 +1,4 @@
-package com.example.smjestaj.entity;
+package com.smjestaj.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,9 +7,7 @@ import lombok.*;
 @Table(name = "room_occupants")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class RoomOccupantEntity {
 
     @Id

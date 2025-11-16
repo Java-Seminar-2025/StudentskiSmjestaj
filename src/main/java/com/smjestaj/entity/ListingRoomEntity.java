@@ -1,4 +1,4 @@
-package com.example.smjestaj.entity;
+package com.smjestaj.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,9 +10,7 @@ import java.util.List;
 @Table(name = "listing_rooms")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class ListingRoomEntity {
 
     @Id

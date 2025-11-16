@@ -1,6 +1,6 @@
-package com.example.smjestaj.entity;
+package com.smjestaj.entity;
 
-import com.example.smjestaj.enums.UserGender;
+import com.smjestaj.enums.UserGender;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,9 +8,7 @@ import lombok.*;
 @Table(name = "student_details")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class StudentDetailsEntity {
 
     @Id
