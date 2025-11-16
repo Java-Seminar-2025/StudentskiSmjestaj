@@ -1,7 +1,7 @@
 package com.smjestaj.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.smjestaj.repository.UserRepository;
 import com.smjestaj.entity.UserEntity;
@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void register(RegisterData input) {
         if(userRepository.existsByEmail(input.getEmail())) {
