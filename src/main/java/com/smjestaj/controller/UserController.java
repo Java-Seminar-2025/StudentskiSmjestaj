@@ -2,7 +2,9 @@ package com.smjestaj.controller;
 
 import com.smjestaj.dto.*;
 import com.smjestaj.service.UserService;
+import com.smjestaj.exception.RegisterException;
 
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class UserController {
     @PostMapping("/register")
     public String register(@ModelAttribute RegisterData input) {
         userService.register(input);
-        return "register_success";
+        return "redirect:/user/login";
     }
 
     @GetMapping("/login")

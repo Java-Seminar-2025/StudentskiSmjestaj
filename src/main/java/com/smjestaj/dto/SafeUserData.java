@@ -1,7 +1,7 @@
 package com.smjestaj.dto;
 
 import com.smjestaj.enums.UserRole;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 public class SafeUserData {

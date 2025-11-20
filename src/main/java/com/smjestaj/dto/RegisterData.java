@@ -1,9 +1,10 @@
 package com.smjestaj.dto;
 
 import com.smjestaj.enums.UserRole;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@Setter
 public class RegisterData {
     private String name;
     private String surname;
@@ -12,5 +13,5 @@ public class RegisterData {
     private String password;
     private String confirmPassword;
     private UserRole role;
-    private String phoneNumber;
+    //private String phoneNumber;
 }

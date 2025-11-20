@@ -1,5 +1,6 @@
 package com.smjestaj.exception;
 
+import com.smjestaj.dto.RegisterData;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(RegisterException.class)
     public String handleRegisterException(RegisterException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
+        model.addAttribute("registerData", new RegisterData());
         return "register";
     }
 

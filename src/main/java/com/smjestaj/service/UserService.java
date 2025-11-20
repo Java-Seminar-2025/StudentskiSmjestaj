@@ -23,7 +23,7 @@ public class UserService {
         if(!input.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new RegisterException("Invalid email format!");
         }
-        if(input.getPassword().equals(input.getConfirmPassword())) {
+        if(!input.getPassword().equals(input.getConfirmPassword())) {
             throw new RegisterException("Passwords do not match!");
         }
 
