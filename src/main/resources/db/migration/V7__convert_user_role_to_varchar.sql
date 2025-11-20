@@ -1,0 +1,5 @@
+ALTER TABLE users
+ALTER COLUMN role TYPE VARCHAR(10)
+USING role::text;
+
+DROP TYPE IF EXISTS user_role;
