@@ -13,5 +13,5 @@ public class RegisterData {
     private String password;
     private String confirmPassword;
     private UserRole role;
-    //private String phoneNumber;
+    private String phoneNumber;
 }
