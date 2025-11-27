@@ -3,7 +3,7 @@ package com.smjestaj.dto;
 import com.smjestaj.enums.UserRole;
 import lombok.*;
 
-@AllArgsConstructor
+@NoArgsConstructor
 public class SafeUserData {
     private Long id;
     private String name;

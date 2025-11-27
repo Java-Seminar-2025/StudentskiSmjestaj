@@ -4,16 +4,14 @@ import com.smjestaj.dto.*;
 import com.smjestaj.service.UserService;
 import com.smjestaj.exception.RegisterException;
 
-import org.springframework.boot.Banner;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.AllArgsConstructor;
-
 @Controller
 @RequestMapping("/user")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 

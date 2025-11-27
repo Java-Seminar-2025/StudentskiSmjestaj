@@ -1,5 +1,7 @@
 package com.smjestaj.service;
 
+import com.smjestaj.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -8,27 +10,22 @@ import com.smjestaj.entity.UserEntity;
 import com.smjestaj.dto.*;
 import com.smjestaj.exception.*;
 
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserValidator userValidator;
+    private final UserMapper userMapper;
 
     public void register(RegisterData input) {
         userValidator.validateEmail(input.getEmail());
         userValidator.validatePassword(input.getPassword(), input.getConfirmPassword());
         userValidator.validateUsername(input.getUsername());
 
-        var user = new UserEntity();
-        user.setName(input.getName());
-        user.setSurname(input.getSurname());
-        user.setUsername(input.getUsername());
-        user.setEmail(input.getEmail());
-        user.setPassword(passwordEncoder.encode(input.getPassword()));
-        user.setRole(input.getRole());
+        UserEntity user = userMapper.registerDataToUserEntity(input);
 
         userRepository.save(user);
     }
@@ -41,14 +38,6 @@ public class UserService {
             throw new LoginFailedException("Wrong username and/or password!");
         }
 
-        return new SafeUserData(
-                user.getId(),
-                user.getName(),
-                user.getSurname(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getRole(),
-                user.getPhoneNumber()
-        );
+        return userMapper.userEntityToSafeUserData(user);
     }
 }
