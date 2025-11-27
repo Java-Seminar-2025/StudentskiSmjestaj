@@ -15,17 +15,12 @@ import lombok.AllArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final UserValidator userValidator;
 
     public void register(RegisterData input) {
-        if(userRepository.existsByEmail(input.getEmail())) {
-            throw new RegisterException("Email already exists!");
-        }
-        if(!input.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            throw new RegisterException("Invalid email format!");
-        }
-        if(!input.getPassword().equals(input.getConfirmPassword())) {
-            throw new RegisterException("Passwords do not match!");
-        }
+        userValidator.validateEmail(input.getEmail());
+        userValidator.validatePassword(input.getPassword(), input.getConfirmPassword());
+        userValidator.validateUsername(input.getUsername());
 
         var user = new UserEntity();
         user.setName(input.getName());
