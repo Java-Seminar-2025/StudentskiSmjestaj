@@ -26,6 +26,7 @@ public class UserService {
         userValidator.validateUsername(input.getUsername());
 
         UserEntity user = userMapper.registerDataToUserEntity(input);
+        user.setPassword(passwordEncoder.encode(input.getPassword()));
 
         userRepository.save(user);
     }
