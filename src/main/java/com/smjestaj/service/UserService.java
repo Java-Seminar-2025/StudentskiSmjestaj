@@ -1,22 +1,21 @@
 package com.smjestaj.service;
 
-import com.smjestaj.mapper.UserMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.smjestaj.repository.UserRepository;
 import com.smjestaj.entity.UserEntity;
+import com.smjestaj.repository.UserRepository;
 import com.smjestaj.dto.*;
 import com.smjestaj.exception.*;
+import com.smjestaj.mapper.UserMapper;
 
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder;
     private final UserValidator userValidator;
     private final UserMapper userMapper;
 
@@ -30,7 +29,7 @@ public class UserService {
 
         userRepository.save(user);
     }
-
+/*
     public SafeUserData login(LoginData input) {
         var user = userRepository.findByUsername(input.getUsername()).
                 orElseThrow(() -> new LoginFailedException("Wrong username and/or password!"));
@@ -41,4 +40,5 @@ public class UserService {
 
         return userMapper.userEntityToSafeUserData(user);
     }
+    */
 }

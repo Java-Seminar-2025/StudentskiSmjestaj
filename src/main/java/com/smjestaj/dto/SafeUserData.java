@@ -4,6 +4,8 @@ import com.smjestaj.enums.UserRole;
 import lombok.*;
 
 @NoArgsConstructor
+@Getter
+@Setter
 public class SafeUserData {
     private Long id;
     private String name;

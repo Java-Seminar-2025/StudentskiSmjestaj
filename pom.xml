@@ -19,6 +19,8 @@
     <properties>
         <java.version>17</java.version>
         <postgresql.version>42.7.8</postgresql.version>
+        <spring.boot.version>3.3.1</spring.boot.version>
+        <spring.security.version>6.3.3</spring.security.version>
     </properties>
 
     <dependencyManagement>
@@ -40,11 +42,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.boot.version}</version>
         </dependency>
 
         <dependency>
@@ -75,14 +79,21 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>7.0.0-RC3</version>
+            <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>${spring.boot.version}</version>
         </dependency>
 
         <dependency>
@@ -97,8 +108,6 @@
             <version>1.5.5.Final</version>
             <scope>provided</scope>
         </dependency>
-
-
     </dependencies>
 
     <build>

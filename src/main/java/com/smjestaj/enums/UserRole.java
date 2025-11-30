@@ -6,7 +6,8 @@ import lombok.*;
 @Getter
 public enum UserRole {
     STUDENT("student"),
-    LANDLORD("landlord");
+    LANDLORD("landlord"),
+    ADMIN("admin");
 
     private final String displayName;
 }

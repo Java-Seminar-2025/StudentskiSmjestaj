@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+
+<body>
+    <h2>Student accommodation</h2>
+    <div th:object="${userData}">
+        Id: <span th:text="*{id}"></span><br>
+        Name: <span th:text="*{name}"></span><br>
+        Surname: <span th:text="*{surname}"></span><br>
+        Email: <span th:text="*{email}"></span><br>
+        Username: <span th:text="*{username}"></span><br>
+        Role: <span th:text="*{role.displayName}"></span><br>
+        Phone number: <span th:text="*{phoneNumber}"></span><br>
+    </div>
+</body>
+
+</html>
