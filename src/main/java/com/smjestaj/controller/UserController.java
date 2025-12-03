@@ -32,12 +32,4 @@ public class UserController {
         model.addAttribute("loginData", new LoginData());
         return "login";
     }
-/*
-    @PostMapping("/login")
-    public String login(@ModelAttribute LoginData input, Model model) {
-        SafeUserData userDto = userService.login(input);
-        model.addAttribute("userData", userDto);
-        return "home";
-    }
-    */
 }

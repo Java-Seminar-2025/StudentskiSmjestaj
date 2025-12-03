@@ -13,13 +13,5 @@ public class CustomExceptionHandler {
         model.addAttribute("registerData", new RegisterData());
         return "register";
     }
-    /*
-    @ExceptionHandler(LoginFailedException.class)
-    public String handleLoginException(LoginFailedException ex, Model model) {
-        model.addAttribute("errorMessage", ex.getMessage());
-        model.addAttribute("loginData", new LoginData());
-        return "login";
-    }
-    */
 }
 

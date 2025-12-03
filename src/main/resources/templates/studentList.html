@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+</head>
+<body>
+    <h2>List of Students</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Phone number</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student : ${students}">
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.surname}"></td>
+            <td th:text="${student.email}"></td>
+            <td th:text="${student.username}"></td>
+            <td th:text="${student.phoneNumber}"></td>
+            <td>
+                <form th:action="@{/admin/changeRole}" method="post">
+                    <input type="hidden" name="username" th:value="${student.username}">
+                    <select name="role">
+                        <option value="LANDLORD">Landlord</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                    <button type="submit">Change role</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/admin/blockOrUnblockUser}" method="post">
+                    <input type="hidden" name="username" th:value="${student.username}">
+                    <input type="hidden" name="blocked" th:value="${student.blocked}">
+                    <button th:if="${student.blocked}" type="submit">Unblock user</button>
+                    <button th:if="${!student.blocked}" type="submit">Block user</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,7 +1,6 @@
 package com.smjestaj.security;
 
 import com.smjestaj.entity.UserEntity;
-import com.smjestaj.exception.LoginFailedException;
 import com.smjestaj.repository.UserRepository;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,8 +16,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new LoginFailedException("Wrong username and/or password."));
+        UserEntity user = userRepository.findByUsername(username).orElseThrow();
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())

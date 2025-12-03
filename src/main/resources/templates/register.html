@@ -13,7 +13,6 @@
 </div>
 
 <form th:action="@{/user/register}" th:object="${registerData}" method="post">
-
     <label for="name">Name:</label><br>
     <input type="text" id="name" th:field="*{name}" required><br><br>
 
@@ -36,6 +35,7 @@
     <select id="role" th:field="*{role}">
         <option value="STUDENT">Student</option>
         <option value="LANDLORD">Landlord</option>
+        <option value="ADMIN">Admin</option>
     </select><br><br>
 
     <button type="submit">Register</button>

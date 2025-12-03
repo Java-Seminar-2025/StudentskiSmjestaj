@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+</head>
+<body>
+<h2>List of Users</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Phone number</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.role.displayName}"></td>
+        <td th:text="${user.phoneNumber}"></td>
+        <td>
+            <form th:action="@{/admin/changeRole}" method="post">
+                <input type="hidden" name="username" th:value="${user.username}">
+                <select name="role">
+                    <option value="STUDENT">Student</option>
+                    <option value="LANDLORD">Landlord</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+                <button type="submit">Change role</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/admin/blockOrUnblockUser}" method="post">
+                <input type="hidden" name="username" th:value="${user.username}">
+                <input type="hidden" name="blocked" th:value="${user.blocked}">
+                <button th:if="${user.blocked}" type="submit">Unblock user</button>
+                <button th:if="${!user.blocked}" type="submit">Block user</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class UserEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -38,6 +37,9 @@ public class UserEntity {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "is_blocked", nullable = false)
+    private Boolean blocked;
 
     @OneToMany(mappedBy = "landlord", cascade = CascadeType.ALL)
     private List<ListingEntity> listings;

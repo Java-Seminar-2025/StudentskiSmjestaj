@@ -6,17 +6,10 @@ import com.smjestaj.dto.*;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
-    @Mappings({
-            @Mapping(target = "id", ignore = true),
-            @Mapping(target = "password", ignore = true),
-            @Mapping(target = "listings", ignore = true),
-            @Mapping(target = "favorites", ignore = true),
-            @Mapping(target = "reservations", ignore = true),
-            @Mapping(target = "roomOccupants", ignore = true)
-    })
+    @Mapping(target = "password", ignore = true)
     UserEntity registerDataToUserEntity(RegisterData input);
 
+    @Mapping(target = "blocked", source = "blocked")
     SafeUserData userEntityToSafeUserData(UserEntity user);
 }
 
