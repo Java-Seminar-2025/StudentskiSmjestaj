@@ -15,6 +15,12 @@
         Role: <span th:text="*{role.displayName}"></span><br>
         Phone number: <span th:text="*{phoneNumber}"></span><br>
     </div>
+    <form th:action="@{/listings/options}" method="get">
+        <button type="submit">Search listings</button>
+    </form>
+    <form th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/create}" method="get">
+        <button type="submit">Create listing</button>
+    </form>
 </body>
 
 </html>

@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class ListingEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "listing_id")
@@ -40,10 +39,10 @@ public class ListingEntity {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(name = "number_of_students")
+    @Column(name = "number_of_students", nullable = false)
     private Integer numberOfStudents;
 
-    @Column(name = "number_of_rooms")
+    @Column(name = "number_of_rooms", nullable = false)
     private Integer numberOfRooms;
 
     @Enumerated(EnumType.STRING)
@@ -51,7 +50,7 @@ public class ListingEntity {
     private UserGender preferredGender;
 
     @Enumerated(EnumType.STRING)
-    private ListingStatus status;
+    private ListingStatus status = ListingStatus.AVAILABLE;
 
     @Column(name = "cancellation_deadline")
     private LocalDateTime cancellationDeadline;

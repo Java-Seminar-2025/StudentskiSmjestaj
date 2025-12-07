@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create listing</title>
+</head>
+<body>
+    <form th:action="@{/listings/create}" th:object="${listingData}" method="post">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" th:field="*{title}" required><br><br>
+
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" th:field="*{description}" required><br><br>
+
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" th:field="*{address}" required><br><br>
+
+        <label for="city">City:</label><br>
+        <input type="text" id="city" th:field="*{city}" required><br><br>
+
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" step="0.01" th:field="*{price}" required><br><br>
+
+        <label for="numberOfStudents">Number of students:</label><br>
+        <input type="number" id="numberOfStudents" th:field="*{numberOfStudents}" required><br><br>
+
+        <label for="numberOfRooms">Number of rooms:</label><br>
+        <input type="number" id="numberOfRooms" th:field="*{numberOfRooms}" required><br><br>
+
+        <label for="preferredGender">Preferred gender:</label><br>
+        <select id="preferredGender" th:field="*{preferredGender}">
+            <option value="">None</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+        </select><br><br>
+
+        <label for="cancellationDeadline">Cancellation deadline:</label><br>
+        <input type="datetime-local" id="cancellationDeadline" th:field="*{cancellationDeadline}"><br><br>
+
+        <input type="hidden" id="landlordId" th:field="*{landlordId}">
+
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>

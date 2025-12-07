@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listings</title>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Landlord</th>
+                <th>Description</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Price</th>
+                <th>Number of students</th>
+                <th>Number of rooms</th>
+                <th>Cancellation deadline</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="listing : ${listings}">
+                <td th:text="${listing.title}"></td>
+                <td th:text="${listing.landlordUsername}"></td>
+                <td th:text="${listing.description}"></td>
+                <td th:text="${listing.address}"></td>
+                <td th:text="${listing.city}"></td>
+                <td th:text="${listing.price}"></td>
+                <td th:text="${listing.numberOfStudents}"></td>
+                <td th:text="${listing.numberOfRooms}"></td>
+                <td th:text="${#temporals.format(listing.cancellationDeadline, 'dd.MM.yyyy. HH:mm')}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

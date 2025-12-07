@@ -2,7 +2,7 @@ package com.smjestaj.enums;
 
 import lombok.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public enum UserRole {
     STUDENT("student"),
