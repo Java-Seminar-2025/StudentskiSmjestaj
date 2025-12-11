@@ -21,8 +21,8 @@ public class AdminController {
     public String showUserList(Model model) {
         List<SafeUserData> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        model.addAttribute("changeRoleDto", new ChangeRoleDto());
-        model.addAttribute("blockOrUnblockDto", new BlockOrUnblockDto());
+        model.addAttribute("changeRoleDto", ChangeRoleDto.builder().build());
+        model.addAttribute("blockOrUnblockDto", BlockOrUnblockDto.builder().build());
         return "userList";
     }
 
@@ -30,8 +30,8 @@ public class AdminController {
     public String showStudentList(Model model) {
         List<SafeUserData> students = userService.getAllUsersWithRole(UserRole.STUDENT);
         model.addAttribute("students", students);
-        model.addAttribute("changeRoleDto", new ChangeRoleDto());
-        model.addAttribute("blockOrUnblockDto", new BlockOrUnblockDto());
+        model.addAttribute("changeRoleDto", ChangeRoleDto.builder().build());
+        model.addAttribute("blockOrUnblockDto", BlockOrUnblockDto.builder().build());
         return "studentList";
     }
 /*

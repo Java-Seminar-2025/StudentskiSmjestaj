@@ -6,13 +6,12 @@ import com.smjestaj.entity.*;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.*;
 
 import lombok.RequiredArgsConstructor;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,23 +20,33 @@ public class ListingService {
     private final UserRepository userRepository;
     private final ListingMapper listingMapper;
 
-    public List<ListingData> filterListings(OptionsData optionsData) {
-        return listingRepository.findAll(ListingSpecification.withFilters(optionsData)).stream()
-                .map(listingMapper::listingEntityToDto)
-                .collect(Collectors.toList());
+    public Page<ListingData> filterListings(OptionsData optionsData, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("price").ascending());
+
+        Page<ListingEntity> listingsPage = listingRepository.findAll(
+                ListingSpecification.withFilters(optionsData),
+                pageable
+        );
+
+        return listingsPage.map(listingMapper::listingEntityToDto);
     }
 
     public ListingData prepareNewListing() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var username = auth.getName();
 
-        ListingData listingData = new ListingData();
-        listingData.setLandlordUsername(username);
+        var listingData = ListingData.builder().build();
+        listingData = listingData.toBuilder().landlordUsername(username).build();
         return listingData;
     }
 
     public void createListing(ListingData listingData) {
+        var landlord = userRepository.findByUsername(listingData.landlordUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+
         var listing = listingMapper.listingDtoToEntity(listingData);
+
+        listing.setLandlord(landlord);
         listingRepository.save(listing);
     }
 }

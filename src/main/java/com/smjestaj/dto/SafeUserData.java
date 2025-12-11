@@ -1,17 +1,15 @@
 package com.smjestaj.dto;
 
 import com.smjestaj.enums.UserRole;
-import lombok.*;
+import lombok.Builder;
 
-@NoArgsConstructor
-@Getter
-@Setter
-public class SafeUserData {
-    private String name;
-    private String surname;
-    private String email;
-    private String username;
-    private UserRole role;
-    private String phoneNumber;
-    private Boolean blocked;
-}
+@Builder
+public record SafeUserData (
+    String name,
+    String surname,
+    String email,
+    String username,
+    UserRole role,
+    String phoneNumber,
+    Boolean blocked
+) {}

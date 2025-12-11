@@ -10,7 +10,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(RegisterException.class)
     public String handleRegisterException(RegisterException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
-        model.addAttribute("registerData", new RegisterData());
+        model.addAttribute("registerData", RegisterData.builder().build());
         return "register";
     }
 }

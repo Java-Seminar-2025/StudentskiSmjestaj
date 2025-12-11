@@ -1,14 +1,12 @@
 package com.smjestaj.dto;
 
-import lombok.*;
-import java.math.BigDecimal;
+import lombok.Builder;
 
-@Getter
-@Setter
-public class OptionsData {
-    private BigDecimal lowerPrice;
-    private BigDecimal upperPrice;
-    private String city;
-    private Integer numberOfStudents;
-    private Integer numberOfRooms;
-}
+@Builder
+public record OptionsData (
+    Integer lowerPrice,
+    Integer upperPrice,
+    String city,
+    Integer numberOfStudents,
+    Integer numberOfRooms
+) {}

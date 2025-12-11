@@ -17,7 +17,7 @@ public class UserController {
 
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
-        model.addAttribute("registerData", new RegisterData());
+        model.addAttribute("registerData", RegisterData.builder().build());
         return "register";
     }
 
@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String showLoginPage(Model model) {
-        model.addAttribute("loginData", new LoginData());
+        model.addAttribute("loginData", LoginData.builder().build());
         return "login";
     }
 }

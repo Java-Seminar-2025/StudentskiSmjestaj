@@ -6,8 +6,8 @@
 </head>
 <body>
     <form th:action="@{/listings/options}" th:object="${optionsData}" method="post">
-        Lower price: <input type="number" step="0.01" th:field="*{lowerPrice}"><br>
-        Upper price: <input type="number" step="0.01" th:field="*{upperPrice}"><br>
+        Lower price: <input type="number" th:field="*{lowerPrice}"><br>
+        Upper price: <input type="number" th:field="*{upperPrice}"><br>
         City: <input type="text" th:field="*{city}"><br>
         Number of students: <input type="number" th:field="*{numberOfStudents}"><br>
         Number of rooms: <input type="number" th:field="*{numberOfRooms}"><br>

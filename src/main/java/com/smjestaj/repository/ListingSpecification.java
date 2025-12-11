@@ -11,29 +11,29 @@ import jakarta.persistence.criteria.Predicate;
 public class ListingSpecification {
     public static Specification<ListingEntity> withFilters(OptionsData optionsData) {
         return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> conditionList = new ArrayList<>();
 
-            if (optionsData.getLowerPrice() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("price"), optionsData.getLowerPrice()));
+            if (optionsData.lowerPrice() != null) {
+                conditionList.add(cb.greaterThanOrEqualTo(root.get("price"), optionsData.lowerPrice()));
             }
 
-            if (optionsData.getUpperPrice() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("price"), optionsData.getUpperPrice()));
+            if (optionsData.upperPrice() != null) {
+                conditionList.add(cb.lessThanOrEqualTo(root.get("price"), optionsData.upperPrice()));
             }
 
-            if (optionsData.getCity() != null && !optionsData.getCity().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get("city")), optionsData.getCity().toLowerCase()));
+            if (optionsData.city() != null && !optionsData.city().isEmpty()) {
+                conditionList.add(cb.equal(cb.lower(root.get("city")), optionsData.city().toLowerCase()));
             }
 
-            if (optionsData.getNumberOfStudents() != null) {
-                predicates.add(cb.equal(root.get("numberOfStudents"), optionsData.getNumberOfStudents()));
+            if (optionsData.numberOfStudents() != null) {
+                conditionList.add(cb.equal(root.get("numberOfStudents"), optionsData.numberOfStudents()));
             }
 
-            if (optionsData.getNumberOfRooms() != null) {
-                predicates.add(cb.equal(root.get("numberOfRooms"), optionsData.getNumberOfRooms()));
+            if (optionsData.numberOfRooms() != null) {
+                conditionList.add(cb.equal(root.get("numberOfRooms"), optionsData.numberOfRooms()));
             }
 
-            return cb.and(predicates.toArray(new Predicate[0]));
+            return cb.and(conditionList.toArray(new Predicate[0]));
         };
     }
 }

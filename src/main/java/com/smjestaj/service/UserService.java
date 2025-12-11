@@ -25,19 +25,19 @@ public class UserService {
     private final UserMapper userMapper;
 
     public void register(RegisterData input) {
-        userValidator.validateEmailFormat(input.getEmail());
-        userValidator.validatePassword(input.getPassword(), input.getConfirmPassword());
+        userValidator.validateEmailFormat(input.email());
+        userValidator.validatePassword(input.password(), input.confirmPassword());
 
-        if(userRepository.existsByEmail(input.getEmail())) {
+        if(userRepository.existsByEmail(input.email())) {
             throw new RegisterException("Email already exists!");
         }
 
-        if(userRepository.existsByUsername(input.getUsername())) {
+        if(userRepository.existsByUsername(input.username())) {
             throw new RegisterException("Username already exists!");
         }
 
         UserEntity user = userMapper.registerDataToUserEntity(input);
-        user.setPassword(passwordEncoder.encode(input.getPassword()));
+        user.setPassword(passwordEncoder.encode(input.password()));
         user.setBlocked(false);
 
         userRepository.save(user);
@@ -58,16 +58,16 @@ public class UserService {
     }
 
     public void changeUserRole(ChangeRoleDto changeRoleDto) {
-        UserEntity user = userRepository.findByUsername(changeRoleDto.getUsername())
+        UserEntity user = userRepository.findByUsername(changeRoleDto.username())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-        user.setRole(changeRoleDto.getRole());
+        user.setRole(changeRoleDto.role());
         userRepository.save(user);
     }
 
     public void blockOrUnblockUser(BlockOrUnblockDto blockOrUnblockDto) {
-        UserEntity user = userRepository.findByUsername(blockOrUnblockDto.getUsername())
+        UserEntity user = userRepository.findByUsername(blockOrUnblockDto.username())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-        user.setBlocked(!blockOrUnblockDto.getBlocked());
+        user.setBlocked(!blockOrUnblockDto.blocked());
         userRepository.save(user);
     }
 }

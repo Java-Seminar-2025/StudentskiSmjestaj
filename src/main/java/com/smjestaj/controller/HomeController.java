@@ -1,11 +1,8 @@
 package com.smjestaj.controller;
 
-import com.smjestaj.dto.SafeUserData;
-import com.smjestaj.entity.UserEntity;
 import com.smjestaj.mapper.UserMapper;
 import com.smjestaj.repository.UserRepository;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +18,11 @@ public class HomeController {
 
     @GetMapping("/home")
     public String showHomePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var username = auth.getName();
 
-        UserEntity user = userRepository.findByUsername(username).orElseThrow();
-        SafeUserData userData = userMapper.userEntityToSafeUserData(user);
+        var user = userRepository.findByUsername(username).orElseThrow();
+        var userData = userMapper.userEntityToSafeUserData(user);
 
         model.addAttribute("userData", userData);
         return "home";

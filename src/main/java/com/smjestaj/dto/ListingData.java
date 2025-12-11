@@ -1,23 +1,20 @@
 package com.smjestaj.dto;
 
 import com.smjestaj.enums.*;
-import lombok.*;
-import java.math.BigDecimal;
+import lombok.Builder;
 import java.time.LocalDateTime;
 
-@Data
-@Getter
-@Setter
-public class ListingData {
-    private Long listingId;
-    private String landlordUsername;
-    private String title;
-    private String description;
-    private String address;
-    private String city;
-    private BigDecimal price;
-    private Integer numberOfStudents;
-    private Integer numberOfRooms;
-    private UserGender preferredGender;
-    private LocalDateTime cancellationDeadline;
-}
+@Builder(toBuilder = true)
+public record ListingData (
+    Long listingId,
+    String landlordUsername,
+    String title,
+    String description,
+    String address,
+    String city,
+    Double price,
+    Integer numberOfStudents,
+    Integer numberOfRooms,
+    UserGender preferredGender,
+    LocalDateTime cancellationDeadline
+) {}

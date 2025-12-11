@@ -1,17 +1,16 @@
 package com.smjestaj.dto;
 
 import com.smjestaj.enums.UserRole;
-import lombok.*;
+import lombok.Builder;
 
-@Getter
-@Setter
-public class RegisterData {
-    private String name;
-    private String surname;
-    private String username;
-    private String email;
-    private String password;
-    private String confirmPassword;
-    private UserRole role;
-    private String phoneNumber;
-}
+@Builder
+public record RegisterData (
+    String name,
+    String surname,
+    String username,
+    String email,
+    String password,
+    String confirmPassword,
+    UserRole role,
+    String phoneNumber
+) {}
