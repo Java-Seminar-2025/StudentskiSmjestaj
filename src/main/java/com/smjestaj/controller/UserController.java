@@ -24,12 +24,20 @@ public class UserController {
     @PostMapping("/register")
     public String register(@ModelAttribute RegisterData input) {
         userService.register(input);
-        return "redirect:/user/login";
+        return userService.redirectToCorrectPage(input.username(), input.role());
     }
 
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("loginData", LoginData.builder().build());
         return "login";
+    }
+
+    @GetMapping("/studentDetails")
+    public String showStudentDetailsPage(@RequestParam Long studentId, Model model) {
+        var studentData = StudentData.builder().build();
+        studentData = studentData.toBuilder().studentId(studentId).build();
+        model.addAttribute("studentData", studentData);
+        return "studentDetails";
     }
 }

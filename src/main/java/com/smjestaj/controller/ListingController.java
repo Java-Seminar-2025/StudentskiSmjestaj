@@ -2,6 +2,7 @@ package com.smjestaj.controller;
 
 import com.smjestaj.dto.ListingData;
 import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.PageDto;
 import com.smjestaj.service.ListingService;
 
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,12 @@ public class ListingController {
 
     @PostMapping("/options")
     public String showFilteredListings(@ModelAttribute OptionsData optionsData, Model model) {
-        var listings = listingService.filterListings(optionsData, 0, 10);
+        var pageDto = PageDto.builder().build();
+        pageDto = pageDto.toBuilder().page(1).size(1).build();
+        var listings = listingService.filterListings(optionsData, pageDto);
+        pageDto = pageDto.toBuilder().totalPages(listings.getTotalPages()).build();
         model.addAttribute("listings", listings);
+        model.addAttribute("pageDto", pageDto);
         return "listings";
     }
 
@@ -41,4 +46,21 @@ public class ListingController {
         listingService.createListing(listingData);
         return "redirect:/home";
     }
+
+    @PostMapping("/changePage")
+    public String changePage(@ModelAttribute PageDto pageDto,
+                             @ModelAttribute OptionsData optionsData,
+                             @RequestParam String action,
+                             Model model) {
+
+        pageDto = listingService.changePage(pageDto, action);
+        var listings = listingService.filterListings(optionsData, pageDto);
+
+        model.addAttribute("listings", listings);
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("optionsData", optionsData);
+
+        return "listings";
+    }
+
 }

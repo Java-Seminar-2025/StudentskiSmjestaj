@@ -36,11 +36,20 @@ public class UserService {
             throw new RegisterException("Username already exists!");
         }
 
-        UserEntity user = userMapper.registerDataToUserEntity(input);
+        var user = userMapper.registerDataToUserEntity(input);
         user.setPassword(passwordEncoder.encode(input.password()));
         user.setBlocked(false);
 
         userRepository.save(user);
+    }
+
+    public String redirectToCorrectPage(String username, UserRole role) {
+        if(role.getDisplayName().equals("student")) {
+            var student = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+            return "redirect:/user/studentDetails?studentId=" + student.getId();
+        }
+        return "redirect:/user/login";
     }
 
     public List<SafeUserData> getAllUsers() {

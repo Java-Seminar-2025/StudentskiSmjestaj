@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Details</title>
+</head>
+<body>
+    <form th:action="@{/user/studentDetails}" th:object="${studentData}" method="post">
+        <label for="facultyName">Faculty name:</label><br>
+        <input type="text" id="facultyName" th:field="*{facultyName}" required><br><br>
+
+        <label for="facultyAddress">Faculty address:</label><br>
+        <input type="text" id="facultyAddress" th:field="*{facultyAddress}" required><br><br>
+
+        <label for="facultyCity">Faculty city:</label><br>
+        <input type="text" id="facultyCity" th:field="*{facultyCity}" required><br><br>
+
+        <label for="yearOfStudy">Year of study:</label><br>
+        <input type="text" id="yearOfStudy" th:field="*{yearOfStudy}" required><br><br>
+
+        <label for="gender">Gender:</label><br>
+        <input type="text" id="gender" th:field="*{gender}" required><br><br>
+
+        <input type="hidden" id="studentId" th:field="*{studentId}" th:value="${studentData.studentId}">
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

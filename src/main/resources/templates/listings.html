@@ -34,5 +34,26 @@
             </tr>
         </tbody>
     </table>
+    <form th:action="@{/listings/changePage}" th:object="${pageDto}" method="post">
+        <input type="hidden" name="page" th:value="${pageDto.page}">
+        <input type="hidden" name="size" th:value="${pageDto.size}">
+        <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
+
+        <input type="hidden" name="lowerPrice"  th:value="${optionsData.lowerPrice}">
+        <input type="hidden" name="upperPrice"  th:value="${optionsData.upperPrice}">
+        <input type="hidden" name="city"        th:value="${optionsData.city}">
+        <table>
+            <tr>
+                <td><button type="submit" name="action" value="first"><<</button></td>
+                <td><button type="submit" name="action" value="prev"><</button></td>
+                <td th:text="${pageDto.page} + '/' + ${pageDto.totalPages}"></td>
+                <td><button type="submit" name="action" value="next">></button></td>
+                <td><button type="submit" name="action" value="last">>></button></td>
+            </tr>
+        </table>
+    </form>
+    <form th:action="@{/listings/options}" method="get">
+        <button type="submit">Back to filters</button>
+    </form>
 </body>
 </html>

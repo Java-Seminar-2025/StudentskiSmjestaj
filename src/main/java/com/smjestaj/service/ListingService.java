@@ -2,6 +2,7 @@ package com.smjestaj.service;
 
 import com.smjestaj.dto.ListingData;
 import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.PageDto;
 import com.smjestaj.entity.*;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
@@ -20,8 +21,8 @@ public class ListingService {
     private final UserRepository userRepository;
     private final ListingMapper listingMapper;
 
-    public Page<ListingData> filterListings(OptionsData optionsData, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("price").ascending());
+    public Page<ListingData> filterListings(OptionsData optionsData, PageDto pageDto) {
+        Pageable pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
 
         Page<ListingEntity> listingsPage = listingRepository.findAll(
                 ListingSpecification.withFilters(optionsData),
@@ -48,5 +49,23 @@ public class ListingService {
 
         listing.setLandlord(landlord);
         listingRepository.save(listing);
+    }
+
+    public PageDto changePage(PageDto pageDto, String action) {
+        return switch (action) {
+            case "first" -> (pageDto.page() == 1)
+                    ? pageDto
+                    : pageDto.toBuilder().page(1).build();
+            case "prev" -> (pageDto.page() > 1)
+                    ? pageDto.toBuilder().page(pageDto.page() - 1).build()
+                    : pageDto;
+            case "next" -> (pageDto.page() < pageDto.totalPages())
+                    ? pageDto.toBuilder().page(pageDto.page() + 1).build()
+                    : pageDto;
+            case "last" -> (pageDto.page().equals(pageDto.totalPages()))
+                    ? pageDto
+                    : pageDto.toBuilder().page(pageDto.totalPages()).build();
+            default -> pageDto;
+        };
     }
 }

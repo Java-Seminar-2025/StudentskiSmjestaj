@@ -19,8 +19,8 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             response.sendRedirect("/admin/userList");
-        } else {
-            response.sendRedirect("/home");
+            return;
         }
+        response.sendRedirect("/home");
     }
 }
