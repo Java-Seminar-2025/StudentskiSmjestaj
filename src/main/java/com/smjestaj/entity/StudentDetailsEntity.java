@@ -12,12 +12,11 @@ import lombok.*;
 public class StudentDetailsEntity {
 
     @Id
-    @Column(name = "student_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id", nullable = false)
     private UserEntity student;
 
     @ManyToOne

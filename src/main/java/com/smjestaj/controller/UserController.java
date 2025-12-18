@@ -40,4 +40,10 @@ public class UserController {
         model.addAttribute("studentData", studentData);
         return "studentDetails";
     }
+
+    @PostMapping("/studentDetails")
+    public String addStudentDetails(@ModelAttribute StudentData studentData) {
+        userService.addStudentDetails(studentData);
+        return "redirect:/user/login";
+    }
 }

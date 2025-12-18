@@ -5,10 +5,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.smjestaj.entity.UserEntity;
-import com.smjestaj.repository.UserRepository;
+import com.smjestaj.repository.*;
 import com.smjestaj.dto.*;
 import com.smjestaj.exception.*;
-import com.smjestaj.mapper.UserMapper;
+import com.smjestaj.mapper.*;
 import com.smjestaj.enums.UserRole;
 
 import lombok.*;
@@ -23,6 +23,10 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserValidator userValidator;
     private final UserMapper userMapper;
+    private final FacultyMapper facultyMapper;
+    private final FacultyRepository facultyRepository;
+    private final StudentDetailsMapper studentDetailsMapper;
+    private final StudentDetailsRepository studentDetailsRepository;
 
     public void register(RegisterData input) {
         userValidator.validateEmailFormat(input.email());
@@ -50,6 +54,27 @@ public class UserService {
             return "redirect:/user/studentDetails?studentId=" + student.getId();
         }
         return "redirect:/user/login";
+    }
+
+    public void addStudentDetails(StudentData studentData) {
+        var studentDetails = studentDetailsMapper.studentDataToEntity(studentData);
+
+        var student = userRepository.findById(studentData.studentId())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        studentDetails.setStudent(student);
+
+        if(facultyRepository.findByName(studentData.facultyName()).isEmpty()) {
+            var faculty = facultyMapper.studentDataToFacultyEntity(studentData);
+            facultyRepository.save(faculty);
+            studentDetails.setFaculty(faculty);
+            studentDetailsRepository.save(studentDetails);
+            return;
+        }
+
+        var faculty = facultyRepository.findByName(studentData.facultyName()).
+                orElseThrow();
+        studentDetails.setFaculty(faculty);
+        studentDetailsRepository.save(studentDetails);
     }
 
     public List<SafeUserData> getAllUsers() {

@@ -3,24 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 
 <body>
+<div class="home_page">
     <h2>Student accommodation</h2>
-    <div th:object="${userData}">
-        Name: <span th:text="*{name}"></span><br>
-        Surname: <span th:text="*{surname}"></span><br>
-        Email: <span th:text="*{email}"></span><br>
-        Username: <span th:text="*{username}"></span><br>
-        Role: <span th:text="*{role.displayName}"></span><br>
-        Phone number: <span th:text="*{phoneNumber}"></span><br>
+    <div class="home_listings">
+        <div id="first_listing" th:if="${top3Listings.size() > 0}">
+            <h3 th:text="${top3Listings[0].title}"></h3>
+            <p th:text="${top3Listings[0].description}"></p>
+        </div>
+
+        <div id="second_listing" th:if="${top3Listings.size() > 1}">
+            <h3 th:text="${top3Listings[1].title}"></h3>
+            <p th:text="${top3Listings[1].description}"></p>
+        </div>
+
+        <div id="third_listing" th:if="${top3Listings.size() > 2}">
+            <h3 th:text="${top3Listings[2].title}"></h3>
+            <p th:text="${top3Listings[2].description}"></p>
+        </div>
+    </div>
+    <div class="profile" th:object="${userData}">
+        <span th:text="*{name}"></span> <span th:text="*{surname}"></span><br>
     </div>
     <form th:action="@{/listings/options}" method="get">
         <button type="submit">Search listings</button>
-    </form>
+    </form><br>
     <form th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/create}" method="get">
         <button type="submit">Create listing</button>
     </form>
+</div>
 </body>
-
 </html>

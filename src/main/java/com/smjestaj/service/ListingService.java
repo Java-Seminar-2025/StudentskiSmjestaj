@@ -14,6 +14,8 @@ import org.springframework.data.domain.*;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ListingService {
@@ -49,6 +51,13 @@ public class ListingService {
 
         listing.setLandlord(landlord);
         listingRepository.save(listing);
+    }
+
+    public List<ListingData> getMostRecentListings() {
+        var top3Listings = listingRepository.findTop3ByOrderByIdDesc();
+        return top3Listings.stream()
+                .map(listingMapper::listingEntityToDto)
+                .toList();
     }
 
     public PageDto changePage(PageDto pageDto, String action) {

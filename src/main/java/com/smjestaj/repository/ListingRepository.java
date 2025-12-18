@@ -3,6 +3,8 @@ package com.smjestaj.repository;
 import com.smjestaj.entity.ListingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import java.util.List;
 
 public interface ListingRepository extends JpaRepository<ListingEntity, Long>, JpaSpecificationExecutor<ListingEntity> {
+    List<ListingEntity> findTop3ByOrderByIdDesc();
 }

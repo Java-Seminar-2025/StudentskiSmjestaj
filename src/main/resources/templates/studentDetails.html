@@ -19,9 +19,12 @@
         <input type="text" id="yearOfStudy" th:field="*{yearOfStudy}" required><br><br>
 
         <label for="gender">Gender:</label><br>
-        <input type="text" id="gender" th:field="*{gender}" required><br><br>
+        <select id="gender" th:field="*{gender}">
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+        </select><br><br>
 
-        <input type="hidden" id="studentId" th:field="*{studentId}" th:value="${studentData.studentId}">
+        <input type="hidden" name="studentId" th:value="${studentData.studentId}">
         <button type="submit">Login</button>
     </form>
 </body>
