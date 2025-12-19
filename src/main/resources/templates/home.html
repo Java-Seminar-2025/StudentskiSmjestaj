@@ -11,19 +11,19 @@
 
 <body>
 <div class="home_page">
-    <h2>Student accommodation</h2>
+    <h2>Student accommodation app</h2>
     <div class="home_listings">
-        <div id="first_listing" th:if="${top3Listings.size() > 0}">
+        <div class="listing_card" th:if="${top3Listings.size() > 0}">
             <h3 th:text="${top3Listings[0].title}"></h3>
             <p th:text="${top3Listings[0].description}"></p>
         </div>
 
-        <div id="second_listing" th:if="${top3Listings.size() > 1}">
+        <div class="listing_card" th:if="${top3Listings.size() > 1}">
             <h3 th:text="${top3Listings[1].title}"></h3>
             <p th:text="${top3Listings[1].description}"></p>
         </div>
 
-        <div id="third_listing" th:if="${top3Listings.size() > 2}">
+        <div class="listing_card" th:if="${top3Listings.size() > 2}">
             <h3 th:text="${top3Listings[2].title}"></h3>
             <p th:text="${top3Listings[2].description}"></p>
         </div>
