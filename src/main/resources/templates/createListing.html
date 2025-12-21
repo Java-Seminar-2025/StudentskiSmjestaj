@@ -9,12 +9,12 @@
     <link rel="stylesheet" th:href="@{/css/forms.css}">
 </head>
 <body>
-    <div class="card">
-        <div class="header" id="create_listing_header">
+    <div class="card" id="two_columns_card">
+        <div class="header" id="purple_header">
             <h2>Create listing</h2>
         </div>
 
-        <form class="form" id="create_listing_form" th:action="@{/listings/create}" th:object="${listingData}" method="post">
+        <form class="form form--grid" id="purple_form" th:action="@{/listings/create}" th:object="${listingData}" method="post">
             <div class="form_field">
                 <label for="title">Title:</label>
                 <input type="text" id="title" th:field="*{title}" required>

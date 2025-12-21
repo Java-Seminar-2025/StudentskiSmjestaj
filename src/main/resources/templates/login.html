@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="card">
-        <div class="header" id="auth_header">
+        <div class="header">
             <h2>User Login</h2>
         </div>
 
@@ -18,7 +18,7 @@
             Wrong username and/or password!
         </div>
 
-        <form class="form" id="auth_form" th:action="@{/user/login}" th:object="${loginData}" method="post">
+        <form class="form form--single" th:action="@{/user/login}" th:object="${loginData}" method="post">
             <div class="form_field">
                 <label for="username">Username:</label>
                 <input type="text" id="username" th:field="*{username}" required>

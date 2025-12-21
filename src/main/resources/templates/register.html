@@ -11,7 +11,7 @@
 
 <body>
     <div class="card">
-        <div class="header" id="auth_header">
+        <div class="header">
             <h2>User Registration</h2>
         </div>
 
@@ -19,7 +19,7 @@
             <span th:text="${errorMessage}"></span>
         </div>
 
-        <form class="form" id="auth_form" th:action="@{/user/register}" th:object="${registerData}" method="post">
+        <form class="form form--single" th:action="@{/user/register}" th:object="${registerData}" method="post">
             <div class="form_field">
                 <label for="name">Name:</label>
                 <input type="text" id="name" th:field="*{name}" required>

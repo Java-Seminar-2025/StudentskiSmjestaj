@@ -26,7 +26,7 @@ public class ListingController {
     @PostMapping("/options")
     public String showFilteredListings(@ModelAttribute OptionsData optionsData, Model model) {
         var pageDto = PageDto.builder().build();
-        pageDto = pageDto.toBuilder().page(1).size(1).build();
+        pageDto = pageDto.toBuilder().page(1).size(10).build();
         var listings = listingService.filterListings(optionsData, pageDto);
         pageDto = pageDto.toBuilder().totalPages(listings.getTotalPages()).build();
         model.addAttribute("listings", listings);

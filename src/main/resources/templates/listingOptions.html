@@ -10,11 +10,11 @@
 </head>
 <body>
     <div class="card">
-        <div class="header" id="filter_header">
+        <div class="header" id="green_header">
             <h2>Search filters</h2>
         </div>
 
-        <form class="form" id="filter_form" th:action="@{/listings/options}" th:object="${optionsData}" method="post">
+        <form class="form form--single" id="green_form" th:action="@{/listings/options}" th:object="${optionsData}" method="post">
             <div class="form_field">
                 <label for="lowerPrice">Lower price:</label>
                 <input type="number" id="lowerPrice" th:field="*{lowerPrice}">

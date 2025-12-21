@@ -78,17 +78,17 @@ public class UserService {
     }
 
     public List<SafeUserData> getAllUsers() {
-        List<UserEntity> users = userRepository.findAll();
+        List<UserEntity> users = userRepository.findAllByOrderByIdAsc();
         return users.stream()
                 .map(userMapper::userEntityToSafeUserData)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<SafeUserData> getAllUsersWithRole(UserRole role) {
         List<UserEntity> usersWithRole = userRepository.findAllByRole(role);
         return usersWithRole.stream()
                 .map(userMapper::userEntityToSafeUserData)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public void changeUserRole(ChangeRoleDto changeRoleDto) {

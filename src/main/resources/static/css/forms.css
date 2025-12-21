@@ -22,52 +22,61 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
+#two_columns_card {
+    width: 700px;
+}
+
 /* BOJA POZADINE NASLOVA (HEADERA) */
 .header {
     width: 100%;
     padding: 16px;
     text-align: center;
     border-radius: 12px 12px 0 0;
-}
-
-#auth_header {
     background-color: #2563eb;
 }
 
-#filter_header {
+#green_header {
     background-color: #065f46;
 }
 
-#create_listing_header {
+#purple_header {
     background-color: #4c1d95;
 }
 
 /* BOJA TEKSTA NASLOVA */
-h2 {
+.header h2 {
     margin: 0;
     font-size: 24px;
     font-weight: 500;
-}
-
-#auth_header h2 {
     color: white;
 }
 
-#filter_header h2 {
+#green_header h2 {
     color: #ecfdf5;
 }
 
-#create_listing_header h2 {
+#purple_header h2 {
     color: #f5f3ff;
 }
 
 /* FORME */
 .form {
     padding: 24px;
+}
+
+.form--single {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
+}
+
+.form--grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    row-gap: 16px;
+    justify-items: center;
 }
 
 .form_field {
@@ -103,8 +112,7 @@ label {
 }
 
 /* BOTUNI */
-button {
-    width: 100%;
+.form button {
     height: 35px;
     font-size: 18px;
     border: none;
@@ -112,37 +120,42 @@ button {
     cursor: pointer;
     transition: background-color 0.2s ease;
     margin-top: 12px;
-    width: 250px;
     padding: 4px 8px;
     box-sizing: border-box;
-}
-
-/* POZADINE BOTUNA */
-#auth_form button {
     background-color: #2563eb;
     color: white;
 }
 
-#filter_form button {
+.form--single button {
+    width: 100%;
+}
+
+.form--grid button {
+    grid-column: span 2;
+    width: 50%;
+}
+
+/* POZADINE BOTUNA */
+#green_form button {
     background-color: #065f46;
     color: #ecfdf5;
 }
 
-#create_listing_form button {
+#purple_form button {
     background-color: #4c1d95;
     color: #f5f3ff;
 }
 
 /* HOVER BOTUNA */
-#auth_form button:hover {
+.form button:hover {
     background-color: #1e40af;
 }
 
-#filter_form button:hover {
+#green_form button:hover {
     background-color: #047857;
 }
 
-#create_listing_form button:hover {
+#purple_form button:hover {
     background-color: #5b21b6;
 }
 

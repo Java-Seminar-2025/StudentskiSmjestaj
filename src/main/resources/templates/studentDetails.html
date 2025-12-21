@@ -3,29 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Student Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/forms.css}">
 </head>
 <body>
-    <form th:action="@{/user/studentDetails}" th:object="${studentData}" method="post">
-        <label for="facultyName">Faculty name:</label><br>
-        <input type="text" id="facultyName" th:field="*{facultyName}" required><br><br>
+    <div class="card">
+        <div class="header" id="green_header">
+            <h2>Student Details</h2>
+        </div>
 
-        <label for="facultyAddress">Faculty address:</label><br>
-        <input type="text" id="facultyAddress" th:field="*{facultyAddress}" required><br><br>
+        <form class="form form--single" id="green_form" th:action="@{/user/studentDetails}" th:object="${studentData}" method="post">
+            <div class="form_field">
+                <label for="facultyName">Faculty name:</label>
+                <input type="text" id="facultyName" th:field="*{facultyName}" required>
+            </div>
 
-        <label for="facultyCity">Faculty city:</label><br>
-        <input type="text" id="facultyCity" th:field="*{facultyCity}" required><br><br>
+            <div class="form_field">
+                <label for="facultyAddress">Faculty address:</label>
+                <input type="text" id="facultyAddress" th:field="*{facultyAddress}" required>
+            </div>
 
-        <label for="yearOfStudy">Year of study:</label><br>
-        <input type="text" id="yearOfStudy" th:field="*{yearOfStudy}" required><br><br>
+            <div class="form_field">
+                <label for="facultyCity">Faculty city:</label>
+                <input type="text" id="facultyCity" th:field="*{facultyCity}" required>
+            </div>
 
-        <label for="gender">Gender:</label><br>
-        <select id="gender" th:field="*{gender}">
-            <option value="MALE">Male</option>
-            <option value="FEMALE">Female</option>
-        </select><br><br>
+            <div class="form_field">
+                <label for="yearOfStudy">Year of study:</label>
+                <input type="text" id="yearOfStudy" th:field="*{yearOfStudy}" required>
+            </div>
 
-        <input type="hidden" name="studentId" th:value="${studentData.studentId}">
-        <button type="submit">Login</button>
-    </form>
+            <div class="form_field">
+                <label for="gender">Gender:</label>
+                <select id="gender" th:field="*{gender}">
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                </select>
+            </div>
+
+            <div class="form_field">
+                <input type="hidden" name="studentId" th:value="${studentData.studentId}">
+            </div>
+
+            <button type="submit">Proceed to login</button>
+        </form>
+    </div>
 </body>
 </html>
