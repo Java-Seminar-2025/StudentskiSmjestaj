@@ -24,9 +24,9 @@ public class ListingService {
     private final ListingMapper listingMapper;
 
     public Page<ListingData> filterListings(OptionsData optionsData, PageDto pageDto) {
-        Pageable pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
+        var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
 
-        Page<ListingEntity> listingsPage = listingRepository.findAll(
+        var listingsPage = listingRepository.findAll(
                 ListingSpecification.withFilters(optionsData),
                 pageable
         );
@@ -43,14 +43,15 @@ public class ListingService {
         return listingData;
     }
 
-    public void createListing(ListingData listingData) {
+    public String createListing(ListingData listingData) {
         var landlord = userRepository.findByUsername(listingData.landlordUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
         var listing = listingMapper.listingDtoToEntity(listingData);
-
         listing.setLandlord(landlord);
+
         listingRepository.save(listing);
+        return "redirect:/listingRooms/create?listingId=" + listing.getId();
     }
 
     public List<ListingData> getMostRecentListings() {

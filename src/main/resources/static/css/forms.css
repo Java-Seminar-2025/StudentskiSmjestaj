@@ -26,7 +26,26 @@ body {
     width: 700px;
 }
 
-/* BOJA POZADINE NASLOVA (HEADERA) */
+/* NASLOV STRANICE (PAGE HEADER) */
+.page_header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #4c1d95;
+    padding: 16px 0;
+    text-align: center;
+    z-index: 1000;
+}
+
+.page_header h2 {
+    margin: 0;
+    color: #f5f3ff;
+    font-size: 26px;
+    font-weight: 500;
+}
+
+/* BOJA POZADINE NASLOVA KARTICE (HEADERA) */
 .header {
     width: 100%;
     padding: 16px;

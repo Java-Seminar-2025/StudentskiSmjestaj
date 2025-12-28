@@ -32,18 +32,4 @@ public class UserController {
         model.addAttribute("loginData", LoginData.builder().build());
         return "login";
     }
-
-    @GetMapping("/studentDetails")
-    public String showStudentDetailsPage(@RequestParam Long studentId, Model model) {
-        var studentData = StudentData.builder().build();
-        studentData = studentData.toBuilder().studentId(studentId).build();
-        model.addAttribute("studentData", studentData);
-        return "studentDetails";
-    }
-
-    @PostMapping("/studentDetails")
-    public String addStudentDetails(@ModelAttribute StudentData studentData) {
-        userService.addStudentDetails(studentData);
-        return "redirect:/user/login";
-    }
 }

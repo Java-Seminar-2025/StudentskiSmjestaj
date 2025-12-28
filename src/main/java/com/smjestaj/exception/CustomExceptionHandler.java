@@ -13,5 +13,12 @@ public class CustomExceptionHandler {
         model.addAttribute("registerData", RegisterData.builder().build());
         return "register";
     }
+
+    @ExceptionHandler(ListingNotFoundException.class)
+    public String handleListingNotFoundException(ListingNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        model.addAttribute("listingData", ListingData.builder().build());
+        return "createListing";
+    }
 }
 

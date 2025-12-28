@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -19,7 +18,7 @@ public class AdminController {
 
     @GetMapping("/userList")
     public String showUserList(Model model) {
-        List<SafeUserData> users = userService.getAllUsers();
+        var users = userService.getAllUsers();
         model.addAttribute("users", users);
         model.addAttribute("changeRoleDto", ChangeRoleDto.builder().build());
         model.addAttribute("blockOrUnblockDto", BlockOrUnblockDto.builder().build());
@@ -28,7 +27,7 @@ public class AdminController {
 
     @GetMapping("/studentList")
     public String showStudentList(Model model) {
-        List<SafeUserData> students = userService.getAllUsersWithRole(UserRole.STUDENT);
+        var students = userService.getAllUsersWithRole(UserRole.STUDENT);
         model.addAttribute("students", students);
         model.addAttribute("changeRoleDto", ChangeRoleDto.builder().build());
         model.addAttribute("blockOrUnblockDto", BlockOrUnblockDto.builder().build());
@@ -37,14 +36,14 @@ public class AdminController {
 /*
     @GetMapping("/landlordList")
     public String showLandlordList(Model model) {
-        List<SafeUserData> landlords = userService.getAllUsersWithRole(UserRole.LANDLORD);
+        var landlords = userService.getAllUsersWithRole(UserRole.LANDLORD);
         model.addAttribute("landlords", landlords);
         return "landlordList";
     }
 
     @GetMapping("/adminList")
     public String showAdminList(Model model) {
-        List<SafeUserData> admins = userService.getAllUsersWithRole(UserRole.ADMIN);
+        var admins = userService.getAllUsersWithRole(UserRole.ADMIN);
         model.addAttribute("admins", admins);
         return "adminList";
     }

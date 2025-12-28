@@ -27,8 +27,10 @@ public class ListingController {
     public String showFilteredListings(@ModelAttribute OptionsData optionsData, Model model) {
         var pageDto = PageDto.builder().build();
         pageDto = pageDto.toBuilder().page(1).size(10).build();
+
         var listings = listingService.filterListings(optionsData, pageDto);
         pageDto = pageDto.toBuilder().totalPages(listings.getTotalPages()).build();
+
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         return "listings";
@@ -43,8 +45,7 @@ public class ListingController {
 
     @PostMapping("/create")
     public String createListing(@ModelAttribute ListingData listingData) {
-        listingService.createListing(listingData);
-        return "redirect:/home";
+        return listingService.createListing(listingData);
     }
 
     @PostMapping("/changePage")

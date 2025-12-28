@@ -3,7 +3,6 @@ package com.smjestaj.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -23,7 +22,7 @@ public class ListingRoomEntity {
     private ListingEntity listing;
 
     @Column(name = "room_price", nullable = false)
-    private BigDecimal roomPrice;
+    private Double roomPrice;
 
     @Column(nullable = false)
     private Integer capacity;
