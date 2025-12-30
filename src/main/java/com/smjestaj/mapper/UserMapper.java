@@ -9,7 +9,6 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     UserEntity registerDataToUserEntity(RegisterData input);
 
-    @Mapping(target = "blocked", source = "blocked")
     SafeUserData userEntityToSafeUserData(UserEntity user);
 }
 

@@ -9,6 +9,15 @@ body {
 }
 
 /* KARTICE */
+.cards-grid {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
 .card {
     width: 350px;
     padding: 0;
@@ -106,19 +115,32 @@ body {
     align-items: flex-start;
 }
 
+.form_field--span2 {
+    grid-column: span 2;
+}
+
 .form_error {
     margin-top: 12px;
 }
 
-/* INPUTI */
-input, select {
-    width: 250px;
-    height: 30px;
+/* INPUT, SELECT, TEXTAREA */
+input, select, textarea {
     font-size: 18px;
     padding: 4px 8px;
     box-sizing: border-box;
     border: 1px solid #d1d5db;
     border-radius: 6px;
+}
+
+input, select {
+    width: 250px;
+    height: 30px;
+}
+
+textarea {
+    width: 100%;
+    resize: vertical;
+    font-family: "Roboto", Arial, sans-serif;
 }
 
 input:focus, select:focus {
@@ -143,6 +165,7 @@ label {
     box-sizing: border-box;
     background-color: #2563eb;
     color: white;
+    max-width: 250px;
 }
 
 .form--single button {

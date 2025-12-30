@@ -13,22 +13,26 @@
         <h2>Create rooms</h2>
     </div>
 
-    <form class="form" id="purple_form" th:action="@{/listingRooms/create}" th:object="${allRoomsData}" method="post">
+    <form class="form form--single" id="purple_form" th:action="@{/listingRooms/create}" th:object="${allRoomsData}" method="post">
         <input type="hidden" id="listingId" th:field="*{listingId}" />
 
-        <div class="card" th:each="i : ${#numbers.sequence(0, allRoomsData.numberOfRooms - 1)}">
-            <div class="header" id="purple_header">
-                <h2>Room <span th:text="${i + 1}"></span></h2>
-            </div>
+        <div class="cards-grid">
+            <div class="card" th:each="i : ${#numbers.sequence(0, allRoomsData.numberOfRooms - 1)}">
+                <div class="header" id="purple_header">
+                    <h2>Room <span th:text="${i + 1}"></span></h2>
+                </div>
 
-            <div class="form_field">
-                <label for="roomPrice">Price:</label>
-                <input type="number" id="roomPrice" th:field="*{rooms[__${i}__].roomPrice}" required>
-            </div>
+                <div class="form form--single">
+                    <div class="form_field">
+                        <label for="roomPrice">Price:</label>
+                        <input type="number" id="roomPrice" th:field="*{rooms[__${i}__].roomPrice}" required>
+                    </div>
 
-            <div class="form_field">
-                <label for="capacity">Capacity:</label>
-                <input type="number" id="capacity" th:field="*{rooms[__${i}__].capacity}" required>
+                    <div class="form_field">
+                        <label for="capacity">Capacity:</label>
+                        <input type="number" id="capacity" th:field="*{rooms[__${i}__].capacity}" required>
+                    </div>
+                </div>
             </div>
         </div>
 
