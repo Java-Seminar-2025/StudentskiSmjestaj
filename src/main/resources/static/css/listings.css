@@ -34,6 +34,10 @@ button {
     margin-top: 15px;
     display: flex;
     flex-direction: column;
+    /*
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    */
     gap: 24px;
     padding: 0 24px;
 }
@@ -59,7 +63,7 @@ button {
     font-weight: 500;
 }
 
-/* UNUTAR KARTICE */
+/* OBLIK OGLASA (TIJELO, OPIS, GRID S PODACIMA) */
 
 .listing_body {
     padding: 20px;
@@ -75,12 +79,33 @@ button {
 
 .listing_grid {
     display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* PODACI O OGLASU */
+
+.listing_data {
+    grid-column: span 2;
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px 24px;
 }
 
-.listing_grid strong {
+.listing_data strong {
     color: #1f2933;
+}
+
+/* BOTUNI ZA SVAKI OGLAS */
+
+.listing_actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 /* PAGINACIJA */
@@ -102,28 +127,39 @@ button {
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* BOTUNI S JEDNOM STRELICOM */
-.page_btn.single {
+.page_btn:active {
+    transform: scale(0.96);
+}
+
+/* ZELENI BOTUNI */
+.page_btn.single, .reservation_btn {
     background-color: #065f46;
     color: #ecfdf5;
 }
 
-.page_btn.single:hover {
+.page_btn.single:hover, .reservation_btn:hover {
     background-color: #047857;
 }
 
-/* BOTUNI S DVIJE STRELICE */
-.page_btn.double {
+/* LJUBIČASTI BOTUNI */
+.page_btn.double, .favorite_btn {
     background-color: #4c1d95;
     color: #f5f3ff;
 }
 
-.page_btn.double:hover {
+.page_btn.double:hover, .favorite_btn:hover {
     background-color: #5b21b6;
 }
 
-.page_btn:active {
-    transform: scale(0.96);
+/* BOTUNI KOJI NISU ZA MIJENJANJE STRANICE */
+
+.favorite_btn, .reservation_btn {
+    width: 200px;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 /* BROJ STRANICE */

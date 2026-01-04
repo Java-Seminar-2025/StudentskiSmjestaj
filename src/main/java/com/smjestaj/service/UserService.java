@@ -49,6 +49,11 @@ public class UserService {
         return "redirect:/user/login";
     }
 
+    public SafeUserData getUserData(String username) {
+        var user = userRepository.findByUsername(username).orElseThrow();
+        return userMapper.userEntityToSafeUserData(user);
+    }
+
     public List<SafeUserData> getAllUsers() {
         var users = userRepository.findAllByOrderByIdAsc();
         return users.stream()

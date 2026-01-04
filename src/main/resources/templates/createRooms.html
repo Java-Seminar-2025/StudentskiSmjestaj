@@ -14,7 +14,7 @@
     </div>
 
     <form class="form form--single" id="purple_form" th:action="@{/listingRooms/create}" th:object="${allRoomsData}" method="post">
-        <input type="hidden" id="listingId" th:field="*{listingId}" />
+        <input type="hidden" id="listingId" th:field="*{listingId}">
 
         <div class="cards-grid">
             <div class="card" th:each="i : ${#numbers.sequence(0, allRoomsData.numberOfRooms - 1)}">

@@ -22,6 +22,7 @@ public class ListingService {
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
     private final ListingMapper listingMapper;
+    private final HomeService homeService;
 
     public Page<ListingData> filterListings(OptionsData optionsData, PageDto pageDto) {
         var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
@@ -35,11 +36,8 @@ public class ListingService {
     }
 
     public ListingData prepareNewListing() {
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        var username = auth.getName();
-
         var listingData = ListingData.builder().build();
-        listingData = listingData.toBuilder().landlordUsername(username).build();
+        listingData = listingData.toBuilder().landlordUsername(homeService.getLoggedInUser()).build();
         return listingData;
     }
 
