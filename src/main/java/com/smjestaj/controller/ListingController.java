@@ -3,6 +3,7 @@ package com.smjestaj.controller;
 import com.smjestaj.dto.ListingData;
 import com.smjestaj.dto.OptionsData;
 import com.smjestaj.dto.PageDto;
+import com.smjestaj.service.FavoriteService;
 import com.smjestaj.service.ListingService;
 
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ListingController {
     private final ListingService listingService;
+    private final FavoriteService favoriteService;
 
     @GetMapping("/options")
     public String showListingOptions(Model model) {
@@ -31,8 +33,11 @@ public class ListingController {
         var listings = listingService.filterListings(optionsData, pageDto);
         pageDto = pageDto.toBuilder().totalPages(listings.getTotalPages()).build();
 
+        var favorites = favoriteService.findAllFavoritesOfUser();
+
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
+        model.addAttribute("favorites", favorites);
         return "listings";
     }
 
@@ -56,10 +61,12 @@ public class ListingController {
 
         pageDto = listingService.changePage(pageDto, action);
         var listings = listingService.filterListings(optionsData, pageDto);
+        var favorites = favoriteService.findAllFavoritesOfUser();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("optionsData", optionsData);
+        model.addAttribute("favorites", favorites);
 
         return "listings";
     }

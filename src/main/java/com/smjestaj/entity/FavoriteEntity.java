@@ -22,4 +22,7 @@ public class FavoriteEntity {
     @ManyToOne
     @JoinColumn(name = "listing_id", nullable = false)
     private ListingEntity listing;
+
+    @Column(name = "is_saved", nullable = false)
+    private Boolean saved;
 }

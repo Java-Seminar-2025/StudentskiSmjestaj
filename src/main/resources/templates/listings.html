@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="listing_actions">
-                        <form th:action="@{/favorites/add}" method="post">
+                        <form th:object="${favorites}" method="post">
                             <input type="hidden" name="listingId" th:value="${listing.listingId}">
 
                             <input type="hidden" name="page" th:value="${pageDto.page}">
@@ -70,7 +70,19 @@
                             <input type="hidden" name="numberOfStudents" th:value="${optionsData.numberOfStudents}">
                             <input type="hidden" name="numberOfRooms" th:value="${optionsData.numberOfRooms}">
 
-                            <button type="submit" class="favorite_btn">Favorite</button>
+                            <button th:if="${!favorites.contains(listing.listingId)}"
+                                    type="submit"
+                                    formaction="/favorites/add"
+                                    class="favorite_btn">
+                                Favorite
+                            </button>
+
+                            <button th:if="${favorites.contains(listing.listingId)}"
+                                    type="submit"
+                                    formaction="/favorites/remove"
+                                    class="unfavorite_btn">
+                                Unfavorite
+                            </button>
                         </form>
                     </div>
                 </div>

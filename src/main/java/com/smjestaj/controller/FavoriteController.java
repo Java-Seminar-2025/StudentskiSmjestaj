@@ -26,11 +26,31 @@ public class FavoriteController {
 
         favoriteService.addFavorite(listingId);
 
+        var favorites = favoriteService.findAllFavoritesOfUser();
         var listings = listingService.filterListings(optionsData, pageDto);
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("optionsData", optionsData);
+        model.addAttribute("favorites", favorites);
+        return "listings";
+    }
+
+    @PostMapping("/remove")
+    public String removeFavorite(@ModelAttribute PageDto pageDto,
+                                 @ModelAttribute OptionsData optionsData,
+                                 @RequestParam Long listingId,
+                                 Model model) {
+
+        favoriteService.removeFavorite(listingId);
+
+        var favorites = favoriteService.findAllFavoritesOfUser();
+        var listings = listingService.filterListings(optionsData, pageDto);
+
+        model.addAttribute("listings", listings);
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("favorites", favorites);
         return "listings";
     }
 }

@@ -151,9 +151,19 @@ button {
     background-color: #5b21b6;
 }
 
+/* SIVI BOTUN (UNFAVORITE) */
+.unfavorite_btn {
+    background-color: #6b7280;
+    color: #f9fafb;
+}
+
+.unfavorite_btn:hover {
+    background-color: #4b5563;
+}
+
 /* BOTUNI KOJI NISU ZA MIJENJANJE STRANICE */
 
-.favorite_btn, .reservation_btn {
+.favorite_btn, .unfavorite_btn, .reservation_btn {
     width: 200px;
     border: none;
     border-radius: 6px;
