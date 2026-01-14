@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My listings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/listings.css}">
+</head>
+
+<body>
+<div class="page_header">
+    <h2>My listings</h2>
+</div>
+
+<form class="pagination pagination_top" th:action="@{/listings/changeMyListingsPage}" th:object="${pageDto}" method="post">
+    <input type="hidden" name="page" th:value="${pageDto.page}">
+    <input type="hidden" name="size" th:value="${pageDto.size}">
+    <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
+
+    <button class="page_btn double" type="submit" name="action" value="first">«</button>
+    <button class="page_btn single" type="submit" name="action" value="prev">‹</button>
+
+    <span class="page_info" th:text="${pageDto.page} + ' / ' + ${pageDto.totalPages}"></span>
+
+    <button class="page_btn single" type="submit" name="action" value="next">›</button>
+    <button class="page_btn double" type="submit" name="action" value="last">»</button>
+</form>
+
+<div class="listings_container">
+    <div class="listing_card" th:each="listing : ${myListings}">
+        <div class="listing_header">
+            <h3 th:text="${listing.title}"></h3>
+        </div>
+
+        <div class="listing_body">
+            <p class="description" th:text="${listing.description}"></p>
+
+            <div class="listing_grid">
+                <div class="listing_data">
+                    <div><strong>Landlord:</strong> <span th:text="${listing.landlordUsername}"></span></div>
+                    <div><strong>Number of students:</strong> <span th:text="${listing.numberOfStudents}"></span></div>
+                    <div><strong>Address:</strong> <span th:text="${listing.address}"></span></div>
+                    <div><strong>Number of rooms:</strong> <span th:text="${listing.numberOfRooms}"></span></div>
+                    <div><strong>City:</strong> <span th:text="${listing.city}"></span></div>
+                    <div><strong>Preferred gender:</strong> <span th:text="${listing.preferredGender?.displayName}"></span></div>
+                    <div><strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(listing.price, 1, 2)}"></span></div>
+                    <div><strong>Cancellation deadline:</strong>
+                        <span th:text="${#temporals.format(listing.cancellationDeadline, 'dd.MM.yyyy. HH:mm')}"></span>
+                    </div>
+                </div>
+                <div class="listing_actions">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

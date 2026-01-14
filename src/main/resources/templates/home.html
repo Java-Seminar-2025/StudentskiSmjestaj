@@ -12,31 +12,82 @@
 <body>
 <div class="home_page">
     <h2>Student accommodation app</h2>
+
     <div class="home_listings">
         <div class="listing_card" th:if="${top3Listings.size() > 0}">
             <h3 th:text="${top3Listings[0].title}"></h3>
             <p th:text="${top3Listings[0].description}"></p>
+            <div><strong>Landlord:</strong> <span th:text="${top3Listings[0].landlordUsername}"></span></div>
+            <div><strong>Address:</strong> <span th:text="${top3Listings[0].address}"></span></div>
+            <div><strong>City:</strong> <span th:text="${top3Listings[0].city}"></span></div>
+            <div>
+                <strong>Price:</strong>
+                <span>€</span><span th:text="${#numbers.formatDecimal(top3Listings[0].price, 1, 2)}"></span>
+            </div>
+            <div><strong>Number of students:</strong> <span th:text="${top3Listings[0].numberOfStudents}"></span></div>
+            <div><strong>Number of rooms:</strong> <span th:text="${top3Listings[0].numberOfRooms}"></span></div>
+            <div><strong>Preferred gender:</strong> <span th:text="${top3Listings[0].preferredGender?.displayName}"></span></div>
+            <div class="last_line"><strong>Cancellation deadline:</strong>
+                <span th:text="${#temporals.format(top3Listings[0].cancellationDeadline, 'dd.MM.yyyy. HH:mm')}">
+                </span>
+            </div>
         </div>
 
         <div class="listing_card" th:if="${top3Listings.size() > 1}">
             <h3 th:text="${top3Listings[1].title}"></h3>
             <p th:text="${top3Listings[1].description}"></p>
+            <div><strong>Landlord:</strong> <span th:text="${top3Listings[1].landlordUsername}"></span></div>
+            <div><strong>Address:</strong> <span th:text="${top3Listings[1].address}"></span></div>
+            <div><strong>City:</strong> <span th:text="${top3Listings[1].city}"></span></div>
+            <div>
+                <strong>Price:</strong>
+                <span>€</span><span th:text="${#numbers.formatDecimal(top3Listings[1].price, 1, 2)}"></span>
+            </div>
+            <div><strong>Number of students:</strong> <span th:text="${top3Listings[1].numberOfStudents}"></span></div>
+            <div><strong>Number of rooms:</strong> <span th:text="${top3Listings[1].numberOfRooms}"></span></div>
+            <div><strong>Preferred gender:</strong> <span th:text="${top3Listings[1].preferredGender?.displayName}"></span></div>
+            <div class="last_line"><strong>Cancellation deadline:</strong>
+                <span th:text="${#temporals.format(top3Listings[1].cancellationDeadline, 'dd.MM.yyyy. HH:mm')}">
+                </span>
+            </div>
         </div>
 
         <div class="listing_card" th:if="${top3Listings.size() > 2}">
             <h3 th:text="${top3Listings[2].title}"></h3>
             <p th:text="${top3Listings[2].description}"></p>
+            <div><strong>Landlord:</strong> <span th:text="${top3Listings[2].landlordUsername}"></span></div>
+            <div><strong>Address:</strong> <span th:text="${top3Listings[2].address}"></span></div>
+            <div><strong>City:</strong> <span th:text="${top3Listings[2].city}"></span></div>
+            <div>
+                <strong>Price:</strong>
+                <span>€</span><span th:text="${#numbers.formatDecimal(top3Listings[2].price, 1, 2)}"></span>
+            </div>
+            <div><strong>Number of students:</strong> <span th:text="${top3Listings[2].numberOfStudents}"></span></div>
+            <div><strong>Number of rooms:</strong> <span th:text="${top3Listings[2].numberOfRooms}"></span></div>
+            <div><strong>Preferred gender:</strong> <span th:text="${top3Listings[2].preferredGender?.displayName}"></span></div>
+            <div class="last_line"><strong>Cancellation deadline:</strong>
+                <span th:text="${#temporals.format(top3Listings[2].cancellationDeadline, 'dd.MM.yyyy. HH:mm')}">
+                </span>
+            </div>
         </div>
     </div>
+
     <div class="profile" th:object="${userData}">
         <span th:text="*{name}"></span> <span th:text="*{surname}"></span><br>
     </div>
-    <form th:action="@{/listings/options}" method="get">
-        <button type="submit">Search listings</button>
-    </form><br>
-    <form th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/create}" method="get">
-        <button type="submit">Create listing</button>
-    </form>
+
+    <div class="listing_actions">
+        <form id="green_form" th:action="@{/listings/options}" method="get">
+            <button type="submit">Search listings</button>
+        </form>
+        <form id="purple_form" th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/create}" method="get">
+            <button type="submit">Create listing</button>
+        </form>
+        <form th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/myListings}" method="post">
+            <input type="hidden" name="username" th:value="${userData.username}">
+            <button type="submit">My listings</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

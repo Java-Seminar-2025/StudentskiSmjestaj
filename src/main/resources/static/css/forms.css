@@ -8,16 +8,18 @@ body {
     font-size: 18px;
 }
 
-/* KARTICE */
+/* GRID KARTICA ZA SOBE */
 .cards-grid {
     margin-top: 70px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 32px;
     justify-content: center;
     margin-bottom: 32px;
+    max-width: 1200px;
 }
 
+/* KARTICE */
 .card {
     width: 350px;
     padding: 0;
@@ -130,6 +132,7 @@ input, select, textarea {
     box-sizing: border-box;
     border: 1px solid #d1d5db;
     border-radius: 6px;
+    font-family: "Roboto", Arial, sans-serif;
 }
 
 input, select {
@@ -140,7 +143,6 @@ input, select {
 textarea {
     width: 100%;
     resize: vertical;
-    font-family: "Roboto", Arial, sans-serif;
 }
 
 input:focus, select:focus {

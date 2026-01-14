@@ -7,7 +7,6 @@ import com.smjestaj.entity.*;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.*;
@@ -29,10 +28,18 @@ public class ListingService {
 
         var listingsPage = listingRepository.findAll(
                 ListingSpecification.withFilters(optionsData),
-                pageable
-        );
+                pageable);
 
         return listingsPage.map(listingMapper::listingEntityToDto);
+    }
+
+    public Page<ListingData> findMyListings(PageDto pageDto) {
+        var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("id").ascending());
+        var landlord = userRepository.findByUsername(homeService.getLoggedInUser())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+
+        var myListingsPage = listingRepository.findAllByLandlord(landlord, pageable);
+        return myListingsPage.map(listingMapper::listingEntityToDto);
     }
 
     public ListingData prepareNewListing() {

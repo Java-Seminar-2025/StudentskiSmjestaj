@@ -54,10 +54,10 @@ public class ListingController {
     }
 
     @PostMapping("/changePage")
-    public String changePage(@ModelAttribute PageDto pageDto,
-                             @ModelAttribute OptionsData optionsData,
-                             @RequestParam String action,
-                             Model model) {
+    public String changeListingsPage(@ModelAttribute PageDto pageDto,
+                                     @ModelAttribute OptionsData optionsData,
+                                     @RequestParam String action,
+                                     Model model) {
 
         pageDto = listingService.changePage(pageDto, action);
         var listings = listingService.filterListings(optionsData, pageDto);
@@ -71,4 +71,31 @@ public class ListingController {
         return "listings";
     }
 
+    @PostMapping("/myListings")
+    public String showMyListingsPage(Model model) {
+        var pageDto = PageDto.builder().build();
+        pageDto = pageDto.toBuilder().page(1).size(10).build();
+
+        var myListings = listingService.findMyListings(pageDto);
+        pageDto = pageDto.toBuilder().totalPages(myListings.getTotalPages()).build();
+
+        model.addAttribute("myListings", myListings);
+        model.addAttribute("pageDto", pageDto);
+
+        return "myListings";
+    }
+
+    @PostMapping("/changeMyListingsPage")
+    public String changeMyListingsPage(@ModelAttribute PageDto pageDto,
+                                       @RequestParam String action,
+                                       Model model) {
+
+        pageDto = listingService.changePage(pageDto, action);
+        var myListings = listingService.findMyListings(pageDto);
+
+        model.addAttribute("myListings", myListings);
+        model.addAttribute("pageDto", pageDto);
+
+        return "myListings";
+    }
 }

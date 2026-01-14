@@ -8,6 +8,7 @@ body {
     background-color: #f9fafb;
 }
 
+/* STRANICA */
 .home_page {
     display: flex;
     flex-direction: column;
@@ -26,6 +27,7 @@ body {
     text-align: center;
 }
 
+/* 3 NAJNOVIJA OGLASA */
 .home_listings {
     display: flex;
     justify-content: center;
@@ -35,7 +37,7 @@ body {
 }
 
 .listing_card {
-    width: 300px;
+    width: 350px;
     background-color: #ffffff;
     border: 1px solid #d1d5db;
     border-radius: 12px;
@@ -43,22 +45,36 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    font-size: 18px;
+    color: #374151;
+    gap: 10px;
 }
 
 .listing_card h3 {
     background-color: #1e3a8a;
     color: white;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 500;
     margin: 0;
     padding: 12px;
     text-align: center;
 }
 
-.listing_card p {
-    padding: 12px;
-    font-size: 16px;
-    color: #374151;
+.listing_card p, .listing_card strong {
+    margin-left: 12px;
+}
+
+.last_line {
+    margin-bottom: 18px;
+}
+
+/* BOTUNI */
+.listing_actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
 }
 
 button {
@@ -78,6 +94,27 @@ button:hover {
     background-color: #1e40af;
 }
 
+/* BOJA POZADINE BOTUNA */
+#green_form button {
+    background-color: #065f46;
+    color: #ecfdf5;
+}
+
+#purple_form button {
+    background-color: #4c1d95;
+    color: #f5f3ff;
+}
+
+/* HOVER BOTUNA */
+#green_form button:hover {
+    background-color: #047857;
+}
+
+#purple_form button:hover {
+    background-color: #5b21b6;
+}
+
+/* PROFIL */
 .profile {
     position: fixed;
     bottom: 16px;
