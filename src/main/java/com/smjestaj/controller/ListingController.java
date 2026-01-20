@@ -6,6 +6,8 @@ import com.smjestaj.dto.PageDto;
 import com.smjestaj.service.FavoriteService;
 import com.smjestaj.service.ListingService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -71,8 +73,8 @@ public class ListingController {
         return "listings";
     }
 
-    @PostMapping("/myListings")
-    public String showMyListingsPage(Model model) {
+    @GetMapping("/myListings")
+    public String showMyListings(Model model) {
         var pageDto = PageDto.builder().build();
         pageDto = pageDto.toBuilder().page(1).size(10).build();
 
@@ -83,6 +85,11 @@ public class ListingController {
         model.addAttribute("pageDto", pageDto);
 
         return "myListings";
+    }
+
+    @PostMapping("/myListings")
+    public String postMyListings() {
+        return "redirect:/listings/myListings";
     }
 
     @PostMapping("/changeMyListingsPage")
@@ -97,5 +104,23 @@ public class ListingController {
         model.addAttribute("pageDto", pageDto);
 
         return "myListings";
+    }
+
+    @GetMapping("/edit")
+    public String showEditListingPage(@RequestParam Long listingId, Model model) {
+        model.addAttribute("listingData", listingService.getListingById(listingId));
+        return "editListing";
+    }
+
+    @PostMapping("/edit")
+    public String editListing(@ModelAttribute ListingData listingData, Model model) {
+        listingService.editListing(listingData);
+        return "redirect:/listings/myListings";
+    }
+
+    @PostMapping("/delete")
+    public String deleteListing(@RequestParam Long listingId) {
+        listingService.deleteListing(listingId);
+        return "redirect:/listings/myListings";
     }
 }

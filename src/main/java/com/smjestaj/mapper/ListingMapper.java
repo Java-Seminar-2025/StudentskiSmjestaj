@@ -11,5 +11,6 @@ public interface ListingMapper {
     ListingData listingEntityToDto(ListingEntity listingEntity);
 
     ListingEntity listingDtoToEntity(ListingData listingData);
+    void updateEntityFromDto(ListingData listingData, @MappingTarget ListingEntity listingEntity);
 }
 

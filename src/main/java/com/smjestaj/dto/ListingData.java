@@ -16,5 +16,6 @@ public record ListingData (
     Integer numberOfStudents,
     Integer numberOfRooms,
     UserGender preferredGender,
-    LocalDateTime cancellationDeadline
+    LocalDateTime cancellationDeadline,
+    Boolean deleted
 ) {}

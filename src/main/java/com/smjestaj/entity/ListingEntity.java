@@ -5,7 +5,6 @@ import com.smjestaj.enums.ListingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class ListingEntity {
     private String city;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private Double price;
 
     @Column(name = "number_of_students", nullable = false)
     private Integer numberOfStudents;
@@ -54,6 +53,9 @@ public class ListingEntity {
 
     @Column(name = "cancellation_deadline")
     private LocalDateTime cancellationDeadline;
+
+    @Column(name = "is_deleted")
+    private Boolean deleted;
 
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
     private List<FavoriteEntity> favorites;

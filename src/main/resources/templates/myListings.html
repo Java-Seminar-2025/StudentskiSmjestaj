@@ -51,7 +51,14 @@
                     </div>
                 </div>
                 <div class="listing_actions">
-
+                    <form th:action="@{/listings/edit}" method="get">
+                        <input type="hidden" name="listingId" th:value="${listing.listingId}">
+                        <button type="submit">Edit</button>
+                    </form>
+                    <form th:action="@{/listings/delete}" method="post">
+                        <input type="hidden" name="listingId" th:value="${listing.listingId}">
+                        <button type="submit">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>

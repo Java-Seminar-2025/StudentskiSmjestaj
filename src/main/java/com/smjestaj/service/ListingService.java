@@ -4,6 +4,7 @@ import com.smjestaj.dto.ListingData;
 import com.smjestaj.dto.OptionsData;
 import com.smjestaj.dto.PageDto;
 import com.smjestaj.entity.*;
+import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
 
@@ -38,7 +39,7 @@ public class ListingService {
         var landlord = userRepository.findByUsername(homeService.getLoggedInUser())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
-        var myListingsPage = listingRepository.findAllByLandlord(landlord, pageable);
+        var myListingsPage = listingRepository.findAllByLandlordAndDeleted(landlord, false, pageable);
         return myListingsPage.map(listingMapper::listingEntityToDto);
     }
 
@@ -54,13 +55,34 @@ public class ListingService {
 
         var listing = listingMapper.listingDtoToEntity(listingData);
         listing.setLandlord(landlord);
-
+        listing.setDeleted(false);
         listingRepository.save(listing);
         return "redirect:/listingRooms/create?listingId=" + listing.getId();
     }
 
+    public ListingData getListingById(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+        return listingMapper.listingEntityToDto(listing);
+    }
+
+    public void editListing(ListingData listingData) {
+        var listing = listingRepository.findById(listingData.listingId())
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+
+        listingMapper.updateEntityFromDto(listingData, listing);
+        listingRepository.save(listing);
+    }
+
+    public void deleteListing(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+        listing.setDeleted(true);
+        listingRepository.save(listing);
+    }
+
     public List<ListingData> getMostRecentListings() {
-        var top3Listings = listingRepository.findTop3ByOrderByIdDesc();
+        var top3Listings = listingRepository.findTop3ByDeletedOrderByIdDesc(false);
         return top3Listings.stream()
                 .map(listingMapper::listingEntityToDto)
                 .toList();

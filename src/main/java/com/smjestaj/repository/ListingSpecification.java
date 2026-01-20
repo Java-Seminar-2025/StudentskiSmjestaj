@@ -33,6 +33,8 @@ public class ListingSpecification {
                 conditionList.add(cb.equal(root.get("numberOfRooms"), optionsData.numberOfRooms()));
             }
 
+            conditionList.add(cb.equal(root.get("deleted"), false));
+
             return cb.and(conditionList.toArray(new Predicate[0]));
         };
     }
