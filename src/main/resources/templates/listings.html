@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Listings</title>
@@ -56,8 +57,8 @@
                             <span th:text="${#temporals.format(listing.cancellationDeadline, 'dd.MM.yyyy. HH:mm')}"></span>
                         </div>
                     </div>
-                    <div class="listing_actions">
-                        <form th:object="${favorites}" method="post">
+                    <div class="listing_actions" sec:authorize="hasRole('STUDENT')">
+                        <form th:object="${favorites}">
                             <input type="hidden" name="listingId" th:value="${listing.listingId}">
 
                             <input type="hidden" name="page" th:value="${pageDto.page}">
@@ -73,6 +74,7 @@
                             <button th:if="${!favorites.contains(listing.listingId)}"
                                     type="submit"
                                     formaction="/favorites/add"
+                                    formmethod="post"
                                     class="favorite_btn">
                                 Favorite
                             </button>
@@ -80,8 +82,16 @@
                             <button th:if="${favorites.contains(listing.listingId)}"
                                     type="submit"
                                     formaction="/favorites/remove"
+                                    formmethod="post"
                                     class="unfavorite_btn">
                                 Unfavorite
+                            </button>
+
+                            <button type="submit"
+                                    formaction="/listingRooms/show"
+                                    formmethod="get"
+                                    class="reservation_btn">
+                                Book rooms
                             </button>
                         </form>
                     </div>

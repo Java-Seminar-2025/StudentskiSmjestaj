@@ -97,7 +97,7 @@ button {
     color: #1f2933;
 }
 
-/* BOTUNI ZA SVAKI OGLAS */
+/* OPCIJE ZA SVAKI OGLAS */
 
 .listing_actions {
     display: flex;
@@ -106,6 +106,15 @@ button {
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+
+.listing_actions button {
+    width: 200px;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 /* PAGINACIJA */
@@ -131,13 +140,19 @@ button {
     transform: scale(0.96);
 }
 
+/* BROJ STRANICE */
+.page_info {
+    font-weight: 500;
+    color: #374151;
+}
+
 /* ZELENI BOTUNI */
-.page_btn.single, .reservation_btn {
+.page_btn.single, .reservation_btn, .edit_btn {
     background-color: #065f46;
     color: #ecfdf5;
 }
 
-.page_btn.single:hover, .reservation_btn:hover {
+.page_btn.single:hover, .reservation_btn:hover, .edit_btn:hover {
     background-color: #047857;
 }
 
@@ -161,9 +176,15 @@ button {
     background-color: #4b5563;
 }
 
-/* BOTUNI KOJI NISU ZA MIJENJANJE STRANICE */
+/* CRVENI BOTUNI */
 
-.favorite_btn, .unfavorite_btn, .reservation_btn {
+.back_form {
+    display: flex;
+    justify-content: center;
+    margin: 32px 0;
+}
+
+.back_form button {
     width: 200px;
     border: none;
     border-radius: 6px;
@@ -172,30 +193,11 @@ button {
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* BROJ STRANICE */
-.page_info {
-    font-weight: 500;
-    color: #374151;
-}
-
-/* BACK TO FILTERS */
-
-.back_form {
-    display: flex;
-    justify-content: center;
-    margin: 32px 0;
-}
-
-.back_btn {
+.back_btn, .delete_btn {
     background-color: #991b1b;
     color: #fef2f2;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 18px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
 }
 
-.back_btn:hover {
+.back_btn:hover, .delete_btn:hover {
     background-color: #b91c1c;
 }

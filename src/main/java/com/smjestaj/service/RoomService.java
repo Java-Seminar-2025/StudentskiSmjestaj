@@ -37,8 +37,21 @@ public class RoomService {
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
         allRoomsData.getRooms().stream()
-                .map(roomMapper::roomDataToEntity)
-                .peek(room -> room.setListing(listing))
-                .forEach(roomRepository::save);
+                .map(roomMapper::roomDtoToEntity)
+                .forEach(room -> {
+                    room.setListing(listing);
+                    roomRepository.save(room);
+                });
+    }
+
+    public AllRoomsData showRoomsOfListing(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+
+        var listingRooms = roomRepository.findAllByListing(listing).stream()
+                .map(roomMapper::roomEntityToDto)
+                .toList();
+
+        return new AllRoomsData(listingId, listing.getNumberOfRooms(), listingRooms);
     }
 }

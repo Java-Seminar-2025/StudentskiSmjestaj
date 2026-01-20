@@ -43,6 +43,12 @@ public class ListingService {
         return myListingsPage.map(listingMapper::listingEntityToDto);
     }
 
+    public ListingData getListingById(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+        return listingMapper.listingEntityToDto(listing);
+    }
+
     public ListingData prepareNewListing() {
         var listingData = ListingData.builder().build();
         listingData = listingData.toBuilder().landlordUsername(homeService.getLoggedInUser()).build();
@@ -58,12 +64,6 @@ public class ListingService {
         listing.setDeleted(false);
         listingRepository.save(listing);
         return "redirect:/listingRooms/create?listingId=" + listing.getId();
-    }
-
-    public ListingData getListingById(Long listingId) {
-        var listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
-        return listingMapper.listingEntityToDto(listing);
     }
 
     public void editListing(ListingData listingData) {

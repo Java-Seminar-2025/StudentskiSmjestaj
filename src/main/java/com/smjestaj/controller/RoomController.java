@@ -26,4 +26,10 @@ public class RoomController {
         roomService.addListingRooms(allRoomsData);
         return "redirect:/home";
     }
+
+    @GetMapping("/show")
+    public String showRoomsOfListing(@RequestParam Long listingId, Model model) {
+        model.addAttribute("allRoomsData", roomService.showRoomsOfListing(listingId));
+        return "showRooms";
+    }
 }

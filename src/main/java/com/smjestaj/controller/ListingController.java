@@ -6,8 +6,6 @@ import com.smjestaj.dto.PageDto;
 import com.smjestaj.service.FavoriteService;
 import com.smjestaj.service.ListingService;
 
-import org.springframework.data.domain.Page;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,24 +33,12 @@ public class ListingController {
         var listings = listingService.filterListings(optionsData, pageDto);
         pageDto = pageDto.toBuilder().totalPages(listings.getTotalPages()).build();
 
-        var favorites = favoriteService.findAllFavoritesOfUser();
+        var favorites = favoriteService.findAllFavoritesOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("favorites", favorites);
         return "listings";
-    }
-
-    @GetMapping("/create")
-    public String showCreateListingPage(Model model) {
-        var listingData = listingService.prepareNewListing();
-        model.addAttribute("listingData", listingData);
-        return "createListing";
-    }
-
-    @PostMapping("/create")
-    public String createListing(@ModelAttribute ListingData listingData) {
-        return listingService.createListing(listingData);
     }
 
     @PostMapping("/changePage")
@@ -63,7 +49,7 @@ public class ListingController {
 
         pageDto = listingService.changePage(pageDto, action);
         var listings = listingService.filterListings(optionsData, pageDto);
-        var favorites = favoriteService.findAllFavoritesOfUser();
+        var favorites = favoriteService.findAllFavoritesOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
@@ -104,6 +90,18 @@ public class ListingController {
         model.addAttribute("pageDto", pageDto);
 
         return "myListings";
+    }
+
+    @GetMapping("/create")
+    public String showCreateListingPage(Model model) {
+        var listingData = listingService.prepareNewListing();
+        model.addAttribute("listingData", listingData);
+        return "createListing";
+    }
+
+    @PostMapping("/create")
+    public String createListing(@ModelAttribute ListingData listingData) {
+        return listingService.createListing(listingData);
     }
 
     @GetMapping("/edit")

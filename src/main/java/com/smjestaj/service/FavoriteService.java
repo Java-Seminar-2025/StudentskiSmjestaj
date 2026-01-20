@@ -61,7 +61,7 @@ public class FavoriteService {
                 });
     }
 
-    public List<Long> findAllFavoritesOfUser() {
+    public List<Long> findAllFavoritesOfStudent() {
         var username = homeService.getLoggedInUser();
         var student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));

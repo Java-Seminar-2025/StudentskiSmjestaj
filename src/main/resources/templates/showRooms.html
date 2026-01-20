@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show rooms</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/forms.css}">
+</head>
+<body>
+<div class="page_header">
+    <h2>Show rooms</h2>
+</div>
+
+<form class="form form--single" id="purple_form" th:action="@{/listingRooms/create}" th:object="${allRoomsData}" method="post">
+    <input type="hidden" id="listingId" th:field="*{listingId}">
+
+    <div class="cards-grid">
+        <div class="card" th:each="i : ${#numbers.sequence(0, allRoomsData.numberOfRooms - 1)}">
+            <div class="header" id="purple_header">
+                <h2>Room <span th:text="${i + 1}"></span></h2>
+            </div>
+
+            <div>
+                Price: <span th:text="*{rooms[__${i}__].roomPrice}"></span>
+                Capacity: <span th:text="*{rooms[__${i}__].capacity}"></span>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

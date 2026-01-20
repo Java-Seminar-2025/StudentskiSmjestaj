@@ -26,7 +26,7 @@ public class FavoriteController {
 
         favoriteService.addFavorite(listingId);
 
-        var favorites = favoriteService.findAllFavoritesOfUser();
+        var favorites = favoriteService.findAllFavoritesOfStudent();
         var listings = listingService.filterListings(optionsData, pageDto);
 
         model.addAttribute("listings", listings);
@@ -44,7 +44,7 @@ public class FavoriteController {
 
         favoriteService.removeFavorite(listingId);
 
-        var favorites = favoriteService.findAllFavoritesOfUser();
+        var favorites = favoriteService.findAllFavoritesOfStudent();
         var listings = listingService.filterListings(optionsData, pageDto);
 
         model.addAttribute("listings", listings);
