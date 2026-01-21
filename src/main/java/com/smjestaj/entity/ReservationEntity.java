@@ -34,4 +34,13 @@ public class ReservationEntity {
 
     @Column(name = "cancelled_at")
     private LocalDateTime cancelledAt;
+
+    public static ReservationEntity createPendingReservation(UserEntity student, ListingRoomEntity room) {
+        var reservation = new ReservationEntity();
+        reservation.student = student;
+        reservation.room = room;
+        reservation.status = ReservationStatus.PENDING;
+        reservation.createdAt = LocalDateTime.now();
+        return reservation;
+    }
 }

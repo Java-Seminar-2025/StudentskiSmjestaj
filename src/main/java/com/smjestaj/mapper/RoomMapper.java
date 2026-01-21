@@ -7,5 +7,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
     ListingRoomEntity roomDtoToEntity(RoomData roomData);
+
+    @Mapping(target = "roomId", source = "id")
     RoomData roomEntityToDto(ListingRoomEntity roomEntity);
 }

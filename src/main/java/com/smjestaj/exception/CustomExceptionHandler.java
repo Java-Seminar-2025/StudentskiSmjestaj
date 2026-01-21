@@ -20,5 +20,12 @@ public class CustomExceptionHandler {
         model.addAttribute("listingData", ListingData.builder().build());
         return "createListing";
     }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    public String handleRoomNotFoundException(RoomNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        model.addAttribute("roomData", new RoomData());
+        return "createListing";
+    }
 }
 

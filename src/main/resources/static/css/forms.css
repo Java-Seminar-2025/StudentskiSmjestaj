@@ -8,6 +8,15 @@ body {
     font-size: 18px;
 }
 
+/* SADRŽAJ STRANICE */
+.page_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    font-size: 20px;
+}
+
 /* GRID KARTICA ZA SOBE */
 .cards-grid {
     margin-top: 70px;
@@ -71,6 +80,10 @@ body {
 
 #purple_header {
     background-color: #4c1d95;
+}
+
+#cyan_header {
+    background-color: #0f766e;
 }
 
 /* BOJA TEKSTA NASLOVA */
@@ -154,6 +167,16 @@ label {
     margin-left: 4px;
 }
 
+/* ROOM INFO */
+.room_info {
+    width: 100%;
+    text-align: center;
+}
+
+.room_info--first {
+    margin-top: 15px;
+}
+
 /* BOTUNI */
 .form button {
     height: 35px;
@@ -179,6 +202,11 @@ label {
     width: 50%;
 }
 
+.page_content button {
+    width: 200px;
+    padding: 8px 14px;
+}
+
 /* POZADINE BOTUNA */
 #green_form button {
     background-color: #065f46;
@@ -188,6 +216,11 @@ label {
 #purple_form button {
     background-color: #4c1d95;
     color: #f5f3ff;
+}
+
+#red_form button {
+    background-color: #991b1b;
+    color: #fef2f2;
 }
 
 /* HOVER BOTUNA */
@@ -201,6 +234,10 @@ label {
 
 #purple_form button:hover {
     background-color: #5b21b6;
+}
+
+#red_form button:hover {
+    background-color: #b91c1c;
 }
 
 /* FOOTER */

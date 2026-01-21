@@ -3,6 +3,7 @@ package com.smjestaj.service;
 import com.smjestaj.dto.AllRoomsData;
 import com.smjestaj.dto.RoomData;
 import com.smjestaj.exception.ListingNotFoundException;
+import com.smjestaj.exception.RoomNotFoundException;
 import com.smjestaj.mapper.RoomMapper;
 import com.smjestaj.repository.ListingRepository;
 import com.smjestaj.repository.RoomRepository;
@@ -29,7 +30,7 @@ public class RoomService {
             rooms.add(new RoomData());
         }
 
-        return new AllRoomsData(listingId, listing.getNumberOfRooms(), rooms);
+        return new AllRoomsData(listingId, rooms);
     }
 
     public void addListingRooms(AllRoomsData allRoomsData) {
@@ -52,6 +53,12 @@ public class RoomService {
                 .map(roomMapper::roomEntityToDto)
                 .toList();
 
-        return new AllRoomsData(listingId, listing.getNumberOfRooms(), listingRooms);
+        return new AllRoomsData(listingId, listingRooms);
+    }
+
+    public Long getListingIdByRoomId(Long roomId) {
+        var room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found!"));
+        return room.getListing().getId();
     }
 }
