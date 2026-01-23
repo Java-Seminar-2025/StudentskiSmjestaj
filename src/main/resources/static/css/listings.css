@@ -153,12 +153,12 @@ button {
 }
 
 /* LJUBIČASTI BOTUNI */
-.page_btn.double, .favorite_btn {
+.page_btn.double, .favorite_btn, .show_reservations_btn {
     background-color: #4c1d95;
     color: #f5f3ff;
 }
 
-.page_btn.double:hover, .favorite_btn:hover {
+.page_btn.double:hover, .favorite_btn:hover, .show_reservations_btn:hover {
     background-color: #5b21b6;
 }
 

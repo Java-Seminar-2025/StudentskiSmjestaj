@@ -59,6 +59,10 @@
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
                         <button type="submit" class="delete_btn">Delete</button>
                     </form>
+                    <form th:action="@{/reservations/showPending}" method="get">
+                        <input type="hidden" name="listingId" th:value="${listing.listingId}">
+                        <button type="submit" class="show_reservations_btn">Show reservations</button>
+                    </form>
                 </div>
             </div>
         </div>

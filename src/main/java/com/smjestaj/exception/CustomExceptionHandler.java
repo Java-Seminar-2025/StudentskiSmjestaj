@@ -27,5 +27,7 @@ public class CustomExceptionHandler {
         model.addAttribute("roomData", new RoomData());
         return "createListing";
     }
+
+
 }
 

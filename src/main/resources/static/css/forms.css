@@ -223,6 +223,11 @@ label {
     color: #fef2f2;
 }
 
+#gray_form button {
+    background-color: #6b7280;
+    color: #f9fafb;
+}
+
 /* HOVER BOTUNA */
 .form button:hover {
     background-color: #1e40af;
@@ -238,6 +243,10 @@ label {
 
 #red_form button:hover {
     background-color: #b91c1c;
+}
+
+#gray_form button:hover {
+    background-color: #4b5563;
 }
 
 /* FOOTER */

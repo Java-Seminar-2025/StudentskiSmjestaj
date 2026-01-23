@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 
 @Builder
 public record ReservationData (
-    Long roomId,
-    Long studentId,
+    Long reservationId,
+    String studentUsername,
     ReservationStatus status,
     LocalDateTime createdAt
 ) {}

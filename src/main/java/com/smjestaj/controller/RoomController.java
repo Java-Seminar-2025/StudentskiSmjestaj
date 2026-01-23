@@ -1,6 +1,8 @@
 package com.smjestaj.controller;
 
 import com.smjestaj.dto.AllRoomsData;
+import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.PageDto;
 import com.smjestaj.service.RoomService;
 
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @GetMapping("/create")
-    public String showListingRoomPage(@RequestParam Long listingId, Model model) {
+    public String showCreateRoomsPage(@RequestParam Long listingId, Model model) {
         model.addAttribute("allRoomsData", roomService.prepareRoomForms(listingId));
         return "createRooms";
     }
@@ -28,8 +30,13 @@ public class RoomController {
     }
 
     @GetMapping("/show")
-    public String showRoomsOfListing(@RequestParam Long listingId, Model model) {
+    public String showRoomsOfListing(@RequestParam Long listingId,
+                                     @ModelAttribute OptionsData optionsData,
+                                     @ModelAttribute PageDto pageDto,
+                                     Model model) {
         model.addAttribute("allRoomsData", roomService.showRoomsOfListing(listingId));
+        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("pageDto", pageDto);
         return "showRooms";
     }
 }
