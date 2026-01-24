@@ -82,10 +82,6 @@ body {
     background-color: #4c1d95;
 }
 
-#cyan_header {
-    background-color: #0f766e;
-}
-
 /* BOJA TEKSTA NASLOVA */
 .header h2 {
     margin: 0;
@@ -167,16 +163,6 @@ label {
     margin-left: 4px;
 }
 
-/* ROOM INFO */
-.room_info {
-    width: 100%;
-    text-align: center;
-}
-
-.room_info--first {
-    margin-top: 15px;
-}
-
 /* BOTUNI */
 .form button {
     height: 35px;
@@ -207,6 +193,17 @@ label {
     padding: 8px 14px;
 }
 
+.accept_btn {
+    max-width: 40px;
+}
+
+.form--single button.full_reservation_btn {
+    width: auto;
+    max-width: none;
+    min-width: 350px;
+    padding: 8px 20px;
+}
+
 /* POZADINE BOTUNA */
 #green_form button {
     background-color: #065f46;
@@ -228,6 +225,11 @@ label {
     color: #f9fafb;
 }
 
+.accept_btn {
+    background-color: #065f46;
+    color: #ecfdf5;
+}
+
 /* HOVER BOTUNA */
 .form button:hover {
     background-color: #1e40af;
@@ -247,6 +249,64 @@ label {
 
 #gray_form button:hover {
     background-color: #4b5563;
+}
+
+/* TABLICA S REZERVACIJAMA */
+.reservation_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    table-layout: fixed;
+}
+
+.reservation_table td {
+    padding: 4px 8px;
+    line-height: 1.2;
+}
+
+.reservation_table td:first-child {
+    width: 75%;
+    padding-left: 15px;
+}
+
+.reservation_table td:last-child {
+    width: 25%;
+    padding-right: 15px;
+    text-align: right;
+}
+
+.reservation_table form {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+}
+
+.reservation_table .form--single button {
+     width: auto;
+     padding: 4px 8px;
+ }
+
+/* INFORMACIJE O SOBI ILI SMJEŠTAJU */
+.room_info {
+    width: 100%;
+    text-align: center;
+}
+
+.room_info--first {
+    margin-top: 15px;
+}
+
+.room_info--last {
+    margin-bottom: 15px;
+}
+
+.accommodation_info {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 /* FOOTER */

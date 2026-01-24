@@ -162,6 +162,11 @@ button {
     background-color: #5b21b6;
 }
 
+/* SHOW RESERVATIONS BOTUN */
+.show_reservations_btn {
+    margin-bottom: 20px;
+}
+
 /* SIVI BOTUN (UNFAVORITE) */
 .unfavorite_btn {
     background-color: #6b7280;

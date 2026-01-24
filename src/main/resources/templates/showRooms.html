@@ -15,7 +15,7 @@
 <div class="page_content">
     <div class="cards-grid" th:object="${allRoomsData}">
         <div class="card" th:each="room, stat : ${allRoomsData.rooms}">
-            <div class="header" id="cyan_header">
+            <div class="header">
                 <h2>Room <span th:text="${stat.count}"></span></h2>
             </div>
 
@@ -26,7 +26,7 @@
                 <strong>Capacity:</strong> <span th:text="${room.capacity}"></span>
             </div>
 
-            <form class="form form--single" id="green_form" th:action="@{/reservations/add}" method="post">
+            <form class="form form--single" id="green_form" th:action="@{/reservations/add/room}" method="post">
                 <input type="hidden" name="roomId" th:value="${room.roomId}">
 
                 <input type="hidden" name="page" th:value="${pageDto.page}">
@@ -43,6 +43,23 @@
             </form>
         </div>
     </div>
+
+    <form class="form form--single" id="purple_form" th:action="@{/reservations/add/full}" method="post">
+        <input type="hidden" name="listingId" th:value="${allRoomsData.listingId}">
+
+        <input type="hidden" name="page" th:value="${pageDto.page}">
+        <input type="hidden" name="size" th:value="${pageDto.size}">
+        <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
+
+        <input type="hidden" name="lowerPrice" th:value="${optionsData.lowerPrice}">
+        <input type="hidden" name="upperPrice" th:value="${optionsData.upperPrice}">
+        <input type="hidden" name="city" th:value="${optionsData.city}">
+        <input type="hidden" name="numberOfStudents" th:value="${optionsData.numberOfStudents}">
+        <input type="hidden" name="numberOfRooms" th:value="${optionsData.numberOfRooms}">
+
+        <button type="submit" class="full_reservation_btn">Book entire accommodation</button>
+    </form>
+
     <form class="form form--single" id="red_form" th:action="@{/listings/changePage}" method="post">
         <input type="hidden" name="page" th:value="${pageDto.page}">
         <input type="hidden" name="size" th:value="${pageDto.size}">

@@ -9,33 +9,61 @@
     <link rel="stylesheet" th:href="@{/css/forms.css}">
 </head>
 <body>
-<div class="page_header" id="green_header">
+<div class="page_header">
     <h2>Reservations</h2>
 </div>
 <div class="page_content">
     <div class="cards-grid" th:object="${allRoomsData}">
         <div class="card" th:each="room, stat : ${allRoomsData.rooms}">
-            <div class="header" id="cyan_header">
+            <div class="header">
                 <h2>Room <span th:text="${stat.count}"></span></h2>
             </div>
 
             <div class="room_info room_info--first">
                 <strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(room.roomPrice, 1, 2)}"></span>
             </div>
-            <div class="room_info">
+            <div class="room_info room_info--last">
                 <strong>Capacity:</strong> <span th:text="${room.capacity}"></span>
             </div>
 
-            <div class="student_names" th:each="reservation : ${room.reservations}">
-                <a href="studentInfo.html" th:text="${reservation.studentUsername}"></a>
+            <table class="reservation_table">
+                <tr class="reservation" th:each="reservation : ${room.reservations}">
+                    <td><a href="studentInfo.html" th:text="${reservation.studentUsername}"></a></td>
 
-                <form class="form form--single" id="green_form" th:action="@{/reservations/accept}" method="post">
-                    <input type="hidden" name="reservationId" th:value="${reservation.reservationId}">
-                    <button type="submit">Accept</button>
-                </form>
-            </div>
+                    <td>
+                        <form class="form form--single" id="green_form" th:action="@{/reservations/accept}" method="post">
+                            <input type="hidden" name="reservationId" th:value="${reservation.reservationId}">
+                            <button type="submit" class="accept_btn">Accept</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
 
         </div>
+
+        <div class="card">
+            <div class="header" id="purple_header">
+                <h2>Entire accommodation</h2>
+            </div>
+
+            <div class="accommodation_info">
+                <strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(allRoomsData.listingId.price, 1, 2)}"></span>
+            </div>
+
+            <table class="reservation_table">
+                <tr class="reservation" th:each="reservation : ${room.reservations}">
+                    <td><a href="studentInfo.html" th:text="${reservation.studentUsername}"></a></td>
+
+                    <td>
+                        <form class="form form--single" th:action="@{/reservations/accept}" method="post">
+                            <input type="hidden" name="reservationId" th:value="${reservation.reservationId}">
+                            <button type="submit" class="accept_btn">Accept</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
     </div>
     <form class="form form--single" id="red_form" th:action="@{/listings/myListings}" method="get">
         <button type="submit">Back to my listings</button>

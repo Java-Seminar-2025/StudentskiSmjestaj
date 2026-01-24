@@ -1,9 +1,10 @@
 package com.smjestaj.controller;
 
-import com.smjestaj.dto.AllRoomsData;
 import com.smjestaj.dto.OptionsData;
 import com.smjestaj.dto.PageDto;
 import com.smjestaj.dto.ReservationData;
+import com.smjestaj.service.FavoriteService;
+import com.smjestaj.service.ListingService;
 import com.smjestaj.service.ReservationService;
 
 import com.smjestaj.service.RoomService;
@@ -19,19 +20,38 @@ import lombok.RequiredArgsConstructor;
 public class ReservationController {
     private final ReservationService reservationService;
     private final RoomService roomService;
+    private final ListingService listingService;
+    private final FavoriteService favoriteService;
 
-    @PostMapping("/add")
-    public String addNewReservation(@RequestParam Long roomId,
-                                    @ModelAttribute PageDto pageDto,
-                                    @ModelAttribute OptionsData optionsData,
-                                    Model model) {
-        reservationService.addNewReservation(roomId);
+    @PostMapping("/add/room")
+    public String addNewRoomReservation(@RequestParam Long roomId,
+                                        @ModelAttribute PageDto pageDto,
+                                        @ModelAttribute OptionsData optionsData,
+                                        Model model) {
+        reservationService.addNewRoomReservation(roomId);
         var listingId = roomService.getListingIdByRoomId(roomId);
 
         model.addAttribute("allRoomsData", roomService.showRoomsOfListing(listingId));
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("optionsData", optionsData);
         return "showRooms";
+    }
+
+    @PostMapping("add/full")
+    public String addNewFullReservation(@RequestParam Long listingId,
+                                        @ModelAttribute PageDto pageDto,
+                                        @ModelAttribute OptionsData optionsData,
+                                        Model model) {
+        reservationService.addNewFullReservation(listingId);
+
+        var listings = listingService.filterListings(optionsData, pageDto);
+        var favorites = favoriteService.findAllFavoritesOfStudent();
+
+        model.addAttribute("listings", listings);
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("favorites", favorites);
+        return "listings";
     }
 
     @GetMapping("/showPending")

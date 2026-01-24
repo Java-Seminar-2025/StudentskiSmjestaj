@@ -62,5 +62,8 @@ public class ListingEntity {
 
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
     private List<ListingRoomEntity> listingRooms;
+
+    @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
+    private List<ReservationEntity> reservations;
 }
 
