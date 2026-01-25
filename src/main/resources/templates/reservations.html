@@ -31,7 +31,7 @@
                     <td><a href="studentInfo.html" th:text="${reservation.studentUsername}"></a></td>
 
                     <td>
-                        <form class="form form--single" id="green_form" th:action="@{/reservations/accept}" method="post">
+                        <form class="form form--single" th:action="@{/reservations/accept}" method="post">
                             <input type="hidden" name="reservationId" th:value="${reservation.reservationId}">
                             <button type="submit" class="accept_btn">Accept</button>
                         </form>
@@ -47,11 +47,11 @@
             </div>
 
             <div class="accommodation_info">
-                <strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(allRoomsData.listingId.price, 1, 2)}"></span>
+                <strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(listingData.price, 1, 2)}"></span>
             </div>
 
             <table class="reservation_table">
-                <tr class="reservation" th:each="reservation : ${room.reservations}">
+                <tr class="reservation" th:each="reservation : ${fullReservations}">
                     <td><a href="studentInfo.html" th:text="${reservation.studentUsername}"></a></td>
 
                     <td>

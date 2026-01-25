@@ -1,8 +1,11 @@
 package com.smjestaj.service;
 
 import com.smjestaj.dto.AllRoomsData;
+import com.smjestaj.dto.ReservationData;
+import com.smjestaj.entity.ListingRoomEntity;
 import com.smjestaj.entity.ReservationEntity;
 import com.smjestaj.enums.ReservationStatus;
+import com.smjestaj.enums.ReservationType;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.ReservationNotFoundException;
 import com.smjestaj.exception.RoomNotFoundException;
@@ -16,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -63,10 +67,44 @@ public class ReservationService {
                 });
     }
 
+    public List<ReservationData> getFullReservationsForListing(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+        var fullReservations = reservationRepository.findAllByListingAndStatusAndType
+                (listing, ReservationStatus.PENDING, ReservationType.FULL_LISTING);
+
+        return fullReservations.stream()
+                .map(reservationMapper::reservationEntityToDto)
+                .toList();
+    }
+
+    public List<Long> getRoomReservationsOfStudentForListing(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+        var student = userRepository.findByUsername(homeService.getLoggedInUser())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+
+        var roomReservations = reservationRepository.findAllByListingAndStudentAndType(listing, student, ReservationType.ROOM);
+
+        return roomReservations.stream()
+                .map(ReservationEntity::getRoom)
+                .map(ListingRoomEntity::getId)
+                .toList();
+    }
+
+    public boolean hasFullListingReservation(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+        var student = userRepository.findByUsername(homeService.getLoggedInUser())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+
+        return !reservationRepository.findAllByListingAndStudentAndType(listing, student, ReservationType.FULL_LISTING)
+                .isEmpty();
+    }
+
     public void acceptReservation(Long reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
-        var listing = reservation.getRoom().getListing();
 
         reservation.setStatus(ReservationStatus.ACTIVE);
         reservationRepository.save(reservation);

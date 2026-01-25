@@ -30,10 +30,14 @@ public class ReservationController {
                                         Model model) {
         reservationService.addNewRoomReservation(roomId);
         var listingId = roomService.getListingIdByRoomId(roomId);
+        var reservations = reservationService.getRoomReservationsOfStudentForListing(listingId);
 
         model.addAttribute("allRoomsData", roomService.showRoomsOfListing(listingId));
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("optionsData", optionsData);
+        model.addAttribute("reservations", reservations);
+        model.addAttribute("hasRoomReservations", !reservations.isEmpty());
+        model.addAttribute("hasFullReservation", reservationService.hasFullListingReservation(listingId));
         return "showRooms";
     }
 
@@ -56,11 +60,16 @@ public class ReservationController {
 
     @GetMapping("/showPending")
     public String showReservationsForListing(@RequestParam Long listingId, Model model) {
+        var listingData = listingService.getListingById(listingId);
+
         var listingRooms = roomService.showRoomsOfListing(listingId);
         reservationService.getReservationsForEachRoom(listingRooms);
 
+        var fullReservations = reservationService.getFullReservationsForListing(listingId);
+
         model.addAttribute("allRoomsData", listingRooms);
-        model.addAttribute("reservationData", ReservationData.builder().build());
+        model.addAttribute("fullReservations", fullReservations);
+        model.addAttribute("listingData", listingData);
         return "reservations";
     }
 

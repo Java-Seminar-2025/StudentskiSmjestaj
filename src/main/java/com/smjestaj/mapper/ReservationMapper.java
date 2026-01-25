@@ -10,5 +10,6 @@ public interface ReservationMapper {
 
     @Mapping(target = "reservationId", source = "id")
     @Mapping(target = "studentUsername", source = "student.username")
+    @Mapping(target = "roomId", source = "room.id")
     ReservationData reservationEntityToDto(ReservationEntity reservationEntity);
 }
