@@ -1,7 +1,8 @@
 package com.smjestaj.service;
 
-import com.smjestaj.dto.AllRoomsData;
 import com.smjestaj.dto.ReservationData;
+import com.smjestaj.dto.ReservationSpecifiers;
+import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.entity.ListingRoomEntity;
 import com.smjestaj.entity.ReservationEntity;
 import com.smjestaj.enums.ReservationStatus;
@@ -10,10 +11,7 @@ import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.ReservationNotFoundException;
 import com.smjestaj.exception.RoomNotFoundException;
 import com.smjestaj.mapper.ReservationMapper;
-import com.smjestaj.repository.ListingRepository;
-import com.smjestaj.repository.ReservationRepository;
-import com.smjestaj.repository.RoomRepository;
-import com.smjestaj.repository.UserRepository;
+import com.smjestaj.repository.*;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -53,20 +51,14 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public void getReservationsForEachRoom(AllRoomsData listingRooms) {
-        listingRooms.getRooms()
-                .forEach(roomData -> {
-                    var roomEntity = roomRepository.findById(roomData.getRoomId())
-                            .orElseThrow(() -> new RoomNotFoundException("Room not found!"));
+    public List<ReservationData> getReservationsForRoom(Long roomId) {
+        var specifiers = ReservationSpecifiers.builder().roomId(roomId).build();
 
-                    var reservations = reservationRepository.findAllByRoomAndStatus(roomEntity, ReservationStatus.PENDING);
-
-                    roomData.setReservations(reservations.stream()
-                            .map(reservationMapper::reservationEntityToDto)
-                            .toList());
-                });
+        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
+                .map(reservationMapper::reservationEntityToDto)
+                .toList();
     }
-
+/*
     public List<ReservationData> getFullReservationsForListing(Long listingId) {
         var listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
@@ -78,35 +70,86 @@ public class ReservationService {
                 .toList();
     }
 
-    public List<Long> getRoomReservationsOfStudentForListing(Long listingId) {
-        var listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
-        var student = userRepository.findByUsername(homeService.getLoggedInUser())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+    public List<Long> getReservationsOfStudentForListing(ReservationSpecifiers specifiers) {
+        var reservations = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
 
-        var roomReservations = reservationRepository.findAllByListingAndStudentAndType(listing, student, ReservationType.ROOM);
+        if (specifiers.type() == ReservationType.ROOM) {
+            return reservations.stream()
+                    .map(ReservationEntity::getRoom)
+                    .map(ListingRoomEntity::getId)
+                    .toList();
+        }
 
-        return roomReservations.stream()
-                .map(ReservationEntity::getRoom)
-                .map(ListingRoomEntity::getId)
+        return reservations.stream()
+                .map(ReservationEntity::getListing)
+                .map(ListingEntity::getId)
+                .toList();
+    }*/
+
+    public List<Long> getReservationsOfStudent(Long listingId, ReservationType type) {
+        var specifiers = ReservationSpecifiers.builder()
+                .listingId(listingId)
+                .studentUsername(homeService.getLoggedInUser())
+                .status(ReservationStatus.PENDING)
+                .type(type)
+                .build();
+
+        var reservationsOfStudent = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
+
+        if (specifiers.type() == ReservationType.ROOM) {
+            return reservationsOfStudent.stream()
+                    .map(ReservationEntity::getRoom)
+                    .map(ListingRoomEntity::getId)
+                    .toList();
+        }
+
+        return reservationsOfStudent.stream()
+                .map(ReservationEntity::getListing)
+                .map(ListingEntity::getId)
                 .toList();
     }
 
+    public List<ReservationData> getFullListingReservations(Long listingId) {
+        var specifiers = ReservationSpecifiers.builder()
+                .listingId(listingId)
+                .status(ReservationStatus.PENDING)
+                .type(ReservationType.FULL_LISTING)
+                .build();
+
+        var reservations = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
+
+        return reservations.stream()
+                .map(reservationMapper::reservationEntityToDto)
+                .toList();
+    }
+
+    public boolean isRoomOccupied(List<ReservationData> reservations) {
+        return true;
+    }
+/*
     public boolean hasFullListingReservation(Long listingId) {
-        var listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
         var student = userRepository.findByUsername(homeService.getLoggedInUser())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
-        return !reservationRepository.findAllByListingAndStudentAndType(listing, student, ReservationType.FULL_LISTING)
-                .isEmpty();
+        var reservationSpecifiers = ReservationSpecifiers.builder()
+                .listingId(listingId)
+                .studentId(student.getId())
+                .status(ReservationStatus.PENDING)
+                .type(ReservationType.FULL_LISTING)
+                .build();
+
+        return !reservationRepository.findAll(ReservationSpecification.withFilters(reservationSpecifiers)).isEmpty();
     }
+
+ */
 
     public void acceptReservation(Long reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
 
         reservation.setStatus(ReservationStatus.ACTIVE);
+        reservation.getListing().setStatus(reservation.getType().getCorrectListingStatus());
+
         reservationRepository.save(reservation);
     }
 }

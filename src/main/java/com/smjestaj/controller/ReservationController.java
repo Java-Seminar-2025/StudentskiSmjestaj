@@ -2,12 +2,11 @@ package com.smjestaj.controller;
 
 import com.smjestaj.dto.OptionsData;
 import com.smjestaj.dto.PageDto;
-import com.smjestaj.dto.ReservationData;
-import com.smjestaj.service.FavoriteService;
-import com.smjestaj.service.ListingService;
-import com.smjestaj.service.ReservationService;
+import com.smjestaj.dto.ReservationSpecifiers;
+import com.smjestaj.enums.ReservationStatus;
+import com.smjestaj.enums.ReservationType;
+import com.smjestaj.service.*;
 
-import com.smjestaj.service.RoomService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,16 +27,21 @@ public class ReservationController {
                                         @ModelAttribute PageDto pageDto,
                                         @ModelAttribute OptionsData optionsData,
                                         Model model) {
+
         reservationService.addNewRoomReservation(roomId);
         var listingId = roomService.getListingIdByRoomId(roomId);
-        var reservations = reservationService.getRoomReservationsOfStudentForListing(listingId);
 
-        model.addAttribute("allRoomsData", roomService.showRoomsOfListing(listingId));
+        model.addAttribute("allRoomsData", roomService.getRoomsOfListing(listingId));
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("optionsData", optionsData);
-        model.addAttribute("reservations", reservations);
-        model.addAttribute("hasRoomReservations", !reservations.isEmpty());
-        model.addAttribute("hasFullReservation", reservationService.hasFullListingReservation(listingId));
+
+        var roomReservationsOfStudent = reservationService.getReservationsOfStudent(listingId, ReservationType.ROOM);
+        model.addAttribute("roomReservationsOfStudent", roomReservationsOfStudent);
+        model.addAttribute("hasRoomReservations", !roomReservationsOfStudent.isEmpty());
+
+        model.addAttribute("hasFullReservation",
+                !reservationService.getReservationsOfStudent(listingId, ReservationType.FULL_LISTING).isEmpty());
+
         return "showRooms";
     }
 
@@ -59,17 +63,13 @@ public class ReservationController {
     }
 
     @GetMapping("/showPending")
-    public String showReservationsForListing(@RequestParam Long listingId, Model model) {
+    public String showPendingReservationsForListing(@RequestParam Long listingId, Model model) {
         var listingData = listingService.getListingById(listingId);
-
-        var listingRooms = roomService.showRoomsOfListing(listingId);
-        reservationService.getReservationsForEachRoom(listingRooms);
-
-        var fullReservations = reservationService.getFullReservationsForListing(listingId);
-
-        model.addAttribute("allRoomsData", listingRooms);
-        model.addAttribute("fullReservations", fullReservations);
         model.addAttribute("listingData", listingData);
+
+        model.addAttribute("allRoomsData", roomService.getRoomsOfListing(listingId));
+        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
+
         return "reservations";
     }
 

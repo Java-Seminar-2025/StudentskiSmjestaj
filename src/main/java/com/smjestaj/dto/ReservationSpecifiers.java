@@ -1,0 +1,14 @@
+package com.smjestaj.dto;
+
+import com.smjestaj.enums.ReservationStatus;
+import com.smjestaj.enums.ReservationType;
+import lombok.Builder;
+
+@Builder(toBuilder = true)
+public record ReservationSpecifiers (
+    Long listingId,
+    String studentUsername,
+    Long roomId,
+    ReservationStatus status,
+    ReservationType type
+) {}

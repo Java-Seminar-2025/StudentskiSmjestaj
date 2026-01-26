@@ -19,6 +19,7 @@ public class RoomService {
     private final ListingRepository listingRepository;
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
+    private final ReservationService reservationService;
 
     public AllRoomsData prepareRoomForms(Long listingId) {
         var listing = listingRepository.findById(listingId)
@@ -45,12 +46,16 @@ public class RoomService {
                 });
     }
 
-    public AllRoomsData showRoomsOfListing(Long listingId) {
+    public AllRoomsData getRoomsOfListing(Long listingId) {
         var listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
         var listingRooms = roomRepository.findAllByListing(listing).stream()
                 .map(roomMapper::roomEntityToDto)
+                .map(roomData -> {
+                    roomData.setReservations(reservationService.getReservationsForRoom(roomData.getRoomId()));
+                    return roomData;
+                })
                 .toList();
 
         return new AllRoomsData(listingId, listingRooms);
