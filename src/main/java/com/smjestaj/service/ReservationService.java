@@ -58,33 +58,6 @@ public class ReservationService {
                 .map(reservationMapper::reservationEntityToDto)
                 .toList();
     }
-/*
-    public List<ReservationData> getFullReservationsForListing(Long listingId) {
-        var listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
-        var fullReservations = reservationRepository.findAllByListingAndStatusAndType
-                (listing, ReservationStatus.PENDING, ReservationType.FULL_LISTING);
-
-        return fullReservations.stream()
-                .map(reservationMapper::reservationEntityToDto)
-                .toList();
-    }
-
-    public List<Long> getReservationsOfStudentForListing(ReservationSpecifiers specifiers) {
-        var reservations = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
-
-        if (specifiers.type() == ReservationType.ROOM) {
-            return reservations.stream()
-                    .map(ReservationEntity::getRoom)
-                    .map(ListingRoomEntity::getId)
-                    .toList();
-        }
-
-        return reservations.stream()
-                .map(ReservationEntity::getListing)
-                .map(ListingEntity::getId)
-                .toList();
-    }*/
 
     public List<Long> getReservationsOfStudent(Long listingId, ReservationType type) {
         var specifiers = ReservationSpecifiers.builder()
@@ -122,26 +95,6 @@ public class ReservationService {
                 .map(reservationMapper::reservationEntityToDto)
                 .toList();
     }
-
-    public boolean isRoomOccupied(List<ReservationData> reservations) {
-        return true;
-    }
-/*
-    public boolean hasFullListingReservation(Long listingId) {
-        var student = userRepository.findByUsername(homeService.getLoggedInUser())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-
-        var reservationSpecifiers = ReservationSpecifiers.builder()
-                .listingId(listingId)
-                .studentId(student.getId())
-                .status(ReservationStatus.PENDING)
-                .type(ReservationType.FULL_LISTING)
-                .build();
-
-        return !reservationRepository.findAll(ReservationSpecification.withFilters(reservationSpecifiers)).isEmpty();
-    }
-
- */
 
     public void acceptReservation(Long reservationId) {
         var reservation = reservationRepository.findById(reservationId)
