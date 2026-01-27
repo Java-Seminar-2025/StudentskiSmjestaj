@@ -11,4 +11,5 @@ public class RoomData {
     private Double roomPrice;
     private Integer capacity;
     private List<ReservationData> reservations;
+    private Boolean isReservable;
 }

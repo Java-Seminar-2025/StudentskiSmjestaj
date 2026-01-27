@@ -3,7 +3,8 @@ package com.smjestaj.service;
 import com.smjestaj.dto.ListingData;
 import com.smjestaj.dto.OptionsData;
 import com.smjestaj.dto.PageDto;
-import com.smjestaj.entity.*;
+import com.smjestaj.enums.ListingStatus;
+import com.smjestaj.enums.ReservationType;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
@@ -23,6 +24,7 @@ public class ListingService {
     private final UserRepository userRepository;
     private final ListingMapper listingMapper;
     private final HomeService homeService;
+    private final ReservationService reservationService;
 
     public Page<ListingData> filterListings(OptionsData optionsData, PageDto pageDto) {
         var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
@@ -61,8 +63,10 @@ public class ListingService {
 
         var listing = listingMapper.listingDtoToEntity(listingData);
         listing.setLandlord(landlord);
+        listing.setStatus(ListingStatus.AVAILABLE);
         listing.setDeleted(false);
         listingRepository.save(listing);
+
         return "redirect:/listingRooms/create?listingId=" + listing.getId();
     }
 
@@ -104,5 +108,12 @@ public class ListingService {
                     : pageDto.toBuilder().page(pageDto.totalPages()).build();
             default -> pageDto;
         };
+    }
+
+    public boolean isFullListingReservable(Long listingId) {
+        var hasPendingReservation = !reservationService.getPendingReservations(listingId).isEmpty();
+        var hasActiveReservation = !reservationService.getActiveReservations(listingId).isEmpty();
+
+        return !hasPendingReservation && !hasActiveReservation;
     }
 }

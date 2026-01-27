@@ -2,6 +2,7 @@ package com.smjestaj.service;
 
 import com.smjestaj.dto.AllRoomsData;
 import com.smjestaj.dto.RoomData;
+import com.smjestaj.enums.ReservationType;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.RoomNotFoundException;
 import com.smjestaj.mapper.RoomMapper;
@@ -53,7 +54,7 @@ public class RoomService {
         var listingRooms = roomRepository.findAllByListing(listing).stream()
                 .map(roomMapper::roomEntityToDto)
                 .map(roomData -> {
-                    roomData.setReservations(reservationService.getReservationsForRoom(roomData.getRoomId()));
+                    roomData.setReservations(reservationService.getActiveReservationsForRoom(roomData.getRoomId()));
                     return roomData;
                 })
                 .toList();
@@ -65,5 +66,21 @@ public class RoomService {
         var room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found!"));
         return room.getListing().getId();
+    }
+
+    public void setReservableForEachRoom(AllRoomsData allRoomsData) {
+        var roomReservationsOfStudent = reservationService.getPendingRoomReservations(allRoomsData.getListingId());
+        var hasFullReservationForListing = !reservationService.getPendingFullReservations(allRoomsData.getListingId()).isEmpty();
+        var hasActiveReservationsForListing = !reservationService.getActiveReservations(allRoomsData.getListingId()).isEmpty();
+
+        allRoomsData.getRooms()
+                .forEach(roomData -> {
+                    var isOccupied = roomData.getCapacity() == roomData.getReservations().size();
+                    var isAlreadyBookedByStudent = roomReservationsOfStudent.contains(roomData.getRoomId());
+
+                    var isReservable = (!hasActiveReservationsForListing) && (!hasFullReservationForListing) &&
+                                        (!isAlreadyBookedByStudent) && (!isOccupied);
+                    roomData.setIsReservable(isReservable);
+                });
     }
 }

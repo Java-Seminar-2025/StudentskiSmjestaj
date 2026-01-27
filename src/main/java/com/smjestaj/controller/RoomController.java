@@ -7,6 +7,7 @@ import com.smjestaj.dto.ReservationSpecifiers;
 import com.smjestaj.enums.ReservationStatus;
 import com.smjestaj.enums.ReservationType;
 import com.smjestaj.service.HomeService;
+import com.smjestaj.service.ListingService;
 import com.smjestaj.service.ReservationService;
 import com.smjestaj.service.RoomService;
 
@@ -21,8 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RoomController {
     private final RoomService roomService;
-    private final ReservationService reservationService;
-    private final HomeService homeService;
+    private final ListingService listingService;
 
     @GetMapping("/create")
     public String showCreateRoomsPage(@RequestParam Long listingId, Model model) {
@@ -41,18 +41,22 @@ public class RoomController {
                                      @ModelAttribute OptionsData optionsData,
                                      @ModelAttribute PageDto pageDto,
                                      Model model) {
+        var listingRooms = roomService.getRoomsOfListing(listingId);
 
-        model.addAttribute("allRoomsData", roomService.getRoomsOfListing(listingId));
+        model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("optionsData", optionsData);
 
+        roomService.setReservableForEachRoom(listingRooms);
+        model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));
+/*
         var roomReservationsOfStudent = reservationService.getReservationsOfStudent(listingId, ReservationType.ROOM);
         model.addAttribute("roomReservationsOfStudent", roomReservationsOfStudent);
         model.addAttribute("hasRoomReservations", !roomReservationsOfStudent.isEmpty());
 
         model.addAttribute("hasFullReservation",
                 !reservationService.getReservationsOfStudent(listingId, ReservationType.FULL_LISTING).isEmpty());
-
-        return "showRooms";
+*/
+        return "bookingPage";
     }
 }

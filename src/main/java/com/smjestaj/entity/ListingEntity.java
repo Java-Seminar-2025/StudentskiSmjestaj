@@ -49,7 +49,7 @@ public class ListingEntity {
     private UserGender preferredGender;
 
     @Enumerated(EnumType.STRING)
-    private ListingStatus status = ListingStatus.AVAILABLE;
+    private ListingStatus status;
 
     @Column(name = "cancellation_deadline")
     private LocalDateTime cancellationDeadline;

@@ -51,19 +51,11 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public List<ReservationData> getReservationsForRoom(Long roomId) {
-        var specifiers = ReservationSpecifiers.builder().roomId(roomId).build();
-
-        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
-                .map(reservationMapper::reservationEntityToDto)
-                .toList();
-    }
-
-    public List<Long> getReservationsOfStudent(Long listingId, ReservationType type) {
+    public List<Long> getReservationsOfStudent(Long listingId, ReservationStatus status, ReservationType type) {
         var specifiers = ReservationSpecifiers.builder()
                 .listingId(listingId)
                 .studentUsername(homeService.getLoggedInUser())
-                .status(ReservationStatus.PENDING)
+                .status(status)
                 .type(type)
                 .build();
 
@@ -79,6 +71,33 @@ public class ReservationService {
         return reservationsOfStudent.stream()
                 .map(ReservationEntity::getListing)
                 .map(ListingEntity::getId)
+                .toList();
+    }
+
+    public List<Long> getPendingReservations(Long listingId) {
+        return getReservationsOfStudent(listingId, ReservationStatus.PENDING, null);
+    }
+
+    public List<Long> getPendingRoomReservations(Long listingId) {
+        return getReservationsOfStudent(listingId, ReservationStatus.PENDING, ReservationType.ROOM);
+    }
+
+    public List<Long> getPendingFullReservations(Long listingId) {
+        return getReservationsOfStudent(listingId, ReservationStatus.PENDING, ReservationType.FULL_LISTING);
+    }
+
+    public List<Long> getActiveReservations(Long listingId) {
+        return getReservationsOfStudent(listingId, ReservationStatus.ACTIVE, null);
+    }
+
+    public List<ReservationData> getActiveReservationsForRoom(Long roomId) {
+        var specifiers = ReservationSpecifiers.builder()
+                .roomId(roomId)
+                .status(ReservationStatus.ACTIVE)
+                .build();
+
+        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
+                .map(reservationMapper::reservationEntityToDto)
                 .toList();
     }
 

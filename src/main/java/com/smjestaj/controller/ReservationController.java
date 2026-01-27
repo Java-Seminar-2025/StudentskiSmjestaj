@@ -30,19 +30,23 @@ public class ReservationController {
 
         reservationService.addNewRoomReservation(roomId);
         var listingId = roomService.getListingIdByRoomId(roomId);
+        var listingRooms = roomService.getRoomsOfListing(listingId);
 
-        model.addAttribute("allRoomsData", roomService.getRoomsOfListing(listingId));
+        model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("optionsData", optionsData);
 
+        roomService.setReservableForEachRoom(listingRooms);
+        model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));
+/*
         var roomReservationsOfStudent = reservationService.getReservationsOfStudent(listingId, ReservationType.ROOM);
         model.addAttribute("roomReservationsOfStudent", roomReservationsOfStudent);
         model.addAttribute("hasRoomReservations", !roomReservationsOfStudent.isEmpty());
 
         model.addAttribute("hasFullReservation",
                 !reservationService.getReservationsOfStudent(listingId, ReservationType.FULL_LISTING).isEmpty());
-
-        return "showRooms";
+*/
+        return "bookingPage";
     }
 
     @PostMapping("add/full")

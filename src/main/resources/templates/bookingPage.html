@@ -39,7 +39,7 @@
                 <input type="hidden" name="numberOfStudents" th:value="${optionsData.numberOfStudents}">
                 <input type="hidden" name="numberOfRooms" th:value="${optionsData.numberOfRooms}">
 
-                <button th:if="${!hasFullReservation and !roomReservationsOfStudent.contains(room.roomId)}">
+                <button th:if="${room.isReservable}">
                     Book
                 </button>
             </form>
@@ -69,7 +69,7 @@
                 class="full_reservation_btn"
                 formaction="/reservations/add/full"
                 formmethod="post"
-                th:if="${!hasFullReservation and !hasRoomReservations}">
+                th:if="${isFullListingReservable}">
             Book entire accommodation
         </button>
 

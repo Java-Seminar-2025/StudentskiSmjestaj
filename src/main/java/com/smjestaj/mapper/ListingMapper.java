@@ -4,7 +4,7 @@ import org.mapstruct.*;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.dto.ListingData;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ListingMapper {
     @Mapping(target = "listingId", source = "id")
     @Mapping(target = "landlordUsername", expression = "java(listingEntity.getLandlord().getUsername())")
