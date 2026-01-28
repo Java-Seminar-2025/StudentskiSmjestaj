@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>My listings</title>
+    <title>My reservations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -11,10 +12,10 @@
 
 <body>
 <div class="page_header">
-    <h2>My listings</h2>
+    <h2>My reservations</h2>
 </div>
 
-<form class="pagination pagination_top" th:action="@{/listings/changeMyListingsPage}" th:object="${pageDto}" method="post">
+<form class="pagination pagination_top" th:action="@{/reservations/changePage}" th:object="${pageDto}" method="post">
     <input type="hidden" name="page" th:value="${pageDto.page}">
     <input type="hidden" name="size" th:value="${pageDto.size}">
     <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
@@ -29,7 +30,7 @@
 </form>
 
 <div class="listings_container">
-    <div class="listing_card" th:each="listing : ${myListings}">
+    <div class="listing_card" th:each="listing : ${reservationList}">
         <div class="listing_header">
             <h3 th:text="${listing.title}"></h3>
         </div>
@@ -51,15 +52,7 @@
                     </div>
                 </div>
                 <div class="listing_actions">
-                    <form th:action="@{/listings/edit}" method="get">
-                        <input type="hidden" name="listingId" th:value="${listing.listingId}">
-                        <button type="submit" class="edit_btn">Edit</button>
-                    </form>
-                    <form th:action="@{/listings/delete}" method="post">
-                        <input type="hidden" name="listingId" th:value="${listing.listingId}">
-                        <button type="submit" class="delete_btn">Delete</button>
-                    </form>
-                    <form th:action="@{/reservations/showPending}" method="get">
+                    <form th:action="@{/reservations/showPending}" thif="" method="get">
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
                         <button type="submit" class="show_reservations_btn">Show reservations</button>
                     </form>
@@ -67,11 +60,9 @@
             </div>
         </div>
     </div>
-</div>
 
-<form class="back_form" th:action="@{/home}" method="get">
-    <button type="submit" class="back_btn">Back to home page</button>
-</form>
-
+    <form class="back_form" th:action="@{/home}" method="get">
+        <button type="submit" class="back_btn">Back to home page</button>
+    </form>
 </body>
 </html>

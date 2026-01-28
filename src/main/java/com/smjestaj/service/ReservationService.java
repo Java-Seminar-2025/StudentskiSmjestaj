@@ -1,5 +1,7 @@
 package com.smjestaj.service;
 
+import com.smjestaj.dto.ListingData;
+import com.smjestaj.dto.PageDto;
 import com.smjestaj.dto.ReservationData;
 import com.smjestaj.dto.ReservationSpecifiers;
 import com.smjestaj.entity.ListingEntity;
@@ -10,11 +12,13 @@ import com.smjestaj.enums.ReservationType;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.ReservationNotFoundException;
 import com.smjestaj.exception.RoomNotFoundException;
+import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.mapper.ReservationMapper;
 import com.smjestaj.repository.*;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.*;
 
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -27,6 +31,7 @@ public class ReservationService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final ListingRepository listingRepository;
+    private final ListingMapper listingMapper;
     private final HomeService homeService;
 
     public void addNewRoomReservation(Long roomId) {
@@ -123,5 +128,18 @@ public class ReservationService {
         reservation.getListing().setStatus(reservation.getType().getCorrectListingStatus());
 
         reservationRepository.save(reservation);
+    }
+
+    public Page<ListingData> getMyReservationsPage(PageDto pageDto) {
+        var username = homeService.getLoggedInUser();
+        var student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        Pageable pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("id").ascending());
+
+        var reservationPage = reservationRepository.findAllByStudent(student, pageable);
+
+        return reservationPage.map(reservation ->
+                listingMapper.listingEntityToDto(reservation.getListing())
+        );
     }
 }

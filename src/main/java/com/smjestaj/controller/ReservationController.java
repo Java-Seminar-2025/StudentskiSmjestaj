@@ -7,6 +7,7 @@ import com.smjestaj.enums.ReservationStatus;
 import com.smjestaj.enums.ReservationType;
 import com.smjestaj.service.*;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ public class ReservationController {
     private final RoomService roomService;
     private final ListingService listingService;
     private final FavoriteService favoriteService;
+    private final UserService userService;
+    private final HomeService homeService;
 
     @PostMapping("/add/room")
     public String addNewRoomReservation(@RequestParam Long roomId,
@@ -73,6 +76,7 @@ public class ReservationController {
 
         model.addAttribute("allRoomsData", roomService.getRoomsOfListing(listingId));
         model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
+        model.addAttribute("userData", userService.getUserData(homeService.getLoggedInUser()));
 
         return "reservations";
     }
@@ -81,5 +85,32 @@ public class ReservationController {
     public String acceptReservation(@RequestParam Long reservationId) {
         reservationService.acceptReservation(reservationId);
         return "redirect:/listings/myListings";
+    }
+
+    @GetMapping("/myReservations")
+    public String showMyReservationsPage(Model model) {
+        var pageDto = PageDto.builder().build();
+        pageDto = pageDto.toBuilder().page(1).size(10).build();
+
+        var reservationList = reservationService.getMyReservationsPage(pageDto);
+        pageDto = pageDto.toBuilder().totalPages(reservationList.getTotalPages()).build();
+
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("reservationList", reservationList);
+        return "myReservations";
+    }
+
+    @PostMapping("/changePage")
+    public String changeMyReservationsPage(@ModelAttribute PageDto pageDto,
+                                           @RequestParam String action,
+                                           Model model) {
+
+        pageDto = listingService.changePage(pageDto, action);
+        var reservationList = reservationService.getMyReservationsPage(pageDto);
+
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("reservationList", reservationList);
+
+        return "myReservations";
     }
 }

@@ -87,6 +87,14 @@
             <input type="hidden" name="username" th:value="${userData.username}">
             <button type="submit">My listings</button>
         </form>
+        <form th:if="${userData.role.displayName == 'student'}" th:action="@{/favorites/show}" method="get">
+            <input type="hidden" name="username" th:value="${userData.username}">
+            <button type="submit">My favorites</button>
+        </form>
+        <form th:if="${userData.role.displayName == 'student'}" th:action="@{/reservations/myReservations}" method="get">
+            <input type="hidden" name="username" th:value="${userData.username}">
+            <button type="submit">My reservations</button>
+        </form>
     </div>
 </div>
 </body>

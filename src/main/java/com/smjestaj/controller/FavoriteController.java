@@ -53,4 +53,31 @@ public class FavoriteController {
         model.addAttribute("favorites", favorites);
         return "listings";
     }
+
+    @GetMapping("/show")
+    public String showMyFavoritesPage(Model model) {
+        var pageDto = PageDto.builder().build();
+        pageDto = pageDto.toBuilder().page(1).size(10).build();
+
+        var favoritesList = favoriteService.getFavoritesPage(pageDto);
+        pageDto = pageDto.toBuilder().totalPages(favoritesList.getTotalPages()).build();
+
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("favoritesList", favoritesList);
+        return "myFavorites";
+    }
+
+    @PostMapping("/changePage")
+    public String changeMyFavoritesPage(@ModelAttribute PageDto pageDto,
+                                        @RequestParam String action,
+                                        Model model) {
+
+        pageDto = listingService.changePage(pageDto, action);
+        var favoritesList = favoriteService.getFavoritesPage(pageDto);
+
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("favoritesList", favoritesList);
+
+        return "myFavorites";
+    }
 }

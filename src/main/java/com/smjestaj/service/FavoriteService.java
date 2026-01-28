@@ -1,6 +1,11 @@
 package com.smjestaj.service;
 
+import com.smjestaj.dto.ListingData;
+import com.smjestaj.dto.PageDto;
 import com.smjestaj.entity.ListingEntity;
+import com.smjestaj.mapper.ListingMapper;
+
+import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,7 @@ import java.util.List;
 public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final ListingRepository listingRepository;
+    private final ListingMapper listingMapper;
     private final UserRepository userRepository;
     private final HomeService homeService;
 
@@ -70,5 +76,18 @@ public class FavoriteService {
                 .map(FavoriteEntity::getListing)
                 .map(ListingEntity::getId)
                 .toList();
+    }
+
+    public Page<ListingData> getFavoritesPage(PageDto pageDto) {
+        var username = homeService.getLoggedInUser();
+        var student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        Pageable pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("id").ascending());
+
+        var favoritesPage = favoriteRepository.findAllBySavedAndStudent(true, student, pageable);
+
+        return favoritesPage.map(favorite ->
+                listingMapper.listingEntityToDto(favorite.getListing())
+        );
     }
 }

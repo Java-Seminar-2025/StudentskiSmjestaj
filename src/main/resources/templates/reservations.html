@@ -65,8 +65,16 @@
         </div>
 
     </div>
-    <form class="form form--single" id="red_form" th:action="@{/listings/myListings}" method="get">
+    <form class="form form--single"
+          th:if="${userData.role.displayName == 'landlord'}"
+          th:action="@{/listings/myListings}" method="get">
         <button type="submit">Back to my listings</button>
+    </form>
+
+    <form class="form form--single"
+          th:if="${userData.role.displayName == 'student'}"
+          th:action="@{/reservations/myReservations}" method="get">
+        <button type="submit">Back to my reservations</button>
     </form>
 </div>
 </body>

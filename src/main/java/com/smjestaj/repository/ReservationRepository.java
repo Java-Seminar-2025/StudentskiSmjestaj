@@ -6,6 +6,8 @@ import com.smjestaj.entity.ReservationEntity;
 import com.smjestaj.entity.UserEntity;
 import com.smjestaj.enums.ReservationStatus;
 import com.smjestaj.enums.ReservationType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -20,4 +22,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findAllByListingAndStudentAndStatusAndType(ListingEntity listing, UserEntity student, ReservationStatus status, ReservationType type);
     List<ReservationEntity> findAllByListingAndStudentAndType(ListingEntity listing, UserEntity student, ReservationType type);
     */
+
+    Page<ReservationEntity> findAllByStudent(UserEntity student, Pageable pageable);
 }
