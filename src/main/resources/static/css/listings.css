@@ -153,17 +153,17 @@ button {
 }
 
 /* LJUBIČASTI BOTUNI */
-.page_btn.double, .favorite_btn, .show_reservations_btn {
+.page_btn.double, .favorite_btn, .pending_reservations_btn {
     background-color: #4c1d95;
     color: #f5f3ff;
 }
 
-.page_btn.double:hover, .favorite_btn:hover, .show_reservations_btn:hover {
+.page_btn.double:hover, .favorite_btn:hover, .pending_reservations_btn:hover {
     background-color: #5b21b6;
 }
 
-/* SHOW RESERVATIONS BOTUN */
-.show_reservations_btn {
+/* PENDING RESERVATIONS BOTUN */
+.pending_reservations_btn {
     margin-bottom: 20px;
 }
 

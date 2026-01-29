@@ -33,7 +33,7 @@ public class ReservationController {
 
         reservationService.addNewRoomReservation(roomId);
         var listingId = roomService.getListingIdByRoomId(roomId);
-        var listingRooms = roomService.getRoomsOfListing(listingId);
+        var listingRooms = roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE);
 
         model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
@@ -41,14 +41,7 @@ public class ReservationController {
 
         roomService.setReservableForEachRoom(listingRooms);
         model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));
-/*
-        var roomReservationsOfStudent = reservationService.getReservationsOfStudent(listingId, ReservationType.ROOM);
-        model.addAttribute("roomReservationsOfStudent", roomReservationsOfStudent);
-        model.addAttribute("hasRoomReservations", !roomReservationsOfStudent.isEmpty());
 
-        model.addAttribute("hasFullReservation",
-                !reservationService.getReservationsOfStudent(listingId, ReservationType.FULL_LISTING).isEmpty());
-*/
         return "bookingPage";
     }
 
@@ -74,17 +67,29 @@ public class ReservationController {
         var listingData = listingService.getListingById(listingId);
         model.addAttribute("listingData", listingData);
 
-        model.addAttribute("allRoomsData", roomService.getRoomsOfListing(listingId));
+        model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.PENDING));
         model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
         model.addAttribute("userData", userService.getUserData(homeService.getLoggedInUser()));
 
-        return "reservations";
+        return "manageReservations";
     }
 
     @PostMapping("/accept")
     public String acceptReservation(@RequestParam Long reservationId) {
         reservationService.acceptReservation(reservationId);
         return "redirect:/listings/myListings";
+    }
+
+    @GetMapping("/showActive")
+    public String showActiveReservationsForListing(@RequestParam Long listingId, Model model) {
+        var listingData = listingService.getListingById(listingId);
+        model.addAttribute("listingData", listingData);
+
+        model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE));
+        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
+        model.addAttribute("userData", userService.getUserData(homeService.getLoggedInUser()));
+
+        return "showActiveReservations";
     }
 
     @GetMapping("/myReservations")

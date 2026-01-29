@@ -23,5 +23,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findAllByListingAndStudentAndType(ListingEntity listing, UserEntity student, ReservationType type);
     */
 
+    List<ReservationEntity> findAllByStudent(UserEntity student);
     Page<ReservationEntity> findAllByStudent(UserEntity student, Pageable pageable);
 }

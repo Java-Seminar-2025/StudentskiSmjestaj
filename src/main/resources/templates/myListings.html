@@ -61,7 +61,11 @@
                     </form>
                     <form th:action="@{/reservations/showPending}" method="get">
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
-                        <button type="submit" class="show_reservations_btn">Show reservations</button>
+                        <button type="submit" class="pending_reservations_btn">Manage pending reservations</button>
+                    </form>
+                    <form th:action="@{/reservations/showActive}" method="get">
+                        <input type="hidden" name="listingId" th:value="${listing.listingId}">
+                        <button type="submit" class="active_reservations_btn">Show active reservations</button>
                     </form>
                 </div>
             </div>

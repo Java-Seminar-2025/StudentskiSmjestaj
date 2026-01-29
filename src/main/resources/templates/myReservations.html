@@ -52,9 +52,12 @@
                     </div>
                 </div>
                 <div class="listing_actions">
-                    <form th:action="@{/reservations/showPending}" thif="" method="get">
+                    <form th:action="@{/reservations/showPending}" method="get">
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
-                        <button type="submit" class="show_reservations_btn">Show reservations</button>
+                        <button type="submit" class="show_reservations_btn">Manage reservations</button>
+                    </form>
+                    <form>
+
                     </form>
                 </div>
             </div>

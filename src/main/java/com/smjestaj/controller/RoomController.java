@@ -41,7 +41,7 @@ public class RoomController {
                                      @ModelAttribute OptionsData optionsData,
                                      @ModelAttribute PageDto pageDto,
                                      Model model) {
-        var listingRooms = roomService.getRoomsOfListing(listingId);
+        var listingRooms = roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE);
 
         model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
@@ -49,14 +49,7 @@ public class RoomController {
 
         roomService.setReservableForEachRoom(listingRooms);
         model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));
-/*
-        var roomReservationsOfStudent = reservationService.getReservationsOfStudent(listingId, ReservationType.ROOM);
-        model.addAttribute("roomReservationsOfStudent", roomReservationsOfStudent);
-        model.addAttribute("hasRoomReservations", !roomReservationsOfStudent.isEmpty());
 
-        model.addAttribute("hasFullReservation",
-                !reservationService.getReservationsOfStudent(listingId, ReservationType.FULL_LISTING).isEmpty());
-*/
         return "bookingPage";
     }
 }

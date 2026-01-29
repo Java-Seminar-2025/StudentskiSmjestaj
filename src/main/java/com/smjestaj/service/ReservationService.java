@@ -95,10 +95,10 @@ public class ReservationService {
         return getReservationsOfStudent(listingId, ReservationStatus.ACTIVE, null);
     }
 
-    public List<ReservationData> getActiveReservationsForRoom(Long roomId) {
+    public List<ReservationData> getReservationsForRoom(Long roomId, ReservationStatus status) {
         var specifiers = ReservationSpecifiers.builder()
                 .roomId(roomId)
-                .status(ReservationStatus.ACTIVE)
+                .status(status)
                 .build();
 
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
@@ -128,6 +128,16 @@ public class ReservationService {
         reservation.getListing().setStatus(reservation.getType().getCorrectListingStatus());
 
         reservationRepository.save(reservation);
+
+        var student = reservation.getStudent();
+        var otherReservationsOfStudent = reservationRepository.findAllByStudent(student);
+
+        otherReservationsOfStudent.forEach(otherReservation -> {
+            if(otherReservation.getId() != reservationId) {
+                otherReservation.setStatus(ReservationStatus.CANCELLED);
+                reservationRepository.save(otherReservation);
+            }
+        });
     }
 
     public Page<ListingData> getMyReservationsPage(PageDto pageDto) {

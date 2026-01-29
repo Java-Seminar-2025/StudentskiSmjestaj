@@ -2,6 +2,7 @@ package com.smjestaj.service;
 
 import com.smjestaj.dto.AllRoomsData;
 import com.smjestaj.dto.RoomData;
+import com.smjestaj.enums.ReservationStatus;
 import com.smjestaj.enums.ReservationType;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.RoomNotFoundException;
@@ -9,6 +10,8 @@ import com.smjestaj.mapper.RoomMapper;
 import com.smjestaj.repository.ListingRepository;
 import com.smjestaj.repository.RoomRepository;
 
+import com.smjestaj.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
@@ -19,8 +22,10 @@ import java.util.List;
 public class RoomService {
     private final ListingRepository listingRepository;
     private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
     private final RoomMapper roomMapper;
     private final ReservationService reservationService;
+    private final HomeService homeService;
 
     public AllRoomsData prepareRoomForms(Long listingId) {
         var listing = listingRepository.findById(listingId)
@@ -47,14 +52,17 @@ public class RoomService {
                 });
     }
 
-    public AllRoomsData getRoomsOfListing(Long listingId) {
+    public AllRoomsData getAllRoomsDataOfListing(Long listingId, ReservationStatus status) {
         var listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+
+        var user = userRepository.findByUsername(homeService.getLoggedInUser())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
         var listingRooms = roomRepository.findAllByListing(listing).stream()
                 .map(roomMapper::roomEntityToDto)
                 .map(roomData -> {
-                    roomData.setReservations(reservationService.getActiveReservationsForRoom(roomData.getRoomId()));
+                    roomData.setReservations(reservationService.getReservationsForRoom(roomData.getRoomId(), status));
                     return roomData;
                 })
                 .toList();
