@@ -1,13 +1,10 @@
 package com.smjestaj.controller;
 
-import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
-import com.smjestaj.dto.ReservationSpecifiers;
 import com.smjestaj.enums.ReservationStatus;
-import com.smjestaj.enums.ReservationType;
 import com.smjestaj.service.*;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +25,7 @@ public class ReservationController {
     @PostMapping("/add/room")
     public String addNewRoomReservation(@RequestParam Long roomId,
                                         @ModelAttribute PageDto pageDto,
-                                        @ModelAttribute OptionsData optionsData,
+                                        @ModelAttribute ListingFilters listingFilters,
                                         Model model) {
 
         reservationService.addNewRoomReservation(roomId);
@@ -37,7 +34,7 @@ public class ReservationController {
 
         model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("listingFilters", listingFilters);
 
         roomService.setReservableForEachRoom(listingRooms);
         model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));
@@ -48,16 +45,16 @@ public class ReservationController {
     @PostMapping("add/full")
     public String addNewFullReservation(@RequestParam Long listingId,
                                         @ModelAttribute PageDto pageDto,
-                                        @ModelAttribute OptionsData optionsData,
+                                        @ModelAttribute ListingFilters listingFilters,
                                         Model model) {
         reservationService.addNewFullReservation(listingId);
 
-        var listings = listingService.filterListings(optionsData, pageDto);
+        var listings = listingService.filterListings(listingFilters, pageDto);
         var favorites = favoriteService.findAllFavoritesOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("listingFilters", listingFilters);
         model.addAttribute("favorites", favorites);
         return "listings";
     }
@@ -69,7 +66,7 @@ public class ReservationController {
 
         model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.PENDING));
         model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
-        model.addAttribute("userData", userService.getUserData(homeService.getLoggedInUser()));
+        model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
 
         return "manageReservations";
     }
@@ -87,7 +84,7 @@ public class ReservationController {
 
         model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE));
         model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
-        model.addAttribute("userData", userService.getUserData(homeService.getLoggedInUser()));
+        model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
 
         return "showActiveReservations";
     }

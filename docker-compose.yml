@@ -10,6 +10,10 @@ services:
       POSTGRES_DB: smjestaj
     ports:
       - "5433:5432"
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
     volumes:
       - postgres-data:/var/lib/postgresql/data
 

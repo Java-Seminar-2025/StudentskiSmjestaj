@@ -35,7 +35,7 @@ public class ReservationService {
     private final HomeService homeService;
 
     public void addNewRoomReservation(Long roomId) {
-        var student = userRepository.findByUsername(homeService.getLoggedInUser())
+        var student = userRepository.findByUsername(homeService.getUsernameOfLoggedInUser())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
         var room = roomRepository.findById(roomId)
@@ -46,7 +46,7 @@ public class ReservationService {
     }
 
     public void addNewFullReservation(Long listingId) {
-        var student = userRepository.findByUsername(homeService.getLoggedInUser())
+        var student = userRepository.findByUsername(homeService.getUsernameOfLoggedInUser())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
         var listing = listingRepository.findById(listingId)
@@ -59,7 +59,7 @@ public class ReservationService {
     public List<Long> getReservationsOfStudent(Long listingId, ReservationStatus status, ReservationType type) {
         var specifiers = ReservationSpecifiers.builder()
                 .listingId(listingId)
-                .studentUsername(homeService.getLoggedInUser())
+                .studentUsername(homeService.getUsernameOfLoggedInUser())
                 .status(status)
                 .type(type)
                 .build();
@@ -113,11 +113,25 @@ public class ReservationService {
                 .type(ReservationType.FULL_LISTING)
                 .build();
 
-        var reservations = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
-
-        return reservations.stream()
+        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
                 .map(reservationMapper::reservationEntityToDto)
                 .toList();
+    }
+
+    public void cancelOtherPendingReservations(ReservationEntity acceptedReservation) {
+        var specifiers = ReservationSpecifiers.builder()
+                .studentUsername(acceptedReservation.getStudent().getUsername())
+                .status(ReservationStatus.PENDING)
+                .build();
+
+        var otherReservationsOfStudent = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
+
+        otherReservationsOfStudent.forEach(otherReservation -> {
+            if(!otherReservation.getId().equals(acceptedReservation.getId())) {
+                otherReservation.setStatus(ReservationStatus.CANCELLED);
+                reservationRepository.save(otherReservation);
+            }
+        });
     }
 
     public void acceptReservation(Long reservationId) {
@@ -128,27 +142,20 @@ public class ReservationService {
         reservation.getListing().setStatus(reservation.getType().getCorrectListingStatus());
 
         reservationRepository.save(reservation);
-
-        var student = reservation.getStudent();
-        var otherReservationsOfStudent = reservationRepository.findAllByStudent(student);
-
-        otherReservationsOfStudent.forEach(otherReservation -> {
-            if(otherReservation.getId() != reservationId) {
-                otherReservation.setStatus(ReservationStatus.CANCELLED);
-                reservationRepository.save(otherReservation);
-            }
-        });
+        cancelOtherPendingReservations(reservation);
     }
 
     public Page<ListingData> getMyReservationsPage(PageDto pageDto) {
-        var username = homeService.getLoggedInUser();
-        var student = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         Pageable pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("id").ascending());
 
-        var reservationPage = reservationRepository.findAllByStudent(student, pageable);
+        var specifiers = ReservationSpecifiers.builder()
+                .studentUsername(homeService.getUsernameOfLoggedInUser())
+                .excludeCancelled(true)
+                .build();
 
-        return reservationPage.map(reservation ->
+        var myReservationPage = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers), pageable);
+
+        return myReservationPage.map(reservation ->
                 listingMapper.listingEntityToDto(reservation.getListing())
         );
     }

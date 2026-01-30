@@ -1,14 +1,10 @@
 package com.smjestaj.controller;
 
 import com.smjestaj.dto.AllRoomsData;
-import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
-import com.smjestaj.dto.ReservationSpecifiers;
 import com.smjestaj.enums.ReservationStatus;
-import com.smjestaj.enums.ReservationType;
-import com.smjestaj.service.HomeService;
 import com.smjestaj.service.ListingService;
-import com.smjestaj.service.ReservationService;
 import com.smjestaj.service.RoomService;
 
 import org.springframework.stereotype.Controller;
@@ -37,15 +33,15 @@ public class RoomController {
     }
 
     @GetMapping("/show")
-    public String showRoomsOfListing(@RequestParam Long listingId,
-                                     @ModelAttribute OptionsData optionsData,
-                                     @ModelAttribute PageDto pageDto,
-                                     Model model) {
+    public String showBookingPage(@RequestParam Long listingId,
+                                  @ModelAttribute ListingFilters listingFilters,
+                                  @ModelAttribute PageDto pageDto,
+                                  Model model) {
         var listingRooms = roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE);
 
         model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("listingFilters", listingFilters);
 
         roomService.setReservableForEachRoom(listingRooms);
         model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));

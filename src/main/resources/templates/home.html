@@ -77,7 +77,7 @@
     </div>
 
     <div class="listing_actions">
-        <form id="green_form" th:action="@{/listings/options}" method="get">
+        <form id="green_form" th:action="@{/listings/filters}" method="get">
             <button type="submit">Search listings</button>
         </form>
         <form id="purple_form" th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/create}" method="get">

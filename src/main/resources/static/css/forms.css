@@ -306,9 +306,14 @@ label {
 }
 
 .reservation_table .form--single button {
-     width: auto;
-     padding: 4px 8px;
+    width: auto;
+    padding: 4px 8px;
  }
+
+.reservation {
+    gap: 4px;
+    margin-bottom: 15px;
+}
 
 /* INFORMACIJE O SOBI ILI SMJEŠTAJU */
 .room_info {

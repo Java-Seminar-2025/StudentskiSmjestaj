@@ -10,5 +10,6 @@ public record ReservationSpecifiers (
     String studentUsername,
     Long roomId,
     ReservationStatus status,
-    ReservationType type
+    ReservationType type,
+    Boolean excludeCancelled
 ) {}

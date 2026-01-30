@@ -2,6 +2,8 @@ package com.smjestaj.repository;
 
 import com.smjestaj.dto.ReservationSpecifiers;
 import com.smjestaj.entity.ReservationEntity;
+import com.smjestaj.enums.ReservationStatus;
+
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -27,6 +29,10 @@ public class ReservationSpecification {
 
             if (specifiers.status() != null) {
                 conditionList.add(cb.equal(root.get("status"), specifiers.status()));
+            }
+
+            if (specifiers.excludeCancelled() != null && specifiers.excludeCancelled()) {
+                conditionList.add(cb.notEqual(root.get("status"), ReservationStatus.CANCELLED));
             }
 
             if (specifiers.type() != null) {

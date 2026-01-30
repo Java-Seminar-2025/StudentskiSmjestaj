@@ -1,6 +1,7 @@
 package com.smjestaj.service;
 
 import com.smjestaj.dto.StudentData;
+import com.smjestaj.exception.StudentDetailsNotFoundException;
 import com.smjestaj.mapper.FacultyMapper;
 import com.smjestaj.mapper.StudentDetailsMapper;
 import com.smjestaj.repository.FacultyRepository;
@@ -33,6 +34,7 @@ public class StudentDetailsService {
         if(facultyRepository.findByName(studentData.facultyName()).isEmpty()) {
             var faculty = facultyMapper.studentDataToFacultyEntity(studentData);
             facultyRepository.save(faculty);
+
             studentDetails.setFaculty(faculty);
             studentDetailsRepository.save(studentDetails);
             return;
@@ -42,5 +44,15 @@ public class StudentDetailsService {
                 orElseThrow();
         studentDetails.setFaculty(faculty);
         studentDetailsRepository.save(studentDetails);
+    }
+
+    public StudentData getStudentData(String username) {
+        var student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+
+        var studentDetails = studentDetailsRepository.findByStudent(student)
+                .orElseThrow(() -> new StudentDetailsNotFoundException("Student details not found!"));
+
+        return studentDetailsMapper.studentDetailsEntityToDto(studentDetails);
     }
 }

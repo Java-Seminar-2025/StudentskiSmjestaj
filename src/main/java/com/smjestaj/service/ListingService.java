@@ -1,10 +1,9 @@
 package com.smjestaj.service;
 
 import com.smjestaj.dto.ListingData;
-import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
 import com.smjestaj.enums.ListingStatus;
-import com.smjestaj.enums.ReservationType;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
@@ -25,12 +24,15 @@ public class ListingService {
     private final ListingMapper listingMapper;
     private final HomeService homeService;
     private final ReservationService reservationService;
+    private final StudentDetailsService studentDetailsService;
 
-    public Page<ListingData> filterListings(OptionsData optionsData, PageDto pageDto) {
+    public Page<ListingData> filterListings(ListingFilters listingFilters, PageDto pageDto) {
         var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
 
+        var studentGender = studentDetailsService.getStudentData(homeService.getUsernameOfLoggedInUser()).gender();
+
         var listingsPage = listingRepository.findAll(
-                ListingSpecification.withFilters(optionsData),
+                ListingSpecification.withFilters(listingFilters, studentGender),
                 pageable);
 
         return listingsPage.map(listingMapper::listingEntityToDto);
@@ -38,7 +40,7 @@ public class ListingService {
 
     public Page<ListingData> findMyListings(PageDto pageDto) {
         var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("id").ascending());
-        var landlord = userRepository.findByUsername(homeService.getLoggedInUser())
+        var landlord = userRepository.findByUsername(homeService.getUsernameOfLoggedInUser())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
         var myListingsPage = listingRepository.findAllByLandlordAndDeleted(landlord, false, pageable);
@@ -53,7 +55,7 @@ public class ListingService {
 
     public ListingData prepareNewListing() {
         var listingData = ListingData.builder().build();
-        listingData = listingData.toBuilder().landlordUsername(homeService.getLoggedInUser()).build();
+        listingData = listingData.toBuilder().landlordUsername(homeService.getUsernameOfLoggedInUser()).build();
         return listingData;
     }
 
@@ -112,8 +114,9 @@ public class ListingService {
 
     public boolean isFullListingReservable(Long listingId) {
         var hasPendingReservation = !reservationService.getPendingReservations(listingId).isEmpty();
-        var hasActiveReservation = !reservationService.getActiveReservations(listingId).isEmpty();
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
-        return !hasPendingReservation && !hasActiveReservation;
+        return (!hasPendingReservation) && (listing.getStatus().equals(ListingStatus.AVAILABLE));
     }
 }

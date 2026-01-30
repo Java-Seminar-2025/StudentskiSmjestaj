@@ -1,7 +1,8 @@
 package com.smjestaj.repository;
 
-import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.entity.ListingEntity;
+import com.smjestaj.enums.UserGender;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -9,29 +10,33 @@ import java.util.List;
 import jakarta.persistence.criteria.Predicate;
 
 public class ListingSpecification {
-    public static Specification<ListingEntity> withFilters(OptionsData optionsData) {
+    public static Specification<ListingEntity> withFilters(ListingFilters listingFilters, UserGender gender) {
         return (root, query, cb) -> {
             List<Predicate> conditionList = new ArrayList<>();
 
-            if (optionsData.lowerPrice() != null) {
-                conditionList.add(cb.greaterThanOrEqualTo(root.get("price"), optionsData.lowerPrice()));
+            if (listingFilters.lowerPrice() != null) {
+                conditionList.add(cb.greaterThanOrEqualTo(root.get("price"), listingFilters.lowerPrice()));
             }
 
-            if (optionsData.upperPrice() != null) {
-                conditionList.add(cb.lessThanOrEqualTo(root.get("price"), optionsData.upperPrice()));
+            if (listingFilters.upperPrice() != null) {
+                conditionList.add(cb.lessThanOrEqualTo(root.get("price"), listingFilters.upperPrice()));
             }
 
-            if (optionsData.city() != null && !optionsData.city().isEmpty()) {
-                conditionList.add(cb.equal(cb.lower(root.get("city")), optionsData.city().toLowerCase()));
+            if (listingFilters.city() != null && !listingFilters.city().isEmpty()) {
+                conditionList.add(cb.equal(cb.lower(root.get("city")), listingFilters.city().toLowerCase()));
             }
 
-            if (optionsData.numberOfStudents() != null) {
-                conditionList.add(cb.equal(root.get("numberOfStudents"), optionsData.numberOfStudents()));
+            if (listingFilters.numberOfStudents() != null) {
+                conditionList.add(cb.equal(root.get("numberOfStudents"), listingFilters.numberOfStudents()));
             }
 
-            if (optionsData.numberOfRooms() != null) {
-                conditionList.add(cb.equal(root.get("numberOfRooms"), optionsData.numberOfRooms()));
+            if (listingFilters.numberOfRooms() != null) {
+                conditionList.add(cb.equal(root.get("numberOfRooms"), listingFilters.numberOfRooms()));
             }
+
+            Predicate sameGender = cb.equal(root.get("preferredGender"), gender);
+            Predicate noPreference = cb.isNull(root.get("preferredGender"));
+            conditionList.add(cb.or(sameGender, noPreference));
 
             conditionList.add(cb.equal(root.get("deleted"), false));
 

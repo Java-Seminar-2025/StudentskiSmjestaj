@@ -28,7 +28,7 @@ public class FavoriteService {
     private final HomeService homeService;
 
     public void addFavorite(Long listingId) {
-        var username = homeService.getLoggedInUser();
+        var username = homeService.getUsernameOfLoggedInUser();
         var student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         var listing = listingRepository.findById(listingId)
@@ -54,7 +54,7 @@ public class FavoriteService {
     }
 
     public void removeFavorite(Long listingId) {
-        var username = homeService.getLoggedInUser();
+        var username = homeService.getUsernameOfLoggedInUser();
         var student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         var listing = listingRepository.findById(listingId)
@@ -68,7 +68,7 @@ public class FavoriteService {
     }
 
     public List<Long> findAllFavoritesOfStudent() {
-        var username = homeService.getLoggedInUser();
+        var username = homeService.getUsernameOfLoggedInUser();
         var student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
@@ -79,7 +79,7 @@ public class FavoriteService {
     }
 
     public Page<ListingData> getFavoritesPage(PageDto pageDto) {
-        var username = homeService.getLoggedInUser();
+        var username = homeService.getUsernameOfLoggedInUser();
         var student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         Pageable pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("id").ascending());

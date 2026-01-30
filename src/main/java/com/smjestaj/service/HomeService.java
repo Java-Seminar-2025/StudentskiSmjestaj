@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HomeService {
-    public String getLoggedInUser() {
+    public String getUsernameOfLoggedInUser() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }

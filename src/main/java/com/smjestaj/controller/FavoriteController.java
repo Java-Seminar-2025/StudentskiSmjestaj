@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.smjestaj.service.FavoriteService;
 import com.smjestaj.service.ListingService;
-import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
 
 import lombok.RequiredArgsConstructor;
@@ -20,36 +20,36 @@ public class FavoriteController {
 
     @PostMapping("/add")
     public String addFavorite(@ModelAttribute PageDto pageDto,
-                              @ModelAttribute OptionsData optionsData,
+                              @ModelAttribute ListingFilters listingFilters,
                               @RequestParam Long listingId,
                               Model model) {
 
         favoriteService.addFavorite(listingId);
 
         var favorites = favoriteService.findAllFavoritesOfStudent();
-        var listings = listingService.filterListings(optionsData, pageDto);
+        var listings = listingService.filterListings(listingFilters, pageDto);
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("listingFilters", listingFilters);
         model.addAttribute("favorites", favorites);
         return "listings";
     }
 
     @PostMapping("/remove")
     public String removeFavorite(@ModelAttribute PageDto pageDto,
-                                 @ModelAttribute OptionsData optionsData,
+                                 @ModelAttribute ListingFilters listingFilters,
                                  @RequestParam Long listingId,
                                  Model model) {
 
         favoriteService.removeFavorite(listingId);
 
         var favorites = favoriteService.findAllFavoritesOfStudent();
-        var listings = listingService.filterListings(optionsData, pageDto);
+        var listings = listingService.filterListings(listingFilters, pageDto);
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("listingFilters", listingFilters);
         model.addAttribute("favorites", favorites);
         return "listings";
     }

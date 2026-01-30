@@ -1,7 +1,7 @@
 package com.smjestaj.controller;
 
 import com.smjestaj.dto.ListingData;
-import com.smjestaj.dto.OptionsData;
+import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
 import com.smjestaj.service.FavoriteService;
 import com.smjestaj.service.ListingService;
@@ -19,18 +19,18 @@ public class ListingController {
     private final ListingService listingService;
     private final FavoriteService favoriteService;
 
-    @GetMapping("/options")
-    public String showListingOptions(Model model) {
-        model.addAttribute("optionsData", OptionsData.builder().build());
-        return "listingOptions";
+    @GetMapping("/filters")
+    public String showListingFilters(Model model) {
+        model.addAttribute("listingFilters", ListingFilters.builder().build());
+        return "listingFilters";
     }
 
-    @PostMapping("/options")
-    public String showFilteredListings(@ModelAttribute OptionsData optionsData, Model model) {
+    @PostMapping("/filters")
+    public String showFilteredListings(@ModelAttribute ListingFilters listingFilters, Model model) {
         var pageDto = PageDto.builder().build();
         pageDto = pageDto.toBuilder().page(1).size(10).build();
 
-        var listings = listingService.filterListings(optionsData, pageDto);
+        var listings = listingService.filterListings(listingFilters, pageDto);
         pageDto = pageDto.toBuilder().totalPages(listings.getTotalPages()).build();
 
         var favorites = favoriteService.findAllFavoritesOfStudent();
@@ -43,17 +43,17 @@ public class ListingController {
 
     @PostMapping("/changePage")
     public String changeListingsPage(@ModelAttribute PageDto pageDto,
-                                     @ModelAttribute OptionsData optionsData,
+                                     @ModelAttribute ListingFilters listingFilters,
                                      @RequestParam String action,
                                      Model model) {
 
         pageDto = listingService.changePage(pageDto, action);
-        var listings = listingService.filterListings(optionsData, pageDto);
+        var listings = listingService.filterListings(listingFilters, pageDto);
         var favorites = favoriteService.findAllFavoritesOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("optionsData", optionsData);
+        model.addAttribute("listingFilters", listingFilters);
         model.addAttribute("favorites", favorites);
 
         return "listings";

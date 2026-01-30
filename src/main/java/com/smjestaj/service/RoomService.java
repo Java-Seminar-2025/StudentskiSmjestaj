@@ -3,7 +3,6 @@ package com.smjestaj.service;
 import com.smjestaj.dto.AllRoomsData;
 import com.smjestaj.dto.RoomData;
 import com.smjestaj.enums.ReservationStatus;
-import com.smjestaj.enums.ReservationType;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.RoomNotFoundException;
 import com.smjestaj.mapper.RoomMapper;
@@ -56,9 +55,6 @@ public class RoomService {
         var listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
-        var user = userRepository.findByUsername(homeService.getLoggedInUser())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-
         var listingRooms = roomRepository.findAllByListing(listing).stream()
                 .map(roomMapper::roomEntityToDto)
                 .map(roomData -> {
@@ -87,7 +83,7 @@ public class RoomService {
                     var isAlreadyBookedByStudent = roomReservationsOfStudent.contains(roomData.getRoomId());
 
                     var isReservable = (!hasActiveReservationsForListing) && (!hasFullReservationForListing) &&
-                                        (!isAlreadyBookedByStudent) && (!isOccupied);
+                                       (!isAlreadyBookedByStudent) && (!isOccupied);
                     roomData.setIsReservable(isReservable);
                 });
     }

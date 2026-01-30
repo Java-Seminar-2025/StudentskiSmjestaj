@@ -20,11 +20,11 @@
         <input type="hidden" name="size" th:value="${pageDto.size}">
         <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
 
-        <input type="hidden" name="lowerPrice" th:value="${optionsData.lowerPrice}">
-        <input type="hidden" name="upperPrice" th:value="${optionsData.upperPrice}">
-        <input type="hidden" name="city" th:value="${optionsData.city}">
-        <input type="hidden" name="numberOfStudents" th:value="${optionsData.numberOfStudents}">
-        <input type="hidden" name="numberOfRooms" th:value="${optionsData.numberOfRooms}">
+        <input type="hidden" name="lowerPrice" th:value="${listingFilters.lowerPrice}">
+        <input type="hidden" name="upperPrice" th:value="${listingFilters.upperPrice}">
+        <input type="hidden" name="city" th:value="${listingFilters.city}">
+        <input type="hidden" name="numberOfStudents" th:value="${listingFilters.numberOfStudents}">
+        <input type="hidden" name="numberOfRooms" th:value="${listingFilters.numberOfRooms}">
 
         <button class="page_btn double" type="submit" name="action" value="first">«</button>
         <button class="page_btn single" type="submit" name="action" value="prev">‹</button>
@@ -65,11 +65,11 @@
                             <input type="hidden" name="size" th:value="${pageDto.size}">
                             <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
 
-                            <input type="hidden" name="lowerPrice" th:value="${optionsData.lowerPrice}">
-                            <input type="hidden" name="upperPrice" th:value="${optionsData.upperPrice}">
-                            <input type="hidden" name="city" th:value="${optionsData.city}">
-                            <input type="hidden" name="numberOfStudents" th:value="${optionsData.numberOfStudents}">
-                            <input type="hidden" name="numberOfRooms" th:value="${optionsData.numberOfRooms}">
+                            <input type="hidden" name="lowerPrice" th:value="${listingFilters.lowerPrice}">
+                            <input type="hidden" name="upperPrice" th:value="${listingFilters.upperPrice}">
+                            <input type="hidden" name="city" th:value="${listingFilters.city}">
+                            <input type="hidden" name="numberOfStudents" th:value="${listingFilters.numberOfStudents}">
+                            <input type="hidden" name="numberOfRooms" th:value="${listingFilters.numberOfRooms}">
 
                             <button th:if="${!favorites.contains(listing.listingId)}"
                                     type="submit"
@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    <form class="back_form" th:action="@{/listings/options}" method="get">
+    <form class="back_form" th:action="@{/listings/filters}" method="get">
         <button type="submit" class="back_btn">Back to filters</button>
     </form>
 </body>
