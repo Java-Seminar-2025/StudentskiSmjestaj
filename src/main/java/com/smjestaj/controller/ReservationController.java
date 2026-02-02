@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import java.util.EnumSet;
 
 @Controller
 @RequestMapping("/reservations")
@@ -30,7 +31,9 @@ public class ReservationController {
 
         reservationService.addNewRoomReservation(roomId);
         var listingId = roomService.getListingIdByRoomId(roomId);
-        var listingRooms = roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE);
+
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
+        var listingRooms = roomService.getAllRoomsDataOfListing(listingId, statusList);
 
         model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
@@ -61,12 +64,14 @@ public class ReservationController {
 
     @GetMapping("/showPending")
     public String showPendingReservationsForListing(@RequestParam Long listingId, Model model) {
+        model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
+
         var listingData = listingService.getListingById(listingId);
         model.addAttribute("listingData", listingData);
 
-        model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.PENDING));
+        var statusList = EnumSet.of(ReservationStatus.PENDING);
+        model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, statusList));
         model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
-        model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
 
         return "manageReservations";
     }
@@ -79,26 +84,22 @@ public class ReservationController {
 
     @GetMapping("/showActive")
     public String showActiveReservationsForListing(@RequestParam Long listingId, Model model) {
+        model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
+
         var listingData = listingService.getListingById(listingId);
         model.addAttribute("listingData", listingData);
 
-        model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE));
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
+        model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, statusList));
         model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
-        model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
 
         return "showActiveReservations";
     }
 
     @GetMapping("/myReservations")
     public String showMyReservationsPage(Model model) {
-        var pageDto = PageDto.builder().build();
-        pageDto = pageDto.toBuilder().page(1).size(10).build();
-
-        var reservationList = reservationService.getMyReservationsPage(pageDto);
-        pageDto = pageDto.toBuilder().totalPages(reservationList.getTotalPages()).build();
-
-        model.addAttribute("pageDto", pageDto);
-        model.addAttribute("reservationList", reservationList);
+        var listingsWithReservations = reservationService.getListingsWithReservations();
+        model.addAttribute("listingsWithReservations", listingsWithReservations);
         return "myReservations";
     }
 
@@ -108,7 +109,7 @@ public class ReservationController {
                                            Model model) {
 
         pageDto = listingService.changePage(pageDto, action);
-        var reservationList = reservationService.getMyReservationsPage(pageDto);
+        var reservationList = reservationService.getListingsWithReservations();
 
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("reservationList", reservationList);

@@ -3,6 +3,7 @@ package com.smjestaj.dto;
 import com.smjestaj.enums.*;
 import lombok.Builder;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder(toBuilder = true)
 public record ListingData (
@@ -18,6 +19,7 @@ public record ListingData (
     UserGender preferredGender,
     LocalDateTime cancellationDeadline,
     ListingStatus status,
+    List<ReservationData> reservations,
     Boolean isReservable,
     Boolean deleted
 ) {}

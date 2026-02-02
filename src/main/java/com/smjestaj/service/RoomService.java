@@ -10,10 +10,10 @@ import com.smjestaj.repository.ListingRepository;
 import com.smjestaj.repository.RoomRepository;
 
 import com.smjestaj.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -51,14 +51,14 @@ public class RoomService {
                 });
     }
 
-    public AllRoomsData getAllRoomsDataOfListing(Long listingId, ReservationStatus status) {
+    public AllRoomsData getAllRoomsDataOfListing(Long listingId, Collection<ReservationStatus> statusList) {
         var listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
         var listingRooms = roomRepository.findAllByListing(listing).stream()
                 .map(roomMapper::roomEntityToDto)
                 .map(roomData -> {
-                    roomData.setReservations(reservationService.getReservationsForRoom(roomData.getRoomId(), status));
+                    roomData.setReservations(reservationService.getReservationsForRoom(roomData.getRoomId(), statusList));
                     return roomData;
                 })
                 .toList();

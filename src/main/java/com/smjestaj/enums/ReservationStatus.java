@@ -6,9 +6,9 @@ import lombok.*;
 @Getter
 public enum ReservationStatus {
     PENDING("pending confirmation"),
+    FIRST_ACTIVE("first active"),
     ACTIVE("active"),
-    CANCELLED("cancelled"),
-    COMPLETED("completed");
+    CANCELLED("cancelled");
 
     private final String displayName;
 }

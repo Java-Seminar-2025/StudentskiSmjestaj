@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import java.util.EnumSet;
 
 @Controller
 @RequestMapping("/listingRooms")
@@ -37,14 +38,16 @@ public class RoomController {
                                   @ModelAttribute ListingFilters listingFilters,
                                   @ModelAttribute PageDto pageDto,
                                   Model model) {
-        var listingRooms = roomService.getAllRoomsDataOfListing(listingId, ReservationStatus.ACTIVE);
 
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
+        var listingRooms = roomService.getAllRoomsDataOfListing(listingId, statusList);
         model.addAttribute("allRoomsData", listingRooms);
-        model.addAttribute("pageDto", pageDto);
-        model.addAttribute("listingFilters", listingFilters);
 
         roomService.setReservableForEachRoom(listingRooms);
         model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));
+
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("listingFilters", listingFilters);
 
         return "bookingPage";
     }

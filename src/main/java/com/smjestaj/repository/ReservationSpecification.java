@@ -27,7 +27,10 @@ public class ReservationSpecification {
                 conditionList.add(cb.equal(root.get("room").get("id"), specifiers.roomId()));
             }
 
-            if (specifiers.status() != null) {
+            if (specifiers.statusList() != null && !specifiers.statusList().isEmpty()) {
+                conditionList.add(root.get("status").in(specifiers.statusList()));
+            }
+            else if (specifiers.status() != null) {
                 conditionList.add(cb.equal(root.get("status"), specifiers.status()));
             }
 

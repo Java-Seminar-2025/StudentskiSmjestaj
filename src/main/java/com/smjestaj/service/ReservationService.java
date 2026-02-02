@@ -1,9 +1,6 @@
 package com.smjestaj.service;
 
-import com.smjestaj.dto.ListingData;
-import com.smjestaj.dto.PageDto;
-import com.smjestaj.dto.ReservationData;
-import com.smjestaj.dto.ReservationSpecifiers;
+import com.smjestaj.dto.*;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.entity.ListingRoomEntity;
 import com.smjestaj.entity.ReservationEntity;
@@ -18,10 +15,13 @@ import com.smjestaj.repository.*;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.*;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -95,10 +95,21 @@ public class ReservationService {
         return getReservationsOfStudent(listingId, ReservationStatus.ACTIVE, null);
     }
 
-    public List<ReservationData> getReservationsForRoom(Long roomId, ReservationStatus status) {
+    public List<ReservationData> getReservationsOfStudentForListing(Long listingId) {
+        var specifiers = ReservationSpecifiers.builder()
+                .listingId(listingId)
+                .studentUsername(homeService.getUsernameOfLoggedInUser())
+                .build();
+
+        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
+                .map(reservationMapper::reservationEntityToDto)
+                .toList();
+    }
+
+    public List<ReservationData> getReservationsForRoom(Long roomId, Collection<ReservationStatus> statusList) {
         var specifiers = ReservationSpecifiers.builder()
                 .roomId(roomId)
-                .status(status)
+                .statusList(statusList)
                 .build();
 
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
@@ -127,7 +138,7 @@ public class ReservationService {
         var otherReservationsOfStudent = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
 
         otherReservationsOfStudent.forEach(otherReservation -> {
-            if(!otherReservation.getId().equals(acceptedReservation.getId())) {
+            if (!otherReservation.getId().equals(acceptedReservation.getId())) {
                 otherReservation.setStatus(ReservationStatus.CANCELLED);
                 reservationRepository.save(otherReservation);
             }
@@ -145,18 +156,50 @@ public class ReservationService {
         cancelOtherPendingReservations(reservation);
     }
 
-    public Page<ListingData> getMyReservationsPage(PageDto pageDto) {
-        Pageable pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("id").ascending());
+    public List<MyReservationData> getListingsWithReservations() {
+        var listingIds = reservationRepository.findListingIdsWithReservationsForStudent(homeService.getUsernameOfLoggedInUser());
+        var listings = listingRepository.findAllByIdIn(listingIds);
+        List<MyReservationData> myReservationDataList = new ArrayList<>();
 
-        var specifiers = ReservationSpecifiers.builder()
-                .studentUsername(homeService.getUsernameOfLoggedInUser())
-                .excludeCancelled(true)
-                .build();
+        listings.forEach(listing -> {
+            var reservations = getReservationsOfStudentForListing(listing.getId());
+            var myReservationData = MyReservationData.builder()
+                    .title(listing.getTitle())
+                    .address(listing.getAddress())
+                    .city(listing.getCity())
+                    .landlordUsername(listing.getLandlord().getUsername())
+                    .numberOfRooms(listing.getNumberOfRooms())
+                    .status(getCorrectStatus(reservations))
+                    .type(reservations.get(0).type())
+                    .numberOfBookedRooms(getNumberOfBookedRooms(listing.getNumberOfRooms(), reservations))
+                    .cancellationDeadline(listing.getCancellationDeadline())
+                    .build();
+            myReservationDataList.add(myReservationData);
+        });
 
-        var myReservationPage = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers), pageable);
+        return myReservationDataList;
+    }
 
-        return myReservationPage.map(reservation ->
-                listingMapper.listingEntityToDto(reservation.getListing())
-        );
+    public ReservationStatus getCorrectStatus(List<ReservationData> reservations) {
+        boolean hasActive = reservations.stream()
+                .anyMatch(reservation -> reservation.status() == ReservationStatus.ACTIVE);
+        if (hasActive) {
+            return ReservationStatus.ACTIVE;
+        }
+
+        boolean hasFirstActive = reservations.stream()
+                .anyMatch(reservation -> reservation.status() == ReservationStatus.FIRST_ACTIVE);
+        if (hasFirstActive) {
+            return ReservationStatus.FIRST_ACTIVE;
+        }
+
+        return ReservationStatus.PENDING;
+    }
+
+    public Integer getNumberOfBookedRooms(Integer numberOfListingRooms, List<ReservationData> reservations) {
+        if (reservations.get(0).type().equals(ReservationType.ROOM)) {
+            return reservations.size();
+        }
+        return numberOfListingRooms;
     }
 }
