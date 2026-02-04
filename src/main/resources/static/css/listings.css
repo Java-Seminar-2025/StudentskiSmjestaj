@@ -38,6 +38,10 @@ button {
     padding: 0 24px;
 }
 
+.listing_details_container {
+    margin-top: 80px;
+}
+
 .listing_card {
     width: 100%;
     background-color: white;

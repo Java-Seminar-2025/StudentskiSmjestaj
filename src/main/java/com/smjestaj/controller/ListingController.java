@@ -121,4 +121,10 @@ public class ListingController {
         listingService.deleteListing(listingId);
         return "redirect:/listings/myListings";
     }
+
+    @GetMapping("/showDetails")
+    public String showListingDetails(@RequestParam Long listingId, Model model) {
+        model.addAttribute("listing", listingService.getListingById(listingId));
+        return "listingDetails";
+    }
 }

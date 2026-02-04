@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -162,18 +161,15 @@ public class ReservationService {
         List<MyReservationData> myReservationDataList = new ArrayList<>();
 
         listings.forEach(listing -> {
-            var reservations = getReservationsOfStudentForListing(listing.getId());
-            var myReservationData = MyReservationData.builder()
-                    .title(listing.getTitle())
-                    .address(listing.getAddress())
-                    .city(listing.getCity())
-                    .landlordUsername(listing.getLandlord().getUsername())
-                    .numberOfRooms(listing.getNumberOfRooms())
-                    .status(getCorrectStatus(reservations))
-                    .type(reservations.get(0).type())
-                    .numberOfBookedRooms(getNumberOfBookedRooms(listing.getNumberOfRooms(), reservations))
-                    .cancellationDeadline(listing.getCancellationDeadline())
+            var listingReservations = getReservationsOfStudentForListing(listing.getId());
+            var myReservationData = listingMapper.listingEntityToMyReservationData(listing);
+
+            myReservationData = myReservationData.toBuilder()
+                    .status(getCorrectStatus(listingReservations))
+                    .type(listingReservations.get(0).type())
+                    .numberOfBookedRooms(getNumberOfBookedRooms(listing.getNumberOfRooms(), listingReservations))
                     .build();
+
             myReservationDataList.add(myReservationData);
         });
 
@@ -201,5 +197,19 @@ public class ReservationService {
             return reservations.size();
         }
         return numberOfListingRooms;
+    }
+
+    public void cancelMyReservationsForListing(Long listingId) {
+        var specifiers = ReservationSpecifiers.builder()
+                .listingId(listingId)
+                .studentUsername(homeService.getUsernameOfLoggedInUser())
+                .build();
+
+        var myReservationsForListing = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
+
+        myReservationsForListing.forEach(myReservation -> {
+                myReservation.setStatus(ReservationStatus.CANCELLED);
+                reservationRepository.save(myReservation);
+            });
     }
 }

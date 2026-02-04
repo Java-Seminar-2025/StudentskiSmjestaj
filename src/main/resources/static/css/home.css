@@ -95,22 +95,22 @@ button:hover {
 }
 
 /* BOJA POZADINE BOTUNA */
-#green_form button {
+.green_btn {
     background-color: #065f46;
     color: #ecfdf5;
 }
 
-#purple_form button {
+.purple_btn {
     background-color: #4c1d95;
     color: #f5f3ff;
 }
 
 /* HOVER BOTUNA */
-#green_form button:hover {
+.green_btn:hover {
     background-color: #047857;
 }
 
-#purple_form button:hover {
+.purple_btn:hover {
     background-color: #5b21b6;
 }
 

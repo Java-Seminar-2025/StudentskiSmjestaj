@@ -1,6 +1,7 @@
 package com.smjestaj.service;
 
 import com.smjestaj.dto.AllRoomsData;
+import com.smjestaj.dto.ReservationData;
 import com.smjestaj.dto.RoomData;
 import com.smjestaj.enums.ReservationStatus;
 import com.smjestaj.exception.ListingNotFoundException;
@@ -21,10 +22,8 @@ import java.util.List;
 public class RoomService {
     private final ListingRepository listingRepository;
     private final RoomRepository roomRepository;
-    private final UserRepository userRepository;
     private final RoomMapper roomMapper;
     private final ReservationService reservationService;
-    private final HomeService homeService;
 
     public AllRoomsData prepareRoomForms(Long listingId) {
         var listing = listingRepository.findById(listingId)
@@ -79,12 +78,22 @@ public class RoomService {
 
         allRoomsData.getRooms()
                 .forEach(roomData -> {
-                    var isOccupied = roomData.getCapacity() == roomData.getReservations().size();
+                    var isOccupied = roomData.getCapacity().equals(roomData.getReservations().size());
                     var isAlreadyBookedByStudent = roomReservationsOfStudent.contains(roomData.getRoomId());
 
                     var isReservable = (!hasActiveReservationsForListing) && (!hasFullReservationForListing) &&
                                        (!isAlreadyBookedByStudent) && (!isOccupied);
                     roomData.setIsReservable(isReservable);
                 });
+    }
+
+    public AllRoomsData getBookedRoomsData(Long listingId, List<ReservationData> reservations) {
+        List<RoomData> rooms = new ArrayList<>();
+        reservations.forEach(reservation -> {
+            var room = roomRepository.findById(reservation.roomId())
+                    .orElseThrow(() -> new RoomNotFoundException("Room not found!"));
+            rooms.add(roomMapper.roomEntityToDto(room));
+        });
+        return new AllRoomsData(listingId, rooms);
     }
 }

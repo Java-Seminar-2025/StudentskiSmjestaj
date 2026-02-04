@@ -62,8 +62,8 @@ public class ReservationController {
         return "listings";
     }
 
-    @GetMapping("/showPending")
-    public String showPendingReservationsForListing(@RequestParam Long listingId, Model model) {
+    @GetMapping("/manage")
+    public String manageReservationsForListing(@RequestParam Long listingId, Model model) {
         model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
 
         var listingData = listingService.getListingById(listingId);
@@ -98,22 +98,20 @@ public class ReservationController {
 
     @GetMapping("/myReservations")
     public String showMyReservationsPage(Model model) {
-        var listingsWithReservations = reservationService.getListingsWithReservations();
-        model.addAttribute("listingsWithReservations", listingsWithReservations);
+        model.addAttribute("listingsWithReservations", reservationService.getListingsWithReservations());
         return "myReservations";
     }
 
-    @PostMapping("/changePage")
-    public String changeMyReservationsPage(@ModelAttribute PageDto pageDto,
-                                           @RequestParam String action,
-                                           Model model) {
+    @GetMapping("/showBookedRooms")
+    public String showBookedRoomsPage(@RequestParam Long listingId, Model model) {
+        var reservations = reservationService.getReservationsOfStudentForListing(listingId);
+        model.addAttribute("bookedRoomsData", roomService.getBookedRoomsData(listingId, reservations));
+        return "bookedRooms";
+    }
 
-        pageDto = listingService.changePage(pageDto, action);
-        var reservationList = reservationService.getListingsWithReservations();
-
-        model.addAttribute("pageDto", pageDto);
-        model.addAttribute("reservationList", reservationList);
-
-        return "myReservations";
+    @PostMapping("/cancelAllForListing")
+    public String cancelMyReservationsForListing(@RequestParam Long listingId) {
+        reservationService.cancelMyReservationsForListing(listingId);
+        return "redirect:/reservations/myReservations";
     }
 }

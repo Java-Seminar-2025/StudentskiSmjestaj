@@ -19,7 +19,6 @@ public record ListingData (
     UserGender preferredGender,
     LocalDateTime cancellationDeadline,
     ListingStatus status,
-    List<ReservationData> reservations,
     Boolean isReservable,
     Boolean deleted
 ) {}

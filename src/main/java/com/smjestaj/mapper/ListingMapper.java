@@ -1,6 +1,8 @@
 package com.smjestaj.mapper;
 
 import org.mapstruct.*;
+
+import com.smjestaj.dto.MyReservationData;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.dto.ListingData;
 
@@ -12,5 +14,10 @@ public interface ListingMapper {
 
     ListingEntity listingDtoToEntity(ListingData listingData);
     void updateEntityFromDto(ListingData listingData, @MappingTarget ListingEntity listingEntity);
+
+    @Mapping(target = "listingId", source = "id")
+    @Mapping(target = "landlordUsername", expression = "java(listingEntity.getLandlord().getUsername())")
+    @Mapping(target = "status", ignore = true)
+    MyReservationData listingEntityToMyReservationData(ListingEntity listingEntity);
 }
 

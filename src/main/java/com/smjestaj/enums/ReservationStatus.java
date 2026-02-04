@@ -5,7 +5,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @Getter
 public enum ReservationStatus {
-    PENDING("pending confirmation"),
+    PENDING("pending"),
     FIRST_ACTIVE("first active"),
     ACTIVE("active"),
     CANCELLED("cancelled");

@@ -77,11 +77,11 @@
     </div>
 
     <div class="listing_actions">
-        <form id="green_form" th:action="@{/listings/filters}" method="get">
-            <button type="submit">Search listings</button>
+        <form th:action="@{/listings/filters}" method="get">
+            <button type="submit" class="green_btn">Search listings</button>
         </form>
         <form id="purple_form" th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/create}" method="get">
-            <button type="submit">Create listing</button>
+            <button type="submit" class="purple_btn">Create listing</button>
         </form>
         <form th:if="${userData.role.displayName == 'landlord'}" th:action="@{/listings/myListings}" method="post">
             <input type="hidden" name="username" th:value="${userData.username}">
@@ -91,9 +91,10 @@
             <input type="hidden" name="username" th:value="${userData.username}">
             <button type="submit">My favorites</button>
         </form>
-        <form th:if="${userData.role.displayName == 'student'}" th:action="@{/reservations/myReservations}" method="get">
+        <form id="orange_form" th:if="${userData.role.displayName == 'student'}"
+              th:action="@{/reservations/myReservations}" method="get">
             <input type="hidden" name="username" th:value="${userData.username}">
-            <button type="submit">My reservations</button>
+            <button type="submit" class="purple_btn">My reservations</button>
         </form>
     </div>
 </div>

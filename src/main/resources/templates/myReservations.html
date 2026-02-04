@@ -10,14 +10,14 @@
 </head>
 <body>
 
-<div class="page_header admin_header">
+<div class="page_header my_reservations_header">
     <h2>My reservations</h2>
 </div>
 
-<div class="admin_container">
-    <div class="admin_card">
+<div class="container">
+    <div class="card my_reservations_card">
 
-        <table class="admin_table">
+        <table class="my_reservations_table">
             <thead>
             <tr>
                 <th>Title</th>
@@ -29,7 +29,7 @@
                 <th>Type</th>
                 <th>Booked rooms</th>
                 <th>Listing rooms</th>
-                <th>Actions</th>
+                <th class="actions">Actions</th>
             </tr>
             </thead>
 
@@ -38,12 +38,36 @@
                 <td th:text="${myReservation.title}"></td>
                 <td th:text="${myReservation.address}"></td>
                 <td th:text="${myReservation.city}"></td>
-                <td th:text="${myReservation.landlordUsername}"></td>
+                <td><a href="userInfo.html" th:text="${myReservation.landlordUsername}"></a></td>
                 <td th:text="${#temporals.format(myReservation.cancellationDeadline, 'dd.MM.yyyy. HH:mm')}"></td>
-                <td th:text="${myReservation.status}"></td>
-                <td th:text="${myReservation.type}"></td>
+                <td th:text="${myReservation.status.displayName}"></td>
+                <td th:text="${myReservation.type.displayName}"></td>
                 <td th:text="${myReservation.numberOfBookedRooms}"></td>
                 <td th:text="${myReservation.numberOfRooms}"></td>
+
+                <td class="reservation_actions">
+                    <form th:action="@{/reservations/showBookedRooms}"
+                          th:if="${myReservation.type.displayName == 'room' and myReservation.status.displayName == 'pending'}"
+                          method="get">
+                        <input type="hidden" name="listingId" th:value="${myReservation.listingId}">
+                        <button type="submit" class="btn blue">Show booked rooms</button>
+                    </form>
+                    <form th:action="@{/reservations/manage}"
+                          th:if="${myReservation.status.displayName == 'active'}"
+                          method="get">
+                        <input type="hidden" name="listingId" th:value="${myReservation.listingId}">
+                        <button type="submit" class="btn green">Manage reservations</button>
+                    </form>
+                    <form th:action="@{/listings/showDetails}" method="get">
+                        <input type="hidden" name="listingId" th:value="${myReservation.listingId}">
+                        <button type="submit" class="btn">View listing details</button>
+                    </form>
+                    <form th:action="@{/reservations/cancelAllForListing}" method="post">
+                        <input type="hidden" name="listingId" th:value="${myReservation.listingId}">
+                        <button type="submit" class="btn red">Cancel all</button>
+                    </form>
+                </td>
+
             </tr>
             </tbody>
         </table>
