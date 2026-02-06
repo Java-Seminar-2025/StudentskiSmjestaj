@@ -10,7 +10,6 @@ import com.smjestaj.mapper.RoomMapper;
 import com.smjestaj.repository.ListingRepository;
 import com.smjestaj.repository.RoomRepository;
 
-import com.smjestaj.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
@@ -57,7 +56,11 @@ public class RoomService {
         var listingRooms = roomRepository.findAllByListing(listing).stream()
                 .map(roomMapper::roomEntityToDto)
                 .map(roomData -> {
-                    roomData.setReservations(reservationService.getReservationsForRoom(roomData.getRoomId(), statusList));
+                    var reservations = reservationService.getReservationsForRoom(roomData.getRoomId(), statusList).stream()
+                            .map(reservationData -> reservationService.setAcceptableForReservation(reservationData, roomData))
+                            .toList();
+
+                    roomData.setReservations(reservations);
                     return roomData;
                 })
                 .toList();

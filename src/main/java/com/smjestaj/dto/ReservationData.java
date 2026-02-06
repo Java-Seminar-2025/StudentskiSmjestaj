@@ -5,7 +5,7 @@ import com.smjestaj.enums.ReservationType;
 import lombok.Builder;
 import java.time.LocalDateTime;
 
-@Builder
+@Builder(toBuilder = true)
 public record ReservationData (
     Long reservationId,
     Long roomId,
@@ -13,5 +13,6 @@ public record ReservationData (
     ReservationStatus status,
     LocalDateTime createdAt,
     ReservationType type,
-    LocalDateTime cancellationDeadline
+    LocalDateTime cancellationDeadline,
+    Boolean isAcceptable
 ) {}

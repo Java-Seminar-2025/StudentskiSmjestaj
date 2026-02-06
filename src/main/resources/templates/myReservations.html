@@ -53,7 +53,7 @@
                         <button type="submit" class="btn blue">Show booked rooms</button>
                     </form>
                     <form th:action="@{/reservations/manage}"
-                          th:if="${myReservation.status.displayName == 'active'}"
+                          th:if="${myReservation.status.displayName == 'first active'}"
                           method="get">
                         <input type="hidden" name="listingId" th:value="${myReservation.listingId}">
                         <button type="submit" class="btn green">Manage reservations</button>

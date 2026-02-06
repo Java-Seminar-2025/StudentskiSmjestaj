@@ -2,6 +2,7 @@ package com.smjestaj.repository;
 
 import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.entity.ListingEntity;
+import com.smjestaj.enums.ListingStatus;
 import com.smjestaj.enums.UserGender;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -38,6 +39,7 @@ public class ListingSpecification {
             Predicate noPreference = cb.isNull(root.get("preferredGender"));
             conditionList.add(cb.or(sameGender, noPreference));
 
+            conditionList.add(cb.notEqual(root.get("status"), ListingStatus.OCCUPIED));
             conditionList.add(cb.equal(root.get("deleted"), false));
 
             return cb.and(conditionList.toArray(new Predicate[0]));

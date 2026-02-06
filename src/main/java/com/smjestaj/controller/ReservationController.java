@@ -64,12 +64,13 @@ public class ReservationController {
 
     @GetMapping("/manage")
     public String manageReservationsForListing(@RequestParam Long listingId, Model model) {
-        model.addAttribute("userData", userService.getUserData(homeService.getUsernameOfLoggedInUser()));
+        var userData = userService.getUserData(homeService.getUsernameOfLoggedInUser());
+        model.addAttribute("userData", userData);
 
         var listingData = listingService.getListingById(listingId);
         model.addAttribute("listingData", listingData);
 
-        var statusList = EnumSet.of(ReservationStatus.PENDING);
+        var statusList = EnumSet.of(ReservationStatus.PENDING, ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, statusList));
         model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
 

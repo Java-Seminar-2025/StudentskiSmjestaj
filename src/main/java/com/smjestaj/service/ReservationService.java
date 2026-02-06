@@ -13,6 +13,7 @@ import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.mapper.ReservationMapper;
 import com.smjestaj.repository.*;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 
 @Service
@@ -159,6 +161,16 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
         cancelOtherPendingReservations(reservation);
+    }
+
+    public ReservationData setAcceptableForReservation(ReservationData reservationData, RoomData roomData) {
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
+        var activeReservationsForRoom = getReservationsForRoom(roomData.getRoomId(), statusList);
+
+        return reservationData.toBuilder()
+                .isAcceptable(reservationData.status().equals(ReservationStatus.PENDING) &&
+                        (activeReservationsForRoom.size() < roomData.getCapacity()))
+                .build();
     }
 
     public List<MyReservationData> getListingsWithMyReservations() {
