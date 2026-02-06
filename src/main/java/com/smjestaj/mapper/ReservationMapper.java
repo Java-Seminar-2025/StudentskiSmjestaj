@@ -4,7 +4,7 @@ import com.smjestaj.dto.ReservationData;
 import com.smjestaj.entity.ReservationEntity;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface ReservationMapper {
     ReservationEntity reservationDtoToEntity(ReservationData reservationData);
 

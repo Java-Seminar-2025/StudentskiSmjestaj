@@ -109,6 +109,12 @@ public class ReservationController {
         return "bookedRooms";
     }
 
+    @PostMapping("/cancel")
+    public String cancelRoomReservation(@RequestParam Long listingId, @RequestParam Long roomId) {
+        reservationService.cancelRoomReservation(roomId);
+        return "redirect:/reservations/showBookedRooms?listingId=" + listingId;
+    }
+
     @PostMapping("/cancelAllForListing")
     public String cancelMyReservationsForListing(@RequestParam Long listingId) {
         reservationService.cancelMyReservationsForListing(listingId);

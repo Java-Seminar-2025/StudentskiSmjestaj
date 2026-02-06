@@ -66,6 +66,7 @@ public class ListingService {
         var listing = listingMapper.listingDtoToEntity(listingData);
         listing.setLandlord(landlord);
         listing.setStatus(ListingStatus.AVAILABLE);
+        listing.setNewDeadline(listingData.cancellationDeadline());
         listing.setDeleted(false);
         listingRepository.save(listing);
 
@@ -77,6 +78,8 @@ public class ListingService {
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
         listingMapper.updateEntityFromDto(listingData, listing);
+        listing.updateCancellationDeadline(listingData.cancellationDeadline());
+
         listingRepository.save(listing);
     }
 

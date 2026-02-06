@@ -14,6 +14,10 @@
             <h2>Create listing</h2>
         </div>
 
+        <div class="form_error" th:if="${errorMessage}" style="color: red; font-weight: bold;">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
         <form class="form form--grid" id="purple_form" th:action="@{/listings/create}" th:object="${listingData}" method="post">
             <div class="form_field">
                 <label for="title">Title:</label>

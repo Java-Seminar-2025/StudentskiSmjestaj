@@ -59,11 +59,11 @@
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
                         <button type="submit" class="delete_btn">Delete</button>
                     </form>
-                    <form th:action="@{/reservations/manage}" method="get">
+                    <form th:action="@{/reservations/manage}" th:if="${listing.status.displayName == 'available'}" method="get">
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
                         <button type="submit" class="pending_reservations_btn">Manage pending reservations</button>
                     </form>
-                    <form th:action="@{/reservations/showActive}" method="get">
+                    <form th:action="@{/reservations/showActive}" th:if="${listing.status.displayName != 'available'}" method="get">
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
                         <button type="submit" class="active_reservations_btn">Show active reservations</button>
                     </form>

@@ -76,7 +76,11 @@
         <span th:text="*{name}"></span> <span th:text="*{surname}"></span><br>
     </div>
 
-    <div class="listing_actions">
+    <div th:if="${userData.blocked}">
+        <p style="color: red; font-weight: bold;">You have been blocked! You cannot search or create listings.</p>
+    </div>
+
+    <div th:if="${!userData.blocked}" class="listing_actions">
         <form th:action="@{/listings/filters}" method="get">
             <button type="submit" class="green_btn">Search listings</button>
         </form>

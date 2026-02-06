@@ -98,6 +98,7 @@ public class ReservationService {
         var specifiers = ReservationSpecifiers.builder()
                 .listingId(listingId)
                 .studentUsername(homeService.getUsernameOfLoggedInUser())
+                .excludeCancelled(true)
                 .build();
 
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
@@ -197,6 +198,23 @@ public class ReservationService {
             return reservations.size();
         }
         return numberOfListingRooms;
+    }
+
+    public Long getReservationIdByRoomId(Long roomId) {
+        var specifiers = ReservationSpecifiers.builder()
+                .studentUsername(homeService.getUsernameOfLoggedInUser())
+                .roomId(roomId)
+                .excludeCancelled(true)
+                .build();
+
+        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).get(0).getId();
+    }
+
+    public void cancelRoomReservation(Long roomId) {
+        var reservation = reservationRepository.findById(getReservationIdByRoomId(roomId))
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
     }
 
     public void cancelMyReservationsForListing(Long listingId) {

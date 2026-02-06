@@ -215,7 +215,7 @@ label {
     color: #f5f3ff;
 }
 
-#red_form button {
+#red_form button, .cancel_btn {
     background-color: #991b1b;
     color: #fef2f2;
 }

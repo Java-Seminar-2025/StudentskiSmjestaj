@@ -28,6 +28,11 @@ public class CustomExceptionHandler {
         return "createListing";
     }
 
-
+    @ExceptionHandler(WrongDeadlineException.class)
+    public String handleWrongDeadlineException(WrongDeadlineException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        model.addAttribute("listingData", ListingData.builder().build());
+        return "createListing";
+    }
 }
 

@@ -2,6 +2,7 @@ package com.smjestaj.entity;
 
 import com.smjestaj.enums.UserGender;
 import com.smjestaj.enums.ListingStatus;
+import com.smjestaj.exception.WrongDeadlineException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -65,5 +66,23 @@ public class ListingEntity {
 
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
     private List<ReservationEntity> reservations;
+
+    public void setNewDeadline(LocalDateTime deadline) {
+        if (this.cancellationDeadline == null && deadline.isBefore(LocalDateTime.now().plusDays(10))) {
+            throw new WrongDeadlineException("New deadline must be 10 or more days from now.");
+        }
+        this.cancellationDeadline = deadline;
+    }
+
+    public void updateCancellationDeadline(LocalDateTime newDeadline) {
+        if (newDeadline == null) {
+            return;
+        }
+        if (this.cancellationDeadline != null && newDeadline.isBefore(this.cancellationDeadline)) {
+            throw new WrongDeadlineException("It's not allowed to shorten the deadline.");
+        }
+        setNewDeadline(newDeadline);
+        this.cancellationDeadline = newDeadline;
+    }
 }
 
