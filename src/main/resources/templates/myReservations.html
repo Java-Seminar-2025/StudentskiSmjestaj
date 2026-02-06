@@ -24,7 +24,7 @@
                 <th>Address</th>
                 <th>City</th>
                 <th>Landlord</th>
-                <th>Deadline</th>
+                <th>Cancellation deadline</th>
                 <th>Status</th>
                 <th>Type</th>
                 <th>Booked rooms</th>
@@ -34,7 +34,7 @@
             </thead>
 
             <tbody>
-            <tr th:each="myReservation : ${listingsWithReservations}">
+            <tr th:each="myReservation : ${listingsWithMyReservations}">
                 <td th:text="${myReservation.title}"></td>
                 <td th:text="${myReservation.address}"></td>
                 <td th:text="${myReservation.city}"></td>
@@ -62,9 +62,9 @@
                         <input type="hidden" name="listingId" th:value="${myReservation.listingId}">
                         <button type="submit" class="btn">View listing details</button>
                     </form>
-                    <form th:action="@{/reservations/cancelAllForListing}" method="post">
+                    <form th:action="@{/reservations/cancelAllForListing}" th:if="${myReservation.isCancellable}" method="post">
                         <input type="hidden" name="listingId" th:value="${myReservation.listingId}">
-                        <button type="submit" class="btn red">Cancel all</button>
+                        <button type="submit" class="btn red">Cancel</button>
                     </form>
                 </td>
 

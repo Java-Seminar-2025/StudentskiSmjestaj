@@ -14,6 +14,10 @@
         <h2>Edit listing</h2>
     </div>
 
+    <div class="form_error" th:if="${errorMessage}" style="color: red; font-weight: bold;">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
     <form class="form form--grid" id="purple_form" th:action="@{/listings/edit}" th:object="${listingData}" method="post">
         <div class="form_field">
             <label for="title">Title:</label>
@@ -36,8 +40,8 @@
         </div>
 
         <div class="form_field">
-            <label for="cancellationDeadline">Cancellation deadline:</label>
-            <input type="datetime-local" id="cancellationDeadline" th:field="*{cancellationDeadline}">
+            <label for="daysToCancel">Days to cancel:</label>
+            <input type="number" id="daysToCancel" th:field="*{daysToCancel}">
         </div>
 
         <input type="hidden" id="listingId" th:field="*{listingId}">

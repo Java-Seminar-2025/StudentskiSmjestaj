@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -148,15 +149,19 @@ public class ReservationService {
     public void acceptReservation(Long reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+        var loggedInUser = userRepository.findByUsername(homeService.getUsernameOfLoggedInUser())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
-        reservation.setStatus(ReservationStatus.ACTIVE);
+        reservation.setStatus(loggedInUser.getRole().getCorrectReservationStatus());
         reservation.getListing().setStatus(reservation.getType().getCorrectListingStatus());
+        reservation.setAcceptedAt(LocalDateTime.now());
+        reservation.setCancellationDeadline(LocalDateTime.now().plusDays(reservation.getListing().getDaysToCancel()));
 
         reservationRepository.save(reservation);
         cancelOtherPendingReservations(reservation);
     }
 
-    public List<MyReservationData> getListingsWithReservations() {
+    public List<MyReservationData> getListingsWithMyReservations() {
         var listingIds = reservationRepository.findListingIdsWithReservationsForStudent(homeService.getUsernameOfLoggedInUser());
         var listings = listingRepository.findAllByIdIn(listingIds);
         List<MyReservationData> myReservationDataList = new ArrayList<>();
@@ -164,33 +169,20 @@ public class ReservationService {
         listings.forEach(listing -> {
             var listingReservations = getReservationsOfStudentForListing(listing.getId());
             var myReservationData = listingMapper.listingEntityToMyReservationData(listing);
+            var cancellationDeadline = listingReservations.get(0).cancellationDeadline();
 
             myReservationData = myReservationData.toBuilder()
-                    .status(getCorrectStatus(listingReservations))
+                    .status(listingReservations.get(0).status())
                     .type(listingReservations.get(0).type())
+                    .cancellationDeadline(cancellationDeadline)
                     .numberOfBookedRooms(getNumberOfBookedRooms(listing.getNumberOfRooms(), listingReservations))
+                    .isCancellable(cancellationDeadline == null || LocalDateTime.now().isBefore(cancellationDeadline))
                     .build();
 
             myReservationDataList.add(myReservationData);
         });
 
         return myReservationDataList;
-    }
-
-    public ReservationStatus getCorrectStatus(List<ReservationData> reservations) {
-        boolean hasActive = reservations.stream()
-                .anyMatch(reservation -> reservation.status() == ReservationStatus.ACTIVE);
-        if (hasActive) {
-            return ReservationStatus.ACTIVE;
-        }
-
-        boolean hasFirstActive = reservations.stream()
-                .anyMatch(reservation -> reservation.status() == ReservationStatus.FIRST_ACTIVE);
-        if (hasFirstActive) {
-            return ReservationStatus.FIRST_ACTIVE;
-        }
-
-        return ReservationStatus.PENDING;
     }
 
     public Integer getNumberOfBookedRooms(Integer numberOfListingRooms, List<ReservationData> reservations) {

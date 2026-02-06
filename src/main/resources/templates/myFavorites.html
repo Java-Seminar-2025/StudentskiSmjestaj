@@ -47,9 +47,7 @@
                     <div><strong>City:</strong> <span th:text="${favorite.city}"></span></div>
                     <div><strong>Preferred gender:</strong> <span th:text="${favorite.preferredGender?.displayName}"></span></div>
                     <div><strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(favorite.price, 1, 2)}"></span></div>
-                    <div><strong>Cancellation deadline:</strong>
-                        <span th:text="${#temporals.format(favorite.cancellationDeadline, 'dd.MM.yyyy. HH:mm')}"></span>
-                    </div>
+                    <div><strong>Days to cancel:</strong> <span th:text="${favorite.daysToCancel}"></span></div>
             </div>
         </div>
     </div>

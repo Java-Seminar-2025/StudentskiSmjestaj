@@ -98,7 +98,7 @@ public class ReservationController {
 
     @GetMapping("/myReservations")
     public String showMyReservationsPage(Model model) {
-        model.addAttribute("listingsWithReservations", reservationService.getListingsWithReservations());
+        model.addAttribute("listingsWithMyReservations", reservationService.getListingsWithMyReservations());
         return "myReservations";
     }
 

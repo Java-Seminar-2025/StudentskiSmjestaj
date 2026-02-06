@@ -27,10 +27,7 @@
             <div><strong>Number of students:</strong> <span th:text="${top3Listings[0].numberOfStudents}"></span></div>
             <div><strong>Number of rooms:</strong> <span th:text="${top3Listings[0].numberOfRooms}"></span></div>
             <div><strong>Preferred gender:</strong> <span th:text="${top3Listings[0].preferredGender?.displayName}"></span></div>
-            <div class="last_line"><strong>Cancellation deadline:</strong>
-                <span th:text="${#temporals.format(top3Listings[0].cancellationDeadline, 'dd.MM.yyyy. HH:mm')}">
-                </span>
-            </div>
+            <div class="last_line"><strong>Days to cancel:</strong> <span th:text="${top3Listings[0].daysToCancel}"></span></div>
         </div>
 
         <div class="listing_card" th:if="${top3Listings.size() > 1}">
@@ -46,10 +43,7 @@
             <div><strong>Number of students:</strong> <span th:text="${top3Listings[1].numberOfStudents}"></span></div>
             <div><strong>Number of rooms:</strong> <span th:text="${top3Listings[1].numberOfRooms}"></span></div>
             <div><strong>Preferred gender:</strong> <span th:text="${top3Listings[1].preferredGender?.displayName}"></span></div>
-            <div class="last_line"><strong>Cancellation deadline:</strong>
-                <span th:text="${#temporals.format(top3Listings[1].cancellationDeadline, 'dd.MM.yyyy. HH:mm')}">
-                </span>
-            </div>
+            <div class="last_line"><strong>Days to cancel:</strong> <span th:text="${top3Listings[1].daysToCancel}"></span></div>
         </div>
 
         <div class="listing_card" th:if="${top3Listings.size() > 2}">
@@ -65,10 +59,7 @@
             <div><strong>Number of students:</strong> <span th:text="${top3Listings[2].numberOfStudents}"></span></div>
             <div><strong>Number of rooms:</strong> <span th:text="${top3Listings[2].numberOfRooms}"></span></div>
             <div><strong>Preferred gender:</strong> <span th:text="${top3Listings[2].preferredGender?.displayName}"></span></div>
-            <div class="last_line"><strong>Cancellation deadline:</strong>
-                <span th:text="${#temporals.format(top3Listings[2].cancellationDeadline, 'dd.MM.yyyy. HH:mm')}">
-                </span>
-            </div>
+            <div class="last_line"><strong>Days to cancel:</strong> <span th:text="${top3Listings[2].daysToCancel}"></span></div>
         </div>
     </div>
 

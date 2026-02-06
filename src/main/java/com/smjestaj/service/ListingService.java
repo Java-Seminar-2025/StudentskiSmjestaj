@@ -5,6 +5,7 @@ import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
 import com.smjestaj.enums.ListingStatus;
 import com.smjestaj.exception.ListingNotFoundException;
+import com.smjestaj.exception.WrongDeadlineException;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
 
@@ -66,10 +67,14 @@ public class ListingService {
         var listing = listingMapper.listingDtoToEntity(listingData);
         listing.setLandlord(landlord);
         listing.setStatus(ListingStatus.AVAILABLE);
-        listing.setNewDeadline(listingData.cancellationDeadline());
         listing.setDeleted(false);
-        listingRepository.save(listing);
 
+        if(listingData.daysToCancel() < 1) {
+            throw new WrongDeadlineException("Days to cancel reservation cannot be smaller than 1.");
+        }
+        listing.setDaysToCancel(listingData.daysToCancel());
+
+        listingRepository.save(listing);
         return "redirect:/listingRooms/create?listingId=" + listing.getId();
     }
 
@@ -78,7 +83,7 @@ public class ListingService {
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
         listingMapper.updateEntityFromDto(listingData, listing);
-        listing.updateCancellationDeadline(listingData.cancellationDeadline());
+        listing.updateDaysToCancel(listingData.daysToCancel());
 
         listingRepository.save(listing);
     }

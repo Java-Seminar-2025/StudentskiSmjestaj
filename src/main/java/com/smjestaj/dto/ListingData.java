@@ -17,8 +17,8 @@ public record ListingData (
     Integer numberOfStudents,
     Integer numberOfRooms,
     UserGender preferredGender,
-    LocalDateTime cancellationDeadline,
     ListingStatus status,
+    Integer daysToCancel,
     Boolean isReservable,
     Boolean deleted
 ) {}

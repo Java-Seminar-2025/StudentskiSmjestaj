@@ -37,6 +37,12 @@ public class ReservationEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "accepted_at")
+    private LocalDateTime acceptedAt;
+
+    @Column(name = "cancellation_deadline")
+    private LocalDateTime cancellationDeadline;
+
     @Column(name = "cancelled_at")
     private LocalDateTime cancelledAt;
 

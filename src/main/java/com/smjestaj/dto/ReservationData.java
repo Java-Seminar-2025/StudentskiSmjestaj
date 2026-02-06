@@ -12,5 +12,6 @@ public record ReservationData (
     String studentUsername,
     ReservationStatus status,
     LocalDateTime createdAt,
-    ReservationType type
+    ReservationType type,
+    LocalDateTime cancellationDeadline
 ) {}

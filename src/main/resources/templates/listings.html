@@ -53,9 +53,7 @@
                         <div><strong>City:</strong> <span th:text="${listing.city}"></span></div>
                         <div><strong>Preferred gender:</strong> <span th:text="${listing.preferredGender?.displayName}"></span></div>
                         <div><strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(listing.price, 1, 2)}"></span></div>
-                        <div><strong>Cancellation deadline:</strong>
-                            <span th:text="${#temporals.format(listing.cancellationDeadline, 'dd.MM.yyyy. HH:mm')}"></span>
-                        </div>
+                        <div><strong>Days to cancel:</strong> <span th:text="${listing.daysToCancel}"></span></div>
                     </div>
                     <div class="listing_actions" sec:authorize="hasRole('STUDENT')">
                         <form th:object="${favorites}">

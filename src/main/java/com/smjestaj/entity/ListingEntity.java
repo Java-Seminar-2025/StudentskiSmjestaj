@@ -52,8 +52,8 @@ public class ListingEntity {
     @Enumerated(EnumType.STRING)
     private ListingStatus status;
 
-    @Column(name = "cancellation_deadline")
-    private LocalDateTime cancellationDeadline;
+    @Column(name = "days_to_cancel")
+    private Integer daysToCancel;
 
     @Column(name = "is_deleted")
     private Boolean deleted;
@@ -67,22 +67,14 @@ public class ListingEntity {
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
     private List<ReservationEntity> reservations;
 
-    public void setNewDeadline(LocalDateTime deadline) {
-        if (this.cancellationDeadline == null && deadline.isBefore(LocalDateTime.now().plusDays(10))) {
-            throw new WrongDeadlineException("New deadline must be 10 or more days from now.");
-        }
-        this.cancellationDeadline = deadline;
-    }
-
-    public void updateCancellationDeadline(LocalDateTime newDeadline) {
-        if (newDeadline == null) {
+    public void updateDaysToCancel(Integer daysToCancel) {
+        if (daysToCancel == null) {
             return;
         }
-        if (this.cancellationDeadline != null && newDeadline.isBefore(this.cancellationDeadline)) {
-            throw new WrongDeadlineException("It's not allowed to shorten the deadline.");
+        if (daysToCancel < this.daysToCancel) {
+            throw new WrongDeadlineException("It's not allowed to shorten the cancellation deadline.");
         }
-        setNewDeadline(newDeadline);
-        this.cancellationDeadline = newDeadline;
+        this.daysToCancel = daysToCancel;
     }
 }
 

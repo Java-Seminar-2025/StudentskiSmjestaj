@@ -12,10 +12,10 @@ public interface ListingMapper {
     @Mapping(target = "landlordUsername", expression = "java(listingEntity.getLandlord().getUsername())")
     ListingData listingEntityToDto(ListingEntity listingEntity);
 
-    @Mapping(target = "cancellationDeadline", ignore = true)
+    @Mapping(target = "daysToCancel", ignore = true)
     ListingEntity listingDtoToEntity(ListingData listingData);
 
-    @Mapping(target = "cancellationDeadline", ignore = true)
+    @Mapping(target = "daysToCancel", ignore = true)
     void updateEntityFromDto(ListingData listingData, @MappingTarget ListingEntity listingEntity);
 
     @Mapping(target = "listingId", source = "id")

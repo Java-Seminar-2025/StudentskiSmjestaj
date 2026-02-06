@@ -17,5 +17,6 @@ public record MyReservationData (
     ReservationStatus status,
     ReservationType type,
     Integer numberOfBookedRooms,
-    LocalDateTime cancellationDeadline
+    LocalDateTime cancellationDeadline,
+    Boolean isCancellable
 ) {}
