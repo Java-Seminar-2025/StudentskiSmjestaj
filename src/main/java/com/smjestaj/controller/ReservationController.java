@@ -2,7 +2,9 @@ package com.smjestaj.controller;
 
 import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
+import com.smjestaj.dto.SafeUserData;
 import com.smjestaj.enums.ReservationStatus;
+import com.smjestaj.enums.UserRole;
 import com.smjestaj.service.*;
 
 import org.springframework.stereotype.Controller;
@@ -47,20 +49,19 @@ public class ReservationController {
 
     @PostMapping("add/full")
     public String addNewFullReservation(@RequestParam Long listingId,
-                                        @RequestParam String returnPage,
                                         @ModelAttribute PageDto pageDto,
                                         @ModelAttribute ListingFilters listingFilters,
                                         Model model) {
         reservationService.addNewFullReservation(listingId);
 
         var listings = listingService.filterListings(listingFilters, pageDto);
-        var favorites = favoriteService.findAllFavoritesOfStudent();
+        var favoriteIds = favoriteService.findAllFavoriteIdsOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("listingFilters", listingFilters);
-        model.addAttribute("favorites", favorites);
-        return returnPage;
+        model.addAttribute("favorites", favoriteIds);
+        return "bookingPage";
     }
 
     @GetMapping("/manage")
@@ -81,7 +82,7 @@ public class ReservationController {
     @PostMapping("/accept")
     public String acceptReservation(@RequestParam Long reservationId) {
         reservationService.acceptReservation(reservationId);
-        return "redirect:/listings/myListings";
+        return reservationService.redirectToCorrectPage(reservationId);
     }
 
     @GetMapping("/showActive")

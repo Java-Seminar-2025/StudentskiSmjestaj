@@ -1,7 +1,6 @@
 package com.smjestaj.service;
 
 import com.smjestaj.dto.ListingData;
-import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.mapper.ListingMapper;
@@ -68,7 +67,7 @@ public class FavoriteService {
                 });
     }
 
-    public List<Long> findAllFavoritesOfStudent() {
+    public List<Long> findAllFavoriteIdsOfStudent() {
         var username = homeService.getUsernameOfLoggedInUser();
         var student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));

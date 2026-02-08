@@ -33,6 +33,7 @@
                     <td th:if="${reservation.isAcceptable}">
                         <form class="form form--single" th:action="@{/reservations/accept}" method="post">
                             <input type="hidden" name="reservationId" th:value="${reservation.reservationId}">
+                            <input type="hidden" name="listingId" th:value="${allRoomsData.listingId}">
                             <button type="submit" class="accept_btn">Accept</button>
                         </form>
                     </td>

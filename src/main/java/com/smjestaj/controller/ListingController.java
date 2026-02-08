@@ -33,11 +33,11 @@ public class ListingController {
         var listings = listingService.filterListings(listingFilters, pageDto);
         pageDto = pageDto.toBuilder().totalPages(listings.getTotalPages()).build();
 
-        var favorites = favoriteService.findAllFavoritesOfStudent();
+        var favoriteIds = favoriteService.findAllFavoriteIdsOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("favorites", favorites);
+        model.addAttribute("favoriteIds", favoriteIds);
         return "listings";
     }
 
@@ -49,12 +49,12 @@ public class ListingController {
 
         pageDto = listingService.changePage(pageDto, action);
         var listings = listingService.filterListings(listingFilters, pageDto);
-        var favorites = favoriteService.findAllFavoritesOfStudent();
+        var favoriteIds = favoriteService.findAllFavoriteIdsOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("listingFilters", listingFilters);
-        model.addAttribute("favorites", favorites);
+        model.addAttribute("favoriteIds", favoriteIds);
 
         return "listings";
     }

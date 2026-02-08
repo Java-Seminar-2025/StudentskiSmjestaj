@@ -26,13 +26,13 @@ public class FavoriteController {
 
         favoriteService.addFavorite(listingId);
 
-        var favorites = favoriteService.findAllFavoritesOfStudent();
         var listings = listingService.filterListings(listingFilters, pageDto);
+        var favoriteIds = favoriteService.findAllFavoriteIdsOfStudent();
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("listingFilters", listingFilters);
-        model.addAttribute("favorites", favorites);
+        model.addAttribute("favoriteIds", favoriteIds);
         return "listings";
     }
 
@@ -44,13 +44,15 @@ public class FavoriteController {
 
         favoriteService.removeFavorite(listingId);
 
-        var favorites = favoriteService.findAllFavoritesOfStudent();
         var listings = listingService.filterListings(listingFilters, pageDto);
+        var favoriteIds = favoriteService.findAllFavoriteIdsOfStudent();
+        var favoritesList = favoriteService.getFavoritesPage(pageDto);
 
         model.addAttribute("listings", listings);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("listingFilters", listingFilters);
-        model.addAttribute("favorites", favorites);
+        model.addAttribute("favoriteIds", favoriteIds);
+        model.addAttribute("favoritesList", favoritesList);
         return pageDto.returnPage();
     }
 

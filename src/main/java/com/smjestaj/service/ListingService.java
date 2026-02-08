@@ -3,6 +3,8 @@ package com.smjestaj.service;
 import com.smjestaj.dto.ListingData;
 import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
+import com.smjestaj.dto.ReservationData;
+import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.enums.ListingStatus;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.WrongDeadlineException;

@@ -6,6 +6,7 @@ import com.smjestaj.entity.ListingRoomEntity;
 import com.smjestaj.entity.ReservationEntity;
 import com.smjestaj.enums.ReservationStatus;
 import com.smjestaj.enums.ReservationType;
+import com.smjestaj.enums.UserRole;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.ReservationNotFoundException;
 import com.smjestaj.exception.RoomNotFoundException;
@@ -13,7 +14,6 @@ import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.mapper.ReservationMapper;
 import com.smjestaj.repository.*;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +35,8 @@ public class ReservationService {
     private final ListingRepository listingRepository;
     private final ListingMapper listingMapper;
     private final HomeService homeService;
+    private final UserService userService;
+    private final OccupancyService occupancyService;
 
     public void addNewRoomReservation(Long roomId) {
         var student = userRepository.findByUsername(homeService.getUsernameOfLoggedInUser())
@@ -58,11 +60,11 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public List<Long> getReservationsOfStudent(Long listingId, ReservationStatus status, ReservationType type) {
+    public List<Long> getReservationsOfStudent(Long listingId, Collection<ReservationStatus> statusList, ReservationType type) {
         var specifiers = ReservationSpecifiers.builder()
                 .listingId(listingId)
                 .studentUsername(homeService.getUsernameOfLoggedInUser())
-                .status(status)
+                .statusList(statusList)
                 .type(type)
                 .build();
 
@@ -82,19 +84,19 @@ public class ReservationService {
     }
 
     public List<Long> getPendingReservations(Long listingId) {
-        return getReservationsOfStudent(listingId, ReservationStatus.PENDING, null);
+        return getReservationsOfStudent(listingId, EnumSet.of(ReservationStatus.PENDING), null);
     }
 
     public List<Long> getPendingRoomReservations(Long listingId) {
-        return getReservationsOfStudent(listingId, ReservationStatus.PENDING, ReservationType.ROOM);
+        return getReservationsOfStudent(listingId, EnumSet.of(ReservationStatus.PENDING), ReservationType.ROOM);
     }
 
     public List<Long> getPendingFullReservations(Long listingId) {
-        return getReservationsOfStudent(listingId, ReservationStatus.PENDING, ReservationType.FULL_LISTING);
+        return getReservationsOfStudent(listingId, EnumSet.of(ReservationStatus.PENDING), ReservationType.FULL_LISTING);
     }
 
     public List<Long> getActiveReservations(Long listingId) {
-        return getReservationsOfStudent(listingId, ReservationStatus.ACTIVE, null);
+        return getReservationsOfStudent(listingId, EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE), null);
     }
 
     public List<ReservationData> getReservationsOfStudentForListing(Long listingId) {
@@ -102,6 +104,17 @@ public class ReservationService {
                 .listingId(listingId)
                 .studentUsername(homeService.getUsernameOfLoggedInUser())
                 .excludeCancelled(true)
+                .build();
+
+        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
+                .map(reservationMapper::reservationEntityToDto)
+                .toList();
+    }
+
+    public List<ReservationData> getActiveReservationsForListing(Long listingId) {
+        var specifiers = ReservationSpecifiers.builder()
+                .listingId(listingId)
+                .statusList(EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE))
                 .build();
 
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
@@ -132,7 +145,24 @@ public class ReservationService {
                 .toList();
     }
 
-    public void cancelOtherPendingReservations(ReservationEntity acceptedReservation) {
+    public void acceptReservation(Long reservationId) {
+        var reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+        var loggedInUser = userRepository.findByUsername(homeService.getUsernameOfLoggedInUser())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+
+        reservation.setStatus(loggedInUser.getRole().getCorrectReservationStatus());
+        if(loggedInUser.getRole().equals(UserRole.LANDLORD)) {
+            reservation.getListing().setStatus(reservation.getType().getCorrectListingStatus());
+        }
+        reservation.setAcceptedAt(LocalDateTime.now());
+        reservation.setCancellationDeadline(LocalDateTime.now().plusDays(reservation.getListing().getDaysToCancel()));
+
+        reservationRepository.save(reservation);
+        cancelOtherPendingReservationsOfStudent(reservation);
+    }
+
+    public void cancelOtherPendingReservationsOfStudent(ReservationEntity acceptedReservation) {
         var specifiers = ReservationSpecifiers.builder()
                 .studentUsername(acceptedReservation.getStudent().getUsername())
                 .status(ReservationStatus.PENDING)
@@ -148,21 +178,6 @@ public class ReservationService {
         });
     }
 
-    public void acceptReservation(Long reservationId) {
-        var reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
-        var loggedInUser = userRepository.findByUsername(homeService.getUsernameOfLoggedInUser())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-
-        reservation.setStatus(loggedInUser.getRole().getCorrectReservationStatus());
-        reservation.getListing().setStatus(reservation.getType().getCorrectListingStatus());
-        reservation.setAcceptedAt(LocalDateTime.now());
-        reservation.setCancellationDeadline(LocalDateTime.now().plusDays(reservation.getListing().getDaysToCancel()));
-
-        reservationRepository.save(reservation);
-        cancelOtherPendingReservations(reservation);
-    }
-
     public ReservationData setAcceptableForReservation(ReservationData reservationData, RoomData roomData) {
         var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         var activeReservationsForRoom = getReservationsForRoom(roomData.getRoomId(), statusList);
@@ -173,12 +188,24 @@ public class ReservationService {
                 .build();
     }
 
+    public String redirectToCorrectPage(Long reservationId) {
+        var reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+        var userData = userService.getUserData(homeService.getUsernameOfLoggedInUser());
+
+        return userData.role().equals(UserRole.STUDENT)
+                ? "redirect:/reservations/manage?listingId=" + reservation.getListing().getId()
+                : "redirect:/listings/myListings";
+    }
+
     public List<MyReservationData> getListingsWithMyReservations() {
         var listingIds = reservationRepository.findListingIdsWithReservationsForStudent(homeService.getUsernameOfLoggedInUser());
         var listings = listingRepository.findAllByIdIn(listingIds);
         List<MyReservationData> myReservationDataList = new ArrayList<>();
 
         listings.forEach(listing -> {
+            occupancyService.updateListingStatus(listing.getId(), getActiveReservationsForListing(listing.getId()));
+
             var listingReservations = getReservationsOfStudentForListing(listing.getId());
             var myReservationData = listingMapper.listingEntityToMyReservationData(listing);
             var cancellationDeadline = listingReservations.get(0).cancellationDeadline();
@@ -233,5 +260,7 @@ public class ReservationService {
                 myReservation.setStatus(ReservationStatus.CANCELLED);
                 reservationRepository.save(myReservation);
             });
+
+        occupancyService.updateListingStatus(listingId, getActiveReservationsForListing(listingId));
     }
 }
