@@ -1,0 +1,9 @@
+DELETE FROM reservations;
+DELETE FROM room_occupants;
+DELETE FROM listing_rooms;
+DELETE FROM favorites;
+DELETE FROM student_details;
+DELETE FROM listings;
+DELETE FROM faculties;
+DELETE FROM users;
+DROP TABLE room_occupants;

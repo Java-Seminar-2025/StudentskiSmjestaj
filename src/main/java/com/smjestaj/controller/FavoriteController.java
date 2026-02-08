@@ -51,13 +51,13 @@ public class FavoriteController {
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("listingFilters", listingFilters);
         model.addAttribute("favorites", favorites);
-        return "listings";
+        return pageDto.returnPage();
     }
 
     @GetMapping("/show")
     public String showMyFavoritesPage(Model model) {
         var pageDto = PageDto.builder().build();
-        pageDto = pageDto.toBuilder().page(1).size(10).build();
+        pageDto = pageDto.toBuilder().page(1).size(10).returnPage("myFavorites").build();
 
         var favoritesList = favoriteService.getFavoritesPage(pageDto);
         pageDto = pageDto.toBuilder().totalPages(favoritesList.getTotalPages()).build();

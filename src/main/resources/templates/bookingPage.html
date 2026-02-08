@@ -32,6 +32,7 @@
                 <input type="hidden" name="page" th:value="${pageDto.page}">
                 <input type="hidden" name="size" th:value="${pageDto.size}">
                 <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
+                <input type="hidden" name="returnPage" th:value="${pageDto.returnPage}">
 
                 <input type="hidden" name="lowerPrice" th:value="${listingFilters.lowerPrice}">
                 <input type="hidden" name="upperPrice" th:value="${listingFilters.upperPrice}">
@@ -58,6 +59,7 @@
         <input type="hidden" name="page" th:value="${pageDto.page}">
         <input type="hidden" name="size" th:value="${pageDto.size}">
         <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
+        <input type="hidden" name="returnPage" th:value="${pageDto.returnPage}">
 
         <input type="hidden" name="lowerPrice" th:value="${listingFilters.lowerPrice}">
         <input type="hidden" name="upperPrice" th:value="${listingFilters.upperPrice}">
@@ -74,10 +76,19 @@
         </button>
 
         <button type="submit" name="action" value="first"
+                th:if="${pageDto.returnPage == 'listings'}"
                 class="back_btn"
                 formaction="/listings/changePage"
                 formmethod="post">
             Back to listings
+        </button>
+
+        <button type="submit"
+                th:if="${pageDto.returnPage == 'myFavorites'}"
+                class="back_btn"
+                formaction="/favorites/show"
+                formmethod="get">
+            Back to my favorites
         </button>
     </form>
 </div>

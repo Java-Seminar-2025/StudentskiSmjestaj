@@ -6,5 +6,6 @@ import lombok.Builder;
 public record PageDto (
     Integer page,
     Integer size,
-    Integer totalPages
+    Integer totalPages,
+    String returnPage
 ) {}

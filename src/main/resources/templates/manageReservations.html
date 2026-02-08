@@ -36,6 +36,10 @@
                             <button type="submit" class="accept_btn">Accept</button>
                         </form>
                     </td>
+
+                    <td th:if="${!reservation.isAcceptable}">
+                        <span th:text="${reservation.status.displayName}"></span>
+                    </td>
                 </tr>
             </table>
 

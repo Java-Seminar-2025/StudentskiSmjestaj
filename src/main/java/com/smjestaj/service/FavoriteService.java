@@ -1,6 +1,7 @@
 package com.smjestaj.service;
 
 import com.smjestaj.dto.ListingData;
+import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.mapper.ListingMapper;

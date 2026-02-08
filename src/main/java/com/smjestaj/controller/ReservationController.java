@@ -47,6 +47,7 @@ public class ReservationController {
 
     @PostMapping("add/full")
     public String addNewFullReservation(@RequestParam Long listingId,
+                                        @RequestParam String returnPage,
                                         @ModelAttribute PageDto pageDto,
                                         @ModelAttribute ListingFilters listingFilters,
                                         Model model) {
@@ -59,7 +60,7 @@ public class ReservationController {
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("listingFilters", listingFilters);
         model.addAttribute("favorites", favorites);
-        return "listings";
+        return returnPage;
     }
 
     @GetMapping("/manage")

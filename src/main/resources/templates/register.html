@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="card">
+    <div class="card" id="two_columns_card">
         <div class="header">
             <h2>User Registration</h2>
         </div>
@@ -19,7 +19,7 @@
             <span th:text="${errorMessage}"></span>
         </div>
 
-        <form class="form form--single" th:action="@{/user/register}" th:object="${registerData}" method="post">
+        <form class="form form--grid" th:action="@{/user/register}" th:object="${registerData}" method="post">
             <div class="form_field">
                 <label for="name">Name:</label>
                 <input type="text" id="name" th:field="*{name}" required>
@@ -46,6 +46,14 @@
             </div>
 
             <div class="form_field">
+                <label for="role">Role:</label>
+                <select id="role" th:field="*{role}">
+                    <option value="STUDENT">Student</option>
+                    <option value="LANDLORD">Landlord</option>
+                </select>
+            </div>
+
+            <div class="form_field">
                 <label for="password">Password:</label>
                 <input type="password" id="password" th:field="*{password}" required>
             </div>
@@ -53,15 +61,6 @@
             <div class="form_field">
                 <label for="confirmPassword">Confirm Password:</label>
                 <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required>
-            </div>
-
-            <div class="form_field">
-                <label for="role">Role:</label>
-                <select id="role" th:field="*{role}">
-                    <option value="STUDENT">Student</option>
-                    <option value="LANDLORD">Landlord</option>
-                    <option value="ADMIN">Admin</option>
-                </select>
             </div>
 
             <button type="submit">Register</button>

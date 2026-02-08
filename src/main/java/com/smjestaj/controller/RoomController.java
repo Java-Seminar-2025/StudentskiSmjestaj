@@ -33,7 +33,7 @@ public class RoomController {
         return "redirect:/home";
     }
 
-    @GetMapping("/show")
+    @GetMapping("/bookingPage")
     public String showBookingPage(@RequestParam Long listingId,
                                   @ModelAttribute ListingFilters listingFilters,
                                   @ModelAttribute PageDto pageDto,
