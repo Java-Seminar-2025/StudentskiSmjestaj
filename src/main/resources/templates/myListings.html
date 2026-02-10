@@ -48,7 +48,7 @@
                     <div><strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(listing.price, 1, 2)}"></span></div>
                     <div><strong>Days to cancel:</strong> <span th:text="${listing.daysToCancel}"></span></div>
                 </div>
-                <div class="listing_actions">
+                <div class="listing_actions" id="wider_buttons">
                     <form th:action="@{/listings/edit}" method="get">
                         <input type="hidden" name="listingId" th:value="${listing.listingId}">
                         <button type="submit" class="edit_btn">Edit</button>

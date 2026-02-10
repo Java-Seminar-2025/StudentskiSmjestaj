@@ -4,6 +4,7 @@ import com.smjestaj.dto.*;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.entity.ListingRoomEntity;
 import com.smjestaj.entity.ReservationEntity;
+import com.smjestaj.enums.ListingStatus;
 import com.smjestaj.enums.ReservationStatus;
 import com.smjestaj.enums.ReservationType;
 import com.smjestaj.enums.UserRole;
@@ -133,15 +134,21 @@ public class ReservationService {
                 .toList();
     }
 
-    public List<ReservationData> getFullListingReservations(Long listingId) {
+    public List<ReservationData> getFullListingReservations(Long listingId, Collection<ReservationStatus> statusList) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+
         var specifiers = ReservationSpecifiers.builder()
                 .listingId(listingId)
-                .status(ReservationStatus.PENDING)
+                .statusList(statusList)
                 .type(ReservationType.FULL_LISTING)
                 .build();
 
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
                 .map(reservationMapper::reservationEntityToDto)
+                .map(reservation -> reservation.toBuilder()
+                        .isAcceptable(listing.getStatus().equals(ListingStatus.AVAILABLE))
+                        .build())
                 .toList();
     }
 
@@ -173,12 +180,13 @@ public class ReservationService {
         otherReservationsOfStudent.forEach(otherReservation -> {
             if (!otherReservation.getId().equals(acceptedReservation.getId())) {
                 otherReservation.setStatus(ReservationStatus.CANCELLED);
+                otherReservation.setCancelledAt(LocalDateTime.now());
                 reservationRepository.save(otherReservation);
             }
         });
     }
 
-    public ReservationData setAcceptableForReservation(ReservationData reservationData, RoomData roomData) {
+    public ReservationData setAcceptableForRoomReservation(ReservationData reservationData, RoomData roomData) {
         var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         var activeReservationsForRoom = getReservationsForRoom(roomData.getRoomId(), statusList);
 
@@ -241,11 +249,33 @@ public class ReservationService {
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).get(0).getId();
     }
 
+    public Long getReservationIdByListingId(Long listingId) {
+        var specifiers = ReservationSpecifiers.builder()
+                .listingId(listingId)
+                .status(ReservationStatus.FIRST_ACTIVE)
+                .build();
+
+        return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).get(0).getId();
+    }
+
     public void cancelRoomReservation(Long roomId) {
         var reservation = reservationRepository.findById(getReservationIdByRoomId(roomId))
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
         reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.setCancelledAt(LocalDateTime.now());
         reservationRepository.save(reservation);
+    }
+
+    public void cancelFirstActiveReservation(Long listingId) {
+        var reservation = reservationRepository.findById(getReservationIdByListingId(listingId))
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.setCancelledAt(LocalDateTime.now());
+        reservationRepository.save(reservation);
+
+        changeOtherActiveReservationsToPending(listingId);
+        occupancyService.updateListingStatus(listingId, getActiveReservationsForListing(listingId));
     }
 
     public void cancelMyReservationsForListing(Long listingId) {
@@ -257,10 +287,27 @@ public class ReservationService {
         var myReservationsForListing = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
 
         myReservationsForListing.forEach(myReservation -> {
+                if(myReservation.getStatus().equals(ReservationStatus.FIRST_ACTIVE)) {
+                    changeOtherActiveReservationsToPending(listingId);
+                }
                 myReservation.setStatus(ReservationStatus.CANCELLED);
+                myReservation.setCancelledAt(LocalDateTime.now());
                 reservationRepository.save(myReservation);
             });
 
         occupancyService.updateListingStatus(listingId, getActiveReservationsForListing(listingId));
+    }
+
+    public void changeOtherActiveReservationsToPending(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
+        var activeReservations = reservationRepository.findAllByListingAndStatus(listing, ReservationStatus.ACTIVE);
+
+        activeReservations.forEach(activeReservation -> {
+            activeReservation.setStatus(ReservationStatus.PENDING);
+            activeReservation.setAcceptedAt(null);
+            activeReservation.setCancellationDeadline(null);
+            reservationRepository.save(activeReservation);
+        });
     }
 }

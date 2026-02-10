@@ -1,9 +1,11 @@
 package com.smjestaj.repository;
 
 import com.smjestaj.dto.ListingFilters;
+import com.smjestaj.dto.SafeUserData;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.enums.ListingStatus;
 import com.smjestaj.enums.UserGender;
+import com.smjestaj.enums.UserRole;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -35,9 +37,11 @@ public class ListingSpecification {
                 conditionList.add(cb.equal(root.get("numberOfRooms"), listingFilters.numberOfRooms()));
             }
 
-            Predicate sameGender = cb.equal(root.get("preferredGender"), gender);
-            Predicate noPreference = cb.isNull(root.get("preferredGender"));
-            conditionList.add(cb.or(sameGender, noPreference));
+            if (gender != null) {
+                Predicate sameGender = cb.equal(root.get("preferredGender"), gender);
+                Predicate noPreference = cb.isNull(root.get("preferredGender"));
+                conditionList.add(cb.or(sameGender, noPreference));
+            }
 
             conditionList.add(cb.notEqual(root.get("status"), ListingStatus.OCCUPIED));
             conditionList.add(cb.equal(root.get("deleted"), false));

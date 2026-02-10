@@ -57,7 +57,7 @@ public class RoomService {
                 .map(roomMapper::roomEntityToDto)
                 .map(roomData -> {
                     var reservations = reservationService.getReservationsForRoom(roomData.getRoomId(), statusList).stream()
-                            .map(reservationData -> reservationService.setAcceptableForReservation(reservationData, roomData))
+                            .map(reservationData -> reservationService.setAcceptableForRoomReservation(reservationData, roomData))
                             .toList();
 
                     roomData.setReservations(reservations);

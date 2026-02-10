@@ -22,7 +22,7 @@ public class ListingController {
     @GetMapping("/filters")
     public String showListingFilters(Model model) {
         model.addAttribute("listingFilters", ListingFilters.builder().build());
-        return "listingFilters";
+        return "searchListings";
     }
 
     @PostMapping("/filters")

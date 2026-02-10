@@ -80,7 +80,7 @@ body {
 button {
     width: 200px;
     height: 40px;
-    font-size: 18px;
+    font-size: 20px;
     margin: 8px 0;
     background-color: #1d4ed8;
     color: white;
@@ -128,4 +128,26 @@ button:hover {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* LOGOUT BUTTON */
+.logout_container {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+}
+
+.logout_container button {
+    width: auto;
+    padding: 8px 16px;
+}
+
+.logout_btn {
+    background-color: #991b1b;
+    color: #fef2f2;
+}
+
+.logout_btn:hover {
+    background-color: #b91c1c;
 }

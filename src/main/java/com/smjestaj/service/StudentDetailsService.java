@@ -53,6 +53,14 @@ public class StudentDetailsService {
         var studentDetails = studentDetailsRepository.findByStudent(student)
                 .orElseThrow(() -> new StudentDetailsNotFoundException("Student details not found!"));
 
-        return studentDetailsMapper.studentDetailsEntityToDto(studentDetails);
+        var faculty = studentDetails.getFaculty();
+
+        return StudentData.builder()
+                .facultyName(faculty.getName())
+                .facultyAddress(faculty.getAddress())
+                .facultyCity(faculty.getCity())
+                .yearOfStudy(studentDetails.getYearOfStudy())
+                .gender(studentDetails.getGender())
+                .build();
     }
 }

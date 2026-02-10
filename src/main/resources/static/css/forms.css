@@ -46,6 +46,19 @@ body {
     width: 700px;
 }
 
+#userInfo_card, #studentInfo_card {
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 500px;
+    height: 400px;
+}
+
+#userInfo_card > div:not(.header), #studentInfo_card > div:not(.header) {
+    margin-top: 20px;
+    font-size: 22px;
+    padding: 8px 20px;
+}
+
 /* NASLOV STRANICE (PAGE HEADER) */
 .page_header {
     position: fixed;
@@ -65,7 +78,7 @@ body {
     font-weight: 500;
 }
 
-/* BOJA POZADINE NASLOVA KARTICE (HEADERA) */
+/* BOJA POZADINE NASLOVA KARTICE ILI STRANICE (HEADERA) */
 .header {
     width: 100%;
     padding: 16px;
@@ -80,6 +93,10 @@ body {
 
 #purple_header {
     background-color: #4c1d95;
+}
+
+#orange_header {
+    background-color: #c9410c;
 }
 
 /* BOJA TEKSTA NASLOVA */
@@ -166,7 +183,7 @@ label {
 /* BOTUNI */
 .form button {
     height: 35px;
-    font-size: 18px;
+    font-size: 20px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -197,7 +214,13 @@ label {
     max-width: 40px;
 }
 
-.form--single button.full_reservation_btn {
+.form--single button.search_btn, .form--single button.back_btn {
+    width: auto;
+    min-width: 250px;
+    padding: 8px 20px;
+}
+
+.form--single button.full_reservation_btn, .form--single button.cancel_first_btn, #wider {
     width: auto;
     max-width: none;
     min-width: 350px;
@@ -205,7 +228,7 @@ label {
 }
 
 /* POZADINE BOTUNA */
-#green_form button {
+#green_form button, .form--single button.search_btn {
     background-color: #065f46;
     color: #ecfdf5;
 }
@@ -215,7 +238,7 @@ label {
     color: #f5f3ff;
 }
 
-#red_form button, .cancel_btn {
+#red_form button, .form--single button.cancel_btn, .form--single button.cancel_first_btn, .form--single button.back_btn {
     background-color: #991b1b;
     color: #fef2f2;
 }
@@ -245,7 +268,7 @@ label {
     background-color: #1e40af;
 }
 
-#green_form button:hover {
+#green_form button:hover, .form--single button.search_btn:hover {
     background-color: #047857;
 }
 
@@ -253,7 +276,10 @@ label {
     background-color: #5b21b6;
 }
 
-#red_form button:hover {
+#red_form button:hover,
+.form--single button.cancel_btn:hover,
+.form--single button.cancel_first_btn:hover,
+.form--single button.back_btn:hover {
     background-color: #b91c1c;
 }
 

@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/forms.css}">
 </head>
 <body>
-<div class="page_header">
+<div class="page_header" id="orange_header">
     <h2>Manage reservations</h2>
 </div>
 <div class="page_content">
@@ -28,7 +28,7 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${room.reservations}">
-                    <td><a href="studentInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
 
                     <td th:if="${reservation.isAcceptable}">
                         <form class="form form--single" th:action="@{/reservations/accept}" method="post">
@@ -57,13 +57,17 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${fullReservations}">
-                    <td><a href="studentInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
 
-                    <td>
+                    <td th:if="${reservation.isAcceptable}">
                         <form class="form form--single" th:action="@{/reservations/accept}" method="post">
                             <input type="hidden" name="reservationId" th:value="${reservation.reservationId}">
                             <button type="submit" class="accept_btn">Accept</button>
                         </form>
+                    </td>
+
+                    <td th:if="${!reservation.isAcceptable}">
+                        <span th:text="${reservation.status.displayName}"></span>
                     </td>
                 </tr>
             </table>
@@ -73,13 +77,13 @@
     <form class="form form--single"
           th:if="${userData.role.displayName == 'landlord'}"
           th:action="@{/listings/myListings}" method="get">
-        <button type="submit">Back to my listings</button>
+        <button type="submit" class="back_btn">Back to my listings</button>
     </form>
 
     <form class="form form--single"
           th:if="${userData.role.displayName == 'student'}"
           th:action="@{/reservations/myReservations}" method="get">
-        <button type="submit">Back to my reservations</button>
+        <button type="submit" class="back_btn" id="wider">Back to my reservations</button>
     </form>
 </div>
 </body>

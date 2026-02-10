@@ -6,6 +6,7 @@ import com.smjestaj.dto.PageDto;
 import com.smjestaj.dto.ReservationData;
 import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.enums.ListingStatus;
+import com.smjestaj.enums.UserRole;
 import com.smjestaj.exception.ListingNotFoundException;
 import com.smjestaj.exception.WrongDeadlineException;
 import com.smjestaj.mapper.ListingMapper;
@@ -27,12 +28,18 @@ public class ListingService {
     private final ListingMapper listingMapper;
     private final HomeService homeService;
     private final ReservationService reservationService;
+    private final UserService userService;
     private final StudentDetailsService studentDetailsService;
 
     public Page<ListingData> filterListings(ListingFilters listingFilters, PageDto pageDto) {
         var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
 
-        var studentGender = studentDetailsService.getStudentData(homeService.getUsernameOfLoggedInUser()).gender();
+        var username = homeService.getUsernameOfLoggedInUser();
+        var userRole = userService.getUserData(username).role();
+
+        var studentGender = (userRole.equals(UserRole.STUDENT))
+                ? studentDetailsService.getStudentData(username).gender()
+                : null;
 
         var listingsPage = listingRepository.findAll(
                 ListingSpecification.withFilters(listingFilters, studentGender),

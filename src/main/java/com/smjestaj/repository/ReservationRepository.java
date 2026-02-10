@@ -1,6 +1,8 @@
 package com.smjestaj.repository;
 
+import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.entity.ReservationEntity;
+import com.smjestaj.enums.ReservationStatus;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
@@ -14,4 +16,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
       and r.status <> com.smjestaj.enums.ReservationStatus.CANCELLED
     """)
     List<Long> findListingIdsWithReservationsForStudent(@Param("username") String username);
+
+    List<ReservationEntity> findAllByListingAndStatus(ListingEntity listing, ReservationStatus status);
 }

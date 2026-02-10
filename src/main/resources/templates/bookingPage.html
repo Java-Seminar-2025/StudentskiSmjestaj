@@ -47,7 +47,8 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${room.reservations}">
-                    <td><a href="studentInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><a th:href="@{/user/{username}(username=${reservation.studentUsername})}"
+                           th:text="${reservation.studentUsername}"></a></td>
                 </tr>
             </table>
         </div>
@@ -85,7 +86,7 @@
 
         <button type="submit"
                 th:if="${pageDto.returnPage == 'myFavorites'}"
-                class="back_btn"
+                class="back_btn" id="wider"
                 formaction="/favorites/show"
                 formmethod="get">
             Back to my favorites

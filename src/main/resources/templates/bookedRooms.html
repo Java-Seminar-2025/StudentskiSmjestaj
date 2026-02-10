@@ -26,7 +26,7 @@
                 <strong>Capacity:</strong> <span th:text="${room.capacity}"></span>
             </div>
 
-            <form th:action="@{/reservations/cancel}" method="post">
+            <form class="form form--single" th:action="@{/reservations/cancel}" method="post">
                 <input type="hidden" name="listingId" th:value="${bookedRoomsData.listingId}">
                 <input type="hidden" name="roomId" th:value="${room.roomId}">
                 <button type="submit" class="cancel_btn">Cancel</button>
@@ -35,6 +35,6 @@
     </div>
 
     <form class="form form--single" id="red_form" th:action="@{/reservations/myReservations}" method="get">
-        <button type="submit">Back to my reservations</button>
+        <button type="submit" id="wider">Back to my reservations</button>
     </form>
 </div>

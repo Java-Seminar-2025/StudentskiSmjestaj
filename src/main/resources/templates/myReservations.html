@@ -38,7 +38,8 @@
                 <td th:text="${myReservation.title}"></td>
                 <td th:text="${myReservation.address}"></td>
                 <td th:text="${myReservation.city}"></td>
-                <td><a href="userInfo.html" th:text="${myReservation.landlordUsername}"></a></td>
+                <td><a th:href="@{/user/{username}(username=${myReservation.landlordUsername})}"
+                       th:text="${myReservation.landlordUsername}"></a></td>
                 <td th:text="${#temporals.format(myReservation.cancellationDeadline, 'dd.MM.yyyy. HH:mm')}"></td>
                 <td th:text="${myReservation.status.displayName}"></td>
                 <td th:text="${myReservation.type.displayName}"></td>
@@ -71,7 +72,9 @@
             </tr>
             </tbody>
         </table>
-        <form class="back_form" th:action="@{/home}" method="get">
+    </div>
+    <div class="back_btn_wrapper">
+        <form th:action="@{/home}" method="get">
             <button type="submit" class="btn red">Back to home page</button>
         </form>
     </div>

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public record ReservationData (
     Long reservationId,
     Long roomId,
+    Long listingId,
     String studentUsername,
     ReservationStatus status,
     LocalDateTime createdAt,

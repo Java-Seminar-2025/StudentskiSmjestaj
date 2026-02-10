@@ -52,15 +52,19 @@ public class ReservationController {
                                         @ModelAttribute PageDto pageDto,
                                         @ModelAttribute ListingFilters listingFilters,
                                         Model model) {
+
         reservationService.addNewFullReservation(listingId);
 
-        var listings = listingService.filterListings(listingFilters, pageDto);
-        var favoriteIds = favoriteService.findAllFavoriteIdsOfStudent();
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
+        var listingRooms = roomService.getAllRoomsDataOfListing(listingId, statusList);
 
-        model.addAttribute("listings", listings);
+        model.addAttribute("allRoomsData", listingRooms);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("listingFilters", listingFilters);
-        model.addAttribute("favorites", favoriteIds);
+
+        roomService.setReservableForEachRoom(listingRooms);
+        model.addAttribute("isFullListingReservable", listingService.isFullListingReservable(listingId));
+
         return "bookingPage";
     }
 
@@ -74,7 +78,7 @@ public class ReservationController {
 
         var statusList = EnumSet.of(ReservationStatus.PENDING, ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, statusList));
-        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
+        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId, statusList));
 
         return "manageReservations";
     }
@@ -94,7 +98,7 @@ public class ReservationController {
 
         var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, statusList));
-        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId));
+        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId, statusList));
 
         return "showActiveReservations";
     }
@@ -122,5 +126,11 @@ public class ReservationController {
     public String cancelMyReservationsForListing(@RequestParam Long listingId) {
         reservationService.cancelMyReservationsForListing(listingId);
         return "redirect:/reservations/myReservations";
+    }
+
+    @PostMapping("/cancelFirstActive")
+    public String cancelFirstActiveReservation(@RequestParam Long listingId) {
+        reservationService.cancelFirstActiveReservation(listingId);
+        return "redirect:/listings/myListings";
     }
 }

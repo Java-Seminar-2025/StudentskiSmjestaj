@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/forms.css}">
 </head>
 <body>
-<div class="page_header">
+<div class="page_header" id="green_header">
     <h2>Show active reservations</h2>
 </div>
 <div class="page_content">
@@ -26,9 +26,12 @@
                 <strong>Capacity:</strong> <span th:text="${room.capacity}"></span>
             </div>
 
-            <div class="reservation" th:each="reservation : ${room.reservations}">
-                <a href="studentInfo.html" th:text="${reservation.studentUsername}"></a>
-            </div>
+            <table class="reservation_table">
+                <tr class="reservation" th:each="reservation : ${room.reservations}">
+                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><span th:text="${reservation.status.displayName}"></span></td>
+                </tr>
+            </table>
         </div>
 
         <div class="card">
@@ -40,22 +43,30 @@
                 <strong>Price:</strong> €<span th:text="${#numbers.formatDecimal(listingData.price, 1, 2)}"></span>
             </div>
 
-            <div class="reservation" th:each="reservation : ${fullReservations}">
-                <a href="studentInfo.html" th:text="${reservation.studentUsername}"></a>
-            </div>
+            <table class="reservation_table">
+                <tr class="reservation" th:each="reservation : ${fullReservations}">
+                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><span th:text="${reservation.status.displayName}"></span></td>
+                </tr>
+            </table>
         </div>
 
     </div>
+    <form class="form form--single" th:action="@{/reservations/cancelFirstActive}" method="post">
+        <input type="hidden" name="listingId" th:value="${allRoomsData.listingId}">
+        <button type="submit" class="cancel_first_btn">Cancel first active reservation</button>
+    </form>
+
     <form class="form form--single"
           th:if="${userData.role.displayName == 'landlord'}"
           th:action="@{/listings/myListings}" method="get">
-        <button type="submit">Back to my listings</button>
+        <button type="submit" class="back_btn">Back to my listings</button>
     </form>
 
     <form class="form form--single"
           th:if="${userData.role.displayName == 'student'}"
           th:action="@{/reservations/myReservations}" method="get">
-        <button type="submit">Back to my reservations</button>
+        <button type="submit" class="back_btn">Back to my reservations</button>
     </form>
 </div>
 </body>
