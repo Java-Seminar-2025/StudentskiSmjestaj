@@ -95,6 +95,26 @@
                             </button>
                         </form>
                     </div>
+                    <div class="listing_actions" sec:authorize="hasRole('ADMIN')">
+                        <form th:action="@{/listings/admin/delete}" method="post">
+                            <input type="hidden" name="listingId" th:value="${listing.listingId}">
+
+                            <input type="hidden" name="page" th:value="${pageDto.page}">
+                            <input type="hidden" name="size" th:value="${pageDto.size}">
+                            <input type="hidden" name="totalPages" th:value="${pageDto.totalPages}">
+                            <input type="hidden" name="returnPage" th:value="${pageDto.returnPage}">
+
+                            <input type="hidden" name="lowerPrice" th:value="${listingFilters.lowerPrice}">
+                            <input type="hidden" name="upperPrice" th:value="${listingFilters.upperPrice}">
+                            <input type="hidden" name="city" th:value="${listingFilters.city}">
+                            <input type="hidden" name="numberOfStudents" th:value="${listingFilters.numberOfStudents}">
+                            <input type="hidden" name="numberOfRooms" th:value="${listingFilters.numberOfRooms}">
+
+                            <button type="submit" class="delete_btn">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

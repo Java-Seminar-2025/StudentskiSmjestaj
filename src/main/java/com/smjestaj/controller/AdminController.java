@@ -2,6 +2,7 @@ package com.smjestaj.controller;
 
 import com.smjestaj.dto.*;
 import com.smjestaj.enums.UserRole;
+import com.smjestaj.service.AdminService;
 import com.smjestaj.service.UserService;
 
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminController {
     private final UserService userService;
+    private final AdminService adminService;
 
     @GetMapping("/userList")
     public String showUserList(Model model) {
@@ -25,38 +27,15 @@ public class AdminController {
         return "userList";
     }
 
-    @GetMapping("/studentList")
-    public String showStudentList(Model model) {
-        var students = userService.getAllUsersWithRole(UserRole.STUDENT);
-        model.addAttribute("students", students);
-        model.addAttribute("changeRoleDto", ChangeRoleDto.builder().build());
-        model.addAttribute("blockOrUnblockDto", BlockOrUnblockDto.builder().build());
-        return "studentList";
-    }
-/*
-    @GetMapping("/landlordList")
-    public String showLandlordList(Model model) {
-        var landlords = userService.getAllUsersWithRole(UserRole.LANDLORD);
-        model.addAttribute("landlords", landlords);
-        return "landlordList";
-    }
-
-    @GetMapping("/adminList")
-    public String showAdminList(Model model) {
-        var admins = userService.getAllUsersWithRole(UserRole.ADMIN);
-        model.addAttribute("admins", admins);
-        return "adminList";
-    }
-*/
     @PostMapping("/changeRole")
     public String changeUserRole(@ModelAttribute ChangeRoleDto changeRoleDto) {
-        userService.changeUserRole(changeRoleDto);
+        adminService.changeUserRole(changeRoleDto);
         return "redirect:/admin/userList";
     }
 
     @PostMapping("/blockOrUnblockUser")
     public String blockOrUnblockUser(@ModelAttribute BlockOrUnblockDto blockOrUnblockDto) {
-        userService.blockOrUnblockUser(blockOrUnblockDto);
+        adminService.blockOrUnblockUser(blockOrUnblockDto);
         return "redirect:/admin/userList";
     }
 }

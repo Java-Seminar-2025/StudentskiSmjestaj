@@ -20,6 +20,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserValidator userValidator;
     private final UserMapper userMapper;
+    private final ListingRepository listingRepository;
 
     public void register(RegisterData input) {
         userValidator.validateEmailFormat(input.email());
@@ -59,26 +60,5 @@ public class UserService {
         return users.stream()
                 .map(userMapper::userEntityToSafeUserData)
                 .toList();
-    }
-
-    public List<SafeUserData> getAllUsersWithRole(UserRole role) {
-        var usersWithRole = userRepository.findAllByRole(role);
-        return usersWithRole.stream()
-                .map(userMapper::userEntityToSafeUserData)
-                .toList();
-    }
-
-    public void changeUserRole(ChangeRoleDto changeRoleDto) {
-        var user = userRepository.findByUsername(changeRoleDto.username())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-        user.setRole(changeRoleDto.role());
-        userRepository.save(user);
-    }
-
-    public void blockOrUnblockUser(BlockOrUnblockDto blockOrUnblockDto) {
-        var user = userRepository.findByUsername(blockOrUnblockDto.username())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-        user.setBlocked(!blockOrUnblockDto.blocked());
-        userRepository.save(user);
     }
 }

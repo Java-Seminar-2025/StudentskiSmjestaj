@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.domain.*;
 
 public interface ListingRepository extends JpaRepository<ListingEntity, Long>, JpaSpecificationExecutor<ListingEntity> {
+    List<ListingEntity> findAllByLandlordAndDeleted(UserEntity landlord, Boolean deleted);
     Page<ListingEntity> findAllByLandlordAndDeleted(UserEntity landlord, Boolean deleted, Pageable pageable);
     List<ListingEntity> findTop3ByDeletedOrderByIdDesc(Boolean deleted);
     List<ListingEntity> findAllByIdIn(List<Long> ids);

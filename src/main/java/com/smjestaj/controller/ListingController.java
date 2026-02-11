@@ -6,6 +6,7 @@ import com.smjestaj.dto.PageDto;
 import com.smjestaj.service.FavoriteService;
 import com.smjestaj.service.ListingService;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -120,6 +121,15 @@ public class ListingController {
     public String deleteListing(@RequestParam Long listingId) {
         listingService.deleteListing(listingId);
         return "redirect:/listings/myListings";
+    }
+
+    @PostMapping("/admin/delete")
+    public String deleteListingAsAdmin(@ModelAttribute PageDto pageDto,
+                                       @ModelAttribute ListingFilters listingFilters,
+                                       Model model) {
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("listingFilters", listingFilters);
+        return "listings";
     }
 
     @GetMapping("/showDetails")
