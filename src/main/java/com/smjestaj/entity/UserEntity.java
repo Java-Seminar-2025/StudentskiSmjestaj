@@ -49,8 +49,5 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<ReservationEntity> reservations;
-
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<RoomOccupantEntity> roomOccupants;
 }
 

@@ -28,7 +28,8 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${room.reservations}">
-                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><a th:href="@{/user/{username}(username=${reservation.studentUsername})}"
+                           th:text="${reservation.studentUsername}"></a></td>
                     <td><span th:text="${reservation.status.displayName}"></span></td>
                 </tr>
             </table>
@@ -45,7 +46,8 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${fullReservations}">
-                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><a th:href="@{/user/{username}(username=${reservation.studentUsername})}"
+                           th:text="${reservation.studentUsername}"></a></td>
                     <td><span th:text="${reservation.status.displayName}"></span></td>
                 </tr>
             </table>

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Long> {
+    List<FavoriteEntity> findAllByListing(ListingEntity listing);
     List<FavoriteEntity> findAllBySavedAndStudent(Boolean saved, UserEntity student);
     Page<FavoriteEntity> findAllBySavedAndStudent(Boolean saved, UserEntity student, Pageable pageable);
     List<FavoriteEntity> findAllByStudentAndListing(UserEntity student, ListingEntity listing);

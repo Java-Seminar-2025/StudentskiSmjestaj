@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/forms.css}">
+</head>
+<body>
+
+<h2 th:text="'Error ' + ${statusCode}"></h2>
+
+<p th:text="${errorMessage}" style="color: red; font-weight: bold;"></p>
+
+<form class="form form--single" id="red_form" th:action="@{/home}" method="get">
+    <button class="btn">Back to home page</button>
+</form>
+
+</body>
+</html>

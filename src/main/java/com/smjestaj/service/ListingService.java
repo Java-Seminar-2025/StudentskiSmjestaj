@@ -3,12 +3,9 @@ package com.smjestaj.service;
 import com.smjestaj.dto.ListingData;
 import com.smjestaj.dto.ListingFilters;
 import com.smjestaj.dto.PageDto;
-import com.smjestaj.dto.ReservationData;
-import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.enums.ListingStatus;
 import com.smjestaj.enums.UserRole;
 import com.smjestaj.exception.ListingNotFoundException;
-import com.smjestaj.exception.WrongDeadlineException;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
 
@@ -19,6 +16,7 @@ import org.springframework.data.domain.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -78,29 +76,29 @@ public class ListingService {
         listing.setStatus(ListingStatus.AVAILABLE);
         listing.setDeleted(false);
 
-        if(listingData.daysToCancel() < 1) {
-            throw new WrongDeadlineException("Days to cancel reservation cannot be smaller than 1.");
-        }
-        listing.setDaysToCancel(listingData.daysToCancel());
-
         listingRepository.save(listing);
         return "redirect:/listingRooms/create?listingId=" + listing.getId();
     }
 
-    public void editListing(ListingData listingData) {
+    public Optional<String> editListing(ListingData listingData) {
         var listing = listingRepository.findById(listingData.listingId())
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 
         listingMapper.updateEntityFromDto(listingData, listing);
-        listing.updateDaysToCancel(listingData.daysToCancel());
 
-        listingRepository.save(listing);
+        Optional<String> errorMessage = listing.updateDaysToCancel(listingData.daysToCancel());
+        if (errorMessage.isEmpty()) {
+            listingRepository.save(listing);
+        }
+
+        return errorMessage;
     }
 
     public void deleteListing(Long listingId) {
         var listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
         listing.setDeleted(true);
+
         listingRepository.save(listing);
     }
 

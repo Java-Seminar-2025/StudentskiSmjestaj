@@ -20,22 +20,21 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserValidator userValidator;
     private final UserMapper userMapper;
-    private final ListingRepository listingRepository;
 
-    public void register(RegisterData input) {
-        userValidator.validateEmailFormat(input.email());
-        userValidator.validatePassword(input.password(), input.confirmPassword());
+    public void register(RegisterData registerData) {
+        userValidator.validateEmailFormat(registerData.email());
+        userValidator.validatePassword(registerData.password(), registerData.confirmPassword());
 
-        if(userRepository.existsByEmail(input.email())) {
+        if(userRepository.existsByEmail(registerData.email())) {
             throw new RegisterException("Email already exists!");
         }
 
-        if(userRepository.existsByUsername(input.username())) {
+        if(userRepository.existsByUsername(registerData.username())) {
             throw new RegisterException("Username already exists!");
         }
 
-        var user = userMapper.registerDataToUserEntity(input);
-        user.setPassword(passwordEncoder.encode(input.password()));
+        var user = userMapper.registerDataToUserEntity(registerData);
+        user.setPassword(passwordEncoder.encode(registerData.password()));
         user.setBlocked(false);
 
         userRepository.save(user);

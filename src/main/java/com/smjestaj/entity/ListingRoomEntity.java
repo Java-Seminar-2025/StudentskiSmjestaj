@@ -29,7 +29,4 @@ public class ListingRoomEntity {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<ReservationEntity> reservations;
-
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List<RoomOccupantEntity> roomOccupants;
 }

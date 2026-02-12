@@ -1,9 +1,8 @@
 package com.smjestaj.dto;
 
 import com.smjestaj.enums.*;
+import jakarta.validation.constraints.Min;
 import lombok.Builder;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Builder(toBuilder = true)
 public record ListingData (
@@ -18,7 +17,10 @@ public record ListingData (
     Integer numberOfRooms,
     UserGender preferredGender,
     ListingStatus status,
+
+    @Min(value = 1, message = "Days to cancel cannot be smaller than 1.")
     Integer daysToCancel,
+
     Boolean isReservable,
     Boolean deleted
 ) {}

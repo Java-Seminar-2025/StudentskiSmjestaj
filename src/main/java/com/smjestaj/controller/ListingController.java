@@ -6,12 +6,14 @@ import com.smjestaj.dto.PageDto;
 import com.smjestaj.service.FavoriteService;
 import com.smjestaj.service.ListingService;
 
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/listings")
@@ -101,7 +103,16 @@ public class ListingController {
     }
 
     @PostMapping("/create")
-    public String createListing(@ModelAttribute ListingData listingData) {
+    public String createListing(@Valid @ModelAttribute ListingData listingData,
+                                BindingResult bindingResult,
+                                Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError("daysToCancel").getDefaultMessage();
+            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("listingData", listingData);
+            return "createListing";
+        }
+
         return listingService.createListing(listingData);
     }
 
@@ -113,7 +124,14 @@ public class ListingController {
 
     @PostMapping("/edit")
     public String editListing(@ModelAttribute ListingData listingData, Model model) {
-        listingService.editListing(listingData);
+        Optional<String> errorMessage = listingService.editListing(listingData);
+
+        if (errorMessage.isPresent()) {
+            model.addAttribute("errorMessage", errorMessage.get());
+            model.addAttribute("listingData", listingData);
+            return "editListing";
+        }
+
         return "redirect:/listings/myListings";
     }
 

@@ -28,7 +28,8 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${room.reservations}">
-                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><a th:href="@{/user/{username}(username=${reservation.studentUsername})}"
+                           th:text="${reservation.studentUsername}"></a></td>
 
                     <td th:if="${reservation.isAcceptable}">
                         <form class="form form--single" th:action="@{/reservations/accept}" method="post">
@@ -57,7 +58,8 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${fullReservations}">
-                    <td><a href="userInfo.html" th:text="${reservation.studentUsername}"></a></td>
+                    <td><a th:href="@{/user/{username}(username=${reservation.studentUsername})}"
+                           th:text="${reservation.studentUsername}"></a></td>
 
                     <td th:if="${reservation.isAcceptable}">
                         <form class="form form--single" th:action="@{/reservations/accept}" method="post">

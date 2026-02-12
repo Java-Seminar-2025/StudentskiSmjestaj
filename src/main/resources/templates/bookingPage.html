@@ -47,7 +47,7 @@
 
             <table class="reservation_table">
                 <tr class="reservation" th:each="reservation : ${room.reservations}">
-                    <td><a th:href="@{/user/{username}(username=${reservation.studentUsername})}"
+                    <td style="text-align: center;"><a th:href="@{/user/{username}(username=${reservation.studentUsername})}"
                            th:text="${reservation.studentUsername}"></a></td>
                 </tr>
             </table>

@@ -2,12 +2,11 @@ package com.smjestaj.entity;
 
 import com.smjestaj.enums.UserGender;
 import com.smjestaj.enums.ListingStatus;
-import com.smjestaj.exception.WrongDeadlineException;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "listings")
@@ -67,14 +66,15 @@ public class ListingEntity {
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
     private List<ReservationEntity> reservations;
 
-    public void updateDaysToCancel(Integer daysToCancel) {
+    public Optional<String> updateDaysToCancel(Integer daysToCancel) {
         if (daysToCancel == null) {
-            return;
+            return Optional.empty();
         }
         if (daysToCancel < this.daysToCancel) {
-            throw new WrongDeadlineException("It's not allowed to shorten the cancellation deadline.");
+            return Optional.of("It's not allowed to shorten the cancellation deadline.");
         }
-        this.daysToCancel = daysToCancel;
+        this.setDaysToCancel(daysToCancel);
+        return Optional.empty();
     }
 }
 

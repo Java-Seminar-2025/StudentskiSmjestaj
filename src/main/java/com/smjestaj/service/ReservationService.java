@@ -112,10 +112,10 @@ public class ReservationService {
                 .toList();
     }
 
-    public List<ReservationData> getActiveReservationsForListing(Long listingId) {
+    public List<ReservationData> getReservationsForListing(Long listingId, Collection<ReservationStatus> statusList) {
         var specifiers = ReservationSpecifiers.builder()
                 .listingId(listingId)
-                .statusList(EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE))
+                .statusList(statusList)
                 .build();
 
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).stream()
@@ -209,10 +209,11 @@ public class ReservationService {
     public List<MyReservationData> getListingsWithMyReservations() {
         var listingIds = reservationRepository.findListingIdsWithReservationsForStudent(homeService.getUsernameOfLoggedInUser());
         var listings = listingRepository.findAllByIdIn(listingIds);
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         List<MyReservationData> myReservationDataList = new ArrayList<>();
 
         listings.forEach(listing -> {
-            occupancyService.updateListingStatus(listing.getId(), getActiveReservationsForListing(listing.getId()));
+            occupancyService.updateListingStatus(listing.getId(), getReservationsForListing(listing.getId(), statusList));
 
             var listingReservations = getReservationsOfStudentForListing(listing.getId());
             var myReservationData = listingMapper.listingEntityToMyReservationData(listing);
@@ -258,24 +259,27 @@ public class ReservationService {
         return reservationRepository.findAll(ReservationSpecification.withFilters(specifiers)).get(0).getId();
     }
 
-    public void cancelRoomReservation(Long roomId) {
-        var reservation = reservationRepository.findById(getReservationIdByRoomId(roomId))
-                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+    public void cancelReservation(ReservationEntity reservation) {
         reservation.setStatus(ReservationStatus.CANCELLED);
         reservation.setCancelledAt(LocalDateTime.now());
         reservationRepository.save(reservation);
     }
 
+    public void cancelRoomReservation(Long roomId) {
+        var reservation = reservationRepository.findById(getReservationIdByRoomId(roomId))
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+        cancelReservation(reservation);
+    }
+
     public void cancelFirstActiveReservation(Long listingId) {
         var reservation = reservationRepository.findById(getReservationIdByListingId(listingId))
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
 
-        reservation.setStatus(ReservationStatus.CANCELLED);
-        reservation.setCancelledAt(LocalDateTime.now());
-        reservationRepository.save(reservation);
+        cancelReservation(reservation);
 
         changeOtherActiveReservationsToPending(listingId);
-        occupancyService.updateListingStatus(listingId, getActiveReservationsForListing(listingId));
+        occupancyService.updateListingStatus(listingId, getReservationsForListing(listingId, statusList));
     }
 
     public void cancelMyReservationsForListing(Long listingId) {
@@ -283,19 +287,17 @@ public class ReservationService {
                 .listingId(listingId)
                 .studentUsername(homeService.getUsernameOfLoggedInUser())
                 .build();
-
+        var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         var myReservationsForListing = reservationRepository.findAll(ReservationSpecification.withFilters(specifiers));
 
         myReservationsForListing.forEach(myReservation -> {
                 if(myReservation.getStatus().equals(ReservationStatus.FIRST_ACTIVE)) {
                     changeOtherActiveReservationsToPending(listingId);
                 }
-                myReservation.setStatus(ReservationStatus.CANCELLED);
-                myReservation.setCancelledAt(LocalDateTime.now());
-                reservationRepository.save(myReservation);
+                cancelReservation(myReservation);
             });
 
-        occupancyService.updateListingStatus(listingId, getActiveReservationsForListing(listingId));
+        occupancyService.updateListingStatus(listingId, getReservationsForListing(listingId, statusList));
     }
 
     public void changeOtherActiveReservationsToPending(Long listingId) {
@@ -308,6 +310,17 @@ public class ReservationService {
             activeReservation.setAcceptedAt(null);
             activeReservation.setCancellationDeadline(null);
             reservationRepository.save(activeReservation);
+        });
+    }
+
+    public void cancelAllReservationsForDeletedListing(Long listingId) {
+        var statusList = EnumSet.of(ReservationStatus.PENDING, ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
+        var reservationsForListing = getReservationsForListing(listingId, statusList);
+
+        reservationsForListing.forEach(reservationData -> {
+            var reservation = reservationRepository.findById(reservationData.reservationId())
+                    .orElseThrow(() -> new ReservationNotFoundException("Reservation not found!"));
+            cancelReservation(reservation);
         });
     }
 }

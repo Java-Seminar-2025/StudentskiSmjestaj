@@ -90,4 +90,14 @@ public class FavoriteService {
                 listingMapper.listingEntityToDto(favorite.getListing())
         );
     }
+
+    public void unfavoriteDeletedListing(Long listingId) {
+        var listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found"));
+        var favorites = favoriteRepository.findAllByListing(listing);
+        favorites.forEach(favorite -> {
+            favorite.setSaved(false);
+            favoriteRepository.save(favorite);
+        });
+    }
 }

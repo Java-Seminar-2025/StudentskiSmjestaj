@@ -12,7 +12,6 @@ public interface ListingMapper {
     @Mapping(target = "landlordUsername", expression = "java(listingEntity.getLandlord().getUsername())")
     ListingData listingEntityToDto(ListingEntity listingEntity);
 
-    @Mapping(target = "daysToCancel", ignore = true)
     ListingEntity listingDtoToEntity(ListingData listingData);
 
     @Mapping(target = "daysToCancel", ignore = true)
