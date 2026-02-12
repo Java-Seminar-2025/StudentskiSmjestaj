@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-
 import java.util.EnumSet;
 
 @Service
@@ -20,7 +19,8 @@ public class AdminService {
     private final UserRepository userRepository;
     private final ListingService listingService;
     private final ListingRepository listingRepository;
-    private final ReservationService reservationService;
+    private final CancelReservationService cancelReservationService;
+    private final FilterReservationsService filterReservationsService;
     private final FavoriteService favoriteService;
     private final OccupancyService occupancyService;
 
@@ -39,12 +39,13 @@ public class AdminService {
 
         if(user.getRole().equals(UserRole.LANDLORD) && (user.getBlocked())) {
             var listings = listingRepository.findAllByLandlordAndDeleted(user, false);
-            var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
+
             listings.forEach(listing -> {
                 listingService.deleteListing(listing.getId());
-                reservationService.cancelAllReservationsForDeletedListing(listing.getId());
+                cancelReservationService.cancelAllReservationsForDeletedListing(listing.getId());
                 favoriteService.unfavoriteDeletedListing(listing.getId());
-                occupancyService.updateListingStatus(listing.getId(), reservationService.getReservationsForListing(listing.getId(), statusList));
+                occupancyService.updateListingStatus(listing.getId(),
+                        filterReservationsService.getActiveReservationsForListing(listing.getId()));
             });
         }
     }

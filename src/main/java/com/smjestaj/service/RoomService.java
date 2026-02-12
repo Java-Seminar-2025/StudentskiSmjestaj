@@ -22,7 +22,8 @@ public class RoomService {
     private final ListingRepository listingRepository;
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
-    private final ReservationService reservationService;
+    private final AcceptReservationService acceptReservationService;
+    private final FilterReservationsService filterReservationsService;
 
     public AllRoomsData prepareRoomForms(Long listingId) {
         var listing = listingRepository.findById(listingId)
@@ -56,8 +57,9 @@ public class RoomService {
         var listingRooms = roomRepository.findAllByListing(listing).stream()
                 .map(roomMapper::roomEntityToDto)
                 .map(roomData -> {
-                    var reservations = reservationService.getReservationsForRoom(roomData.getRoomId(), statusList).stream()
-                            .map(reservationData -> reservationService.setAcceptableForRoomReservation(reservationData, roomData))
+                    var reservations = filterReservationsService.getReservationsForRoom(roomData.getRoomId(), statusList).stream()
+                            .map(reservationData ->
+                                    acceptReservationService.setAcceptableForRoomReservation(reservationData, roomData))
                             .toList();
 
                     roomData.setReservations(reservations);
@@ -75,9 +77,9 @@ public class RoomService {
     }
 
     public void setReservableForEachRoom(AllRoomsData allRoomsData) {
-        var roomReservationsOfStudent = reservationService.getPendingRoomReservations(allRoomsData.getListingId());
-        var hasFullReservationForListing = !reservationService.getPendingFullReservations(allRoomsData.getListingId()).isEmpty();
-        var hasActiveReservationsForListing = !reservationService.getActiveReservations(allRoomsData.getListingId()).isEmpty();
+        var roomReservationsOfStudent = filterReservationsService.getPendingRoomReservationsOfStudent(allRoomsData.getListingId());
+        var hasFullReservationForListing = !filterReservationsService.getPendingFullReservationsOfStudent(allRoomsData.getListingId()).isEmpty();
+        var hasActiveReservationsForListing = !filterReservationsService.getActiveReservationsOfStudent(allRoomsData.getListingId()).isEmpty();
 
         allRoomsData.getRooms()
                 .forEach(roomData -> {

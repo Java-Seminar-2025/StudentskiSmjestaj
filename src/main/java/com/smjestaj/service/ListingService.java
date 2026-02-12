@@ -6,6 +6,7 @@ import com.smjestaj.dto.PageDto;
 import com.smjestaj.enums.ListingStatus;
 import com.smjestaj.enums.UserRole;
 import com.smjestaj.exception.ListingNotFoundException;
+import com.smjestaj.exception.ReservationNotFoundException;
 import com.smjestaj.mapper.ListingMapper;
 import com.smjestaj.repository.*;
 
@@ -25,7 +26,8 @@ public class ListingService {
     private final UserRepository userRepository;
     private final ListingMapper listingMapper;
     private final HomeService homeService;
-    private final ReservationService reservationService;
+    private final FilterReservationsService filterReservationsService;
+    private final ManageReservationService manageReservationService;
     private final UserService userService;
     private final StudentDetailsService studentDetailsService;
 
@@ -89,6 +91,7 @@ public class ListingService {
         Optional<String> errorMessage = listing.updateDaysToCancel(listingData.daysToCancel());
         if (errorMessage.isEmpty()) {
             listingRepository.save(listing);
+            manageReservationService.updateCancellationDeadline(listingData.listingId());
         }
 
         return errorMessage;
@@ -128,7 +131,7 @@ public class ListingService {
     }
 
     public boolean isFullListingReservable(Long listingId) {
-        var hasPendingReservation = !reservationService.getPendingReservations(listingId).isEmpty();
+        var hasPendingReservation = !filterReservationsService.getPendingReservationsOfStudent(listingId).isEmpty();
         var listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found!"));
 

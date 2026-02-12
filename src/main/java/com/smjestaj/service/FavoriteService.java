@@ -1,19 +1,18 @@
 package com.smjestaj.service;
 
-import com.smjestaj.dto.ListingData;
-import com.smjestaj.dto.PageDto;
-import com.smjestaj.entity.ListingEntity;
-import com.smjestaj.mapper.ListingMapper;
-
 import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.smjestaj.dto.ListingData;
+import com.smjestaj.dto.PageDto;
+import com.smjestaj.entity.ListingEntity;
 import com.smjestaj.entity.FavoriteEntity;
 import com.smjestaj.repository.ListingRepository;
 import com.smjestaj.repository.FavoriteRepository;
 import com.smjestaj.repository.UserRepository;
 import com.smjestaj.exception.ListingNotFoundException;
+import com.smjestaj.mapper.ListingMapper;
 
 import lombok.RequiredArgsConstructor;
 import java.util.List;

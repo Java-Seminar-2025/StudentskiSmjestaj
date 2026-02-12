@@ -18,10 +18,13 @@ import java.util.EnumSet;
 @RequestMapping("/reservations")
 @RequiredArgsConstructor
 public class ReservationController {
-    private final ReservationService reservationService;
+    private final ManageReservationService manageReservationService;
+    private final AcceptReservationService acceptReservationService;
+    private final FilterReservationsService filterReservationsService;
+    private final MyReservationsService myReservationsService;
+    private final CancelReservationService cancelReservationService;
     private final RoomService roomService;
     private final ListingService listingService;
-    private final FavoriteService favoriteService;
     private final UserService userService;
     private final HomeService homeService;
 
@@ -31,7 +34,7 @@ public class ReservationController {
                                         @ModelAttribute ListingFilters listingFilters,
                                         Model model) {
 
-        reservationService.addNewRoomReservation(roomId);
+        manageReservationService.addNewRoomReservation(roomId);
         var listingId = roomService.getListingIdByRoomId(roomId);
 
         var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
@@ -53,7 +56,7 @@ public class ReservationController {
                                         @ModelAttribute ListingFilters listingFilters,
                                         Model model) {
 
-        reservationService.addNewFullReservation(listingId);
+        manageReservationService.addNewFullReservation(listingId);
 
         var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         var listingRooms = roomService.getAllRoomsDataOfListing(listingId, statusList);
@@ -78,15 +81,15 @@ public class ReservationController {
 
         var statusList = EnumSet.of(ReservationStatus.PENDING, ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, statusList));
-        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId, statusList));
+        model.addAttribute("fullReservations", filterReservationsService.getFullListingReservations(listingId, statusList));
 
         return "manageReservations";
     }
 
     @PostMapping("/accept")
     public String acceptReservation(@RequestParam Long reservationId) {
-        reservationService.acceptReservation(reservationId);
-        return reservationService.redirectToCorrectPage(reservationId);
+        acceptReservationService.acceptReservation(reservationId);
+        return acceptReservationService.redirectToCorrectPage(reservationId);
     }
 
     @GetMapping("/showActive")
@@ -98,39 +101,39 @@ public class ReservationController {
 
         var statusList = EnumSet.of(ReservationStatus.ACTIVE, ReservationStatus.FIRST_ACTIVE);
         model.addAttribute("allRoomsData", roomService.getAllRoomsDataOfListing(listingId, statusList));
-        model.addAttribute("fullReservations", reservationService.getFullListingReservations(listingId, statusList));
+        model.addAttribute("fullReservations", filterReservationsService.getFullListingReservations(listingId, statusList));
 
         return "showActiveReservations";
     }
 
     @GetMapping("/myReservations")
     public String showMyReservationsPage(Model model) {
-        model.addAttribute("listingsWithMyReservations", reservationService.getListingsWithMyReservations());
+        model.addAttribute("listingsWithMyReservations", myReservationsService.getListingsWithMyReservations());
         return "myReservations";
     }
 
     @GetMapping("/showBookedRooms")
     public String showBookedRoomsPage(@RequestParam Long listingId, Model model) {
-        var reservations = reservationService.getReservationsOfStudentForListing(listingId);
+        var reservations = filterReservationsService.getReservationsOfStudentForListing(listingId);
         model.addAttribute("bookedRoomsData", roomService.getBookedRoomsData(listingId, reservations));
         return "bookedRooms";
     }
 
     @PostMapping("/cancel")
     public String cancelRoomReservation(@RequestParam Long listingId, @RequestParam Long roomId) {
-        reservationService.cancelRoomReservation(roomId);
+        cancelReservationService.cancelRoomReservation(roomId);
         return "redirect:/reservations/showBookedRooms?listingId=" + listingId;
     }
 
     @PostMapping("/cancelAllForListing")
     public String cancelMyReservationsForListing(@RequestParam Long listingId) {
-        reservationService.cancelMyReservationsForListing(listingId);
+        cancelReservationService.cancelMyReservationsForListing(listingId);
         return "redirect:/reservations/myReservations";
     }
 
     @PostMapping("/cancelFirstActive")
     public String cancelFirstActiveReservation(@RequestParam Long listingId) {
-        reservationService.cancelFirstActiveReservation(listingId);
+        cancelReservationService.cancelFirstActiveReservation(listingId);
         return "redirect:/listings/myListings";
     }
 }
