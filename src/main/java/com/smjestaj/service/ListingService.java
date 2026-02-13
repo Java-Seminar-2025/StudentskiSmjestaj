@@ -28,8 +28,10 @@ public class ListingService {
     private final HomeService homeService;
     private final FilterReservationsService filterReservationsService;
     private final ManageReservationService manageReservationService;
+    private final CancelReservationService cancelReservationService;
     private final UserService userService;
     private final StudentDetailsService studentDetailsService;
+    private final FavoriteService favoriteService;
 
     public Page<ListingData> filterListings(ListingFilters listingFilters, PageDto pageDto) {
         var pageable = PageRequest.of(pageDto.page() - 1, pageDto.size(), Sort.by("price").ascending());
@@ -103,6 +105,9 @@ public class ListingService {
         listing.setDeleted(true);
 
         listingRepository.save(listing);
+
+        cancelReservationService.cancelAllReservationsForDeletedListing(listingId);
+        favoriteService.unfavoriteDeletedListing(listing.getId());
     }
 
     public List<ListingData> getMostRecentListings() {
